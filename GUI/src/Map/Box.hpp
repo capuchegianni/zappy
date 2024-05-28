@@ -38,7 +38,7 @@ namespace zappy
             std::size_t phiras = 0;
             std::size_t thystame = 0;
 
-            void addPlayer(std::shared_ptr<Trantorien> player);
+            void addPlayer(const std::shared_ptr<Trantorien>& player);
             void removePlayerById(std::size_t id);
         private:
             std::vector<std::shared_ptr<Trantorien>> _players = {};

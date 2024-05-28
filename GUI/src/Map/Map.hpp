@@ -30,7 +30,7 @@ namespace zappy
 
              Box &operator()(std::size_t x, std::size_t y);
              std::shared_ptr<Trantorien> getPlayerById(std::size_t id);
-             void addPlayer(std::shared_ptr<Trantorien> player);
+             void addPlayer(const std::shared_ptr<Trantorien>& player);
              void removePlayerById(std::size_t id);
              void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 

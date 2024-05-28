@@ -11,7 +11,7 @@ zappy::Box::Box() = default;
 
 zappy::Box::~Box() = default;
 
-void zappy::Box::addPlayer(std::shared_ptr<Trantorien> player)
+void zappy::Box::addPlayer(const std::shared_ptr<Trantorien>& player)
 {
     _players.push_back(player);
 }

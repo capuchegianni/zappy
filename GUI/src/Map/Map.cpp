@@ -37,7 +37,7 @@ std::shared_ptr<zappy::Trantorien> zappy::Map::getPlayerById(std::size_t id)
     throw Map::MapError("Player not found");
 }
 
-void zappy::Map::addPlayer(std::shared_ptr<Trantorien> player)
+void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player)
 {
     _players.push_back(player);
 }
