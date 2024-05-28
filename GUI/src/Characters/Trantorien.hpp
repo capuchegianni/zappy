@@ -11,6 +11,14 @@
 
 namespace zappy
 {
+    enum class Direction
+    {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT
+    };
+
     class Trantorien
     {
         public:
@@ -29,5 +37,10 @@ namespace zappy
             std::size_t level = 0;
 
             std::size_t id;
+
+            short direction = 0;
+
+            std::size_t x = 0;
+            std::size_t y = 0;
     };
 }
