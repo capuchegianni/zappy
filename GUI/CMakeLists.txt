@@ -8,4 +8,11 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -pedantic -g3 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
 add_executable(zappy_gui
-        src/main.cpp)
+        src/main.cpp
+        src/Map/Map.hpp
+        src/Map/Map.cpp
+        src/Characters/Trantorien.hpp
+        src/Characters/Trantorien.cpp
+        src/Map/Box.hpp
+        src/Map/Box.cpp
+)
