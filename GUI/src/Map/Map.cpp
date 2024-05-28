@@ -19,9 +19,9 @@ zappy::Map::Map(std::size_t width, std::size_t height)
 
 zappy::Map::~Map() = default;
 
-zappy::Box &zappy::Map::operator()(int x, int y)
+zappy::Box &zappy::Map::operator()(std::size_t x, std::size_t y)
 {
-    if (x < 0 || y < 0 || x >= _map.size() || y >= _map[0].size())
+    if (x >= _map.size() || y >= _map[0].size())
         throw Map::MapError("Out of bounds");
 
     return _map[x][y];
