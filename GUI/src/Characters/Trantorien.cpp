@@ -7,6 +7,6 @@
 
 #include "Trantorien.hpp"
 
-zappy::Trantorien::Trantorien() = default;
+zappy::Trantorien::Trantorien(std::size_t id) : id(id) {}
 
 zappy::Trantorien::~Trantorien() = default;
