@@ -21,14 +21,14 @@ namespace zappy
 
             ~Box();
 
-            std::size_t food;
-            std::size_t linemate;
-            std::size_t deraumere;
-            std::size_t sibur;
-            std::size_t mendiane;
-            std::size_t phiras;
-            std::size_t thystame;
+            std::size_t food = 0;
+            std::size_t linemate = 0;
+            std::size_t deraumere = 0;
+            std::size_t sibur = 0;
+            std::size_t mendiane = 0;
+            std::size_t phiras = 0;
+            std::size_t thystame = 0;
 
-            std::vector<std::shared_ptr<Trantorien>> players;
+            std::vector<std::shared_ptr<Trantorien>> players = {};
     };
 }
