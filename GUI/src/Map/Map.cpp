@@ -18,10 +18,14 @@ zappy::Map::Map() : Map(10, 10) {}
 
 zappy::Map::Map(std::size_t width, std::size_t height)
 {
+    _map.reserve(width);
+
     for (std::size_t i = 0; i < width; i++) {
         _map.emplace_back();
+
+        _map.back().reserve(height);
         for (std::size_t j = 0; j < height; j++) {
-            _map[i].emplace_back(i, j);
+            _map[i].emplace_back(i, j, _assets.font);
         }
     }
 }

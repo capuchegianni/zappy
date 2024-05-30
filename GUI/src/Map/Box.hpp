@@ -24,7 +24,7 @@ namespace zappy
     class BoxDrawables
     {
         public:
-            BoxDrawables();
+            BoxDrawables(sf::Font &font);
             ~BoxDrawables();
 
             class BoxDrawablesError : public std::exception
@@ -38,13 +38,13 @@ namespace zappy
 
             sf::RectangleShape background;
 
-            sf::Text food = sf::Text();
-            sf::Text linemate = sf::Text();
-            sf::Text deraumere = sf::Text();
-            sf::Text sibur = sf::Text();
-            sf::Text mendiane = sf::Text();
-            sf::Text phiras = sf::Text();
-            sf::Text thystame = sf::Text();
+            sf::Text food;
+            sf::Text linemate;
+            sf::Text deraumere;
+            sf::Text sibur;
+            sf::Text mendiane;
+            sf::Text phiras;
+            sf::Text thystame;
 
         private:
             sf::Font _font;
@@ -53,7 +53,7 @@ namespace zappy
     class Box : public sf::Drawable
     {
         public:
-            Box(std::size_t x, std::size_t y);
+            Box(std::size_t x, std::size_t y, sf::Font &font);
             ~Box() override;
 
             class BoxError : public std::exception

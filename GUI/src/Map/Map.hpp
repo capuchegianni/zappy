@@ -14,6 +14,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include "Box.hpp"
+#include "../Display/Assets.hpp"
 
 namespace zappy
 {
@@ -56,6 +57,8 @@ namespace zappy
             std::vector<std::vector<Box>> _map;
             std::vector<std::shared_ptr<Trantorien>> _players = {};
             std::size_t _getPlayerIndexById(std::size_t id);
+
+            Assets _assets;
 
             MapDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

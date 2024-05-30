@@ -15,6 +15,8 @@ add_executable(zappy_gui
         src/Characters/Trantorien.cpp
         src/Map/Box.hpp
         src/Map/Box.cpp
+        src/Display/Assets.hpp
+        src/Display/Assets.cpp
 )
 
 target_link_libraries(zappy_gui sfml-graphics sfml-window sfml-system)

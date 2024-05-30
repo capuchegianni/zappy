@@ -7,30 +7,19 @@
 
 #include "Box.hpp"
 
-zappy::BoxDrawables::BoxDrawables()
+zappy::BoxDrawables::BoxDrawables(sf::Font &font) : _font(font)
 {
     background.setFillColor(sf::Color::Transparent);
     background.setOutlineColor(sf::Color::Black);
     background.setOutlineThickness(1);
 
-    if (!_font.loadFromFile("../assets/fonts/Minecraft.ttf"))
-        throw BoxDrawables::BoxDrawablesError("Could not load font");
-
-    food.setFont(_font);
-    linemate.setFont(_font);
-    deraumere.setFont(_font);
-    sibur.setFont(_font);
-    mendiane.setFont(_font);
-    phiras.setFont(_font);
-    thystame.setFont(_font);
-
-    food.setCharacterSize(10);
-    linemate.setCharacterSize(10);
-    deraumere.setCharacterSize(10);
-    sibur.setCharacterSize(10);
-    mendiane.setCharacterSize(10);
-    phiras.setCharacterSize(10);
-    thystame.setCharacterSize(10);
+    food = sf::Text("0", _font, 30);
+    linemate = sf::Text("0", _font, 30);
+    deraumere = sf::Text("0", _font, 30);
+    sibur = sf::Text("0", _font, 30);
+    mendiane = sf::Text("0", _font, 30);
+    phiras = sf::Text("0", _font, 30);
+    thystame = sf::Text("0", _font, 30);
 
     food.setFillColor(sf::Color::Black);
     linemate.setFillColor(sf::Color::Black);
@@ -43,7 +32,7 @@ zappy::BoxDrawables::BoxDrawables()
 
 zappy::BoxDrawables::~BoxDrawables() = default;
 
-zappy::Box::Box(std::size_t x, std::size_t y) : x(x), y(y) {}
+zappy::Box::Box(std::size_t x, std::size_t y, sf::Font &font) : x(x), y(y), _drawables(font) {}
 
 zappy::Box::~Box() = default;
 
@@ -63,6 +52,14 @@ void zappy::Box::setDisplaySize(sf::Vector2f &size)
 void zappy::Box::setDisplayPosition(sf::Vector2f &position)
 {
     _drawables.background.setPosition(position);
+
+    _drawables.food.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10);
+    _drawables.linemate.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 2);
+    _drawables.deraumere.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 3);
+    _drawables.sibur.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 4);
+    _drawables.mendiane.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 5);
+    _drawables.phiras.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 6);
+    _drawables.thystame.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 7);
 }
 
 void zappy::Box::updateText()
