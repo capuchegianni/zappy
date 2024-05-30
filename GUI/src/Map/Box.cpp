@@ -7,9 +7,28 @@
 
 #include "Box.hpp"
 
-zappy::Box::Box() = default;
+zappy::BoxDrawables::BoxDrawables()
+{
+    background.setFillColor(sf::Color::Transparent);
+    background.setOutlineColor(sf::Color::Black);
+    background.setOutlineThickness(2);
+}
+
+zappy::BoxDrawables::~BoxDrawables() = default;
+
+zappy::Box::Box(std::size_t x, std::size_t y) : x(x), y(y) {}
 
 zappy::Box::~Box() = default;
+
+void zappy::Box::setDisplaySize(sf::Vector2f &size)
+{
+    _drawables.background.setSize(size);
+}
+
+void zappy::Box::setDisplayPosition(sf::Vector2f &position)
+{
+    _drawables.background.setPosition(position);
+}
 
 void zappy::Box::addPlayer(const std::shared_ptr<Trantorien>& player)
 {
@@ -34,4 +53,9 @@ std::size_t zappy::Box::_getPlayerIndexById(std::size_t id)
     }
 
     throw Box::BoxError("Player not found");
+}
+
+void zappy::Box::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(_drawables.background, states);
 }

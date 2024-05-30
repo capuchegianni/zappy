@@ -30,7 +30,7 @@ namespace zappy
         public:
             Map();
             Map(std::size_t width, std::size_t height);
-            ~Map();
+            ~Map() override;
 
             class MapError : public std::exception
             {
@@ -47,8 +47,8 @@ namespace zappy
              void removePlayerById(std::size_t id);
              void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 
-             void setMapDisplaySize(sf::Vector2f &size);
-             void setMapDisplayPosition(sf::Vector2f &position);
+             void setDisplaySize(sf::Vector2f &size);
+             void setDisplayPosition(sf::Vector2f &position);
         private:
             std::vector<std::vector<Box>> _map;
             std::vector<std::shared_ptr<Trantorien>> _players = {};

@@ -16,10 +16,10 @@ int main(int ac, char **av)
     zappy::Map map;
 
     sf::Vector2f position(0, 0);
-    sf::Vector2f size(250, 250);
+    sf::Vector2f size(512, 250);
 
-    map.setMapDisplayPosition(position);
-    map.setMapDisplaySize(size);
+    map.setDisplayPosition(position);
+    map.setDisplaySize(size);
 
     window.draw(map);
     window.display();
