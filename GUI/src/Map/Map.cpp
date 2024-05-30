@@ -7,6 +7,13 @@
 
 #include "Map.hpp"
 
+zappy::MapDrawables::MapDrawables()
+{
+    background.setFillColor(sf::Color::White);
+}
+
+zappy::MapDrawables::~MapDrawables() = default;
+
 zappy::Map::Map() : Map(10, 10) {}
 
 zappy::Map::Map(std::size_t width, std::size_t height)
@@ -79,6 +86,17 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
     player->y = y;
 }
 
+void zappy::Map::setMapDisplaySize(sf::Vector2f &size)
+{
+    _drawables.background.setSize(size);
+}
+
+void zappy::Map::setMapDisplayPosition(sf::Vector2f &position)
+{
+    _drawables.background.setPosition(position);
+}
+
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    target.draw(_drawables.background, states);
 }
