@@ -8,10 +8,11 @@
 #pragma once
 
 #include <string>
+
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
+
 #include "Box.hpp"
 
 namespace zappy

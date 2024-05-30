@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

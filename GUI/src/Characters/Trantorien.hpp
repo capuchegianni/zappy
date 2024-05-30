@@ -9,9 +9,13 @@
 
 #include <cstddef>
 
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+
 namespace zappy
 {
-    enum class Direction
+    enum Direction
     {
         UP,
         RIGHT,
@@ -19,12 +23,25 @@ namespace zappy
         LEFT
     };
 
-    class Trantorien
+    class TrantorienDrawables
+    {
+        public:
+            TrantorienDrawables();
+            ~TrantorienDrawables();
+
+            sf::CircleShape body;
+            sf::CircleShape head;
+    };
+
+    class Trantorien : public sf::Drawable
     {
         public:
             Trantorien(std::size_t id = 0);
 
-            ~Trantorien();
+            ~Trantorien() override;
+
+            void setDisplaySize(sf::Vector2f &size);
+            void setDisplayPosition(sf::Vector2f &position);
 
             std::size_t food = 0;
             std::size_t linemate = 0;
@@ -42,5 +59,9 @@ namespace zappy
 
             std::size_t x = 0;
             std::size_t y = 0;
+
+        private:
+            TrantorienDrawables _drawables;
+            void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };
 }

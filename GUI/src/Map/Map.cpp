@@ -100,6 +100,13 @@ void zappy::Map::setDisplaySize(sf::Vector2f &size)
             box.setDisplayPosition(position);
         }
     }
+
+    for (auto &player : _players) {
+        sf::Vector2f position(player->x * boxSize.x + _drawables.background.getPosition().x, player->y * boxSize.y + _drawables.background.getPosition().y);
+
+        player->setDisplaySize(boxSize);
+        player->setDisplayPosition(position);
+    }
 }
 
 void zappy::Map::setDisplayPosition(sf::Vector2f &position)
@@ -116,6 +123,13 @@ void zappy::Map::setDisplayPosition(sf::Vector2f &position)
             box.setDisplayPosition(position);
         }
     }
+
+    for (auto &player : _players) {
+        sf::Vector2f position(player->x * boxSize.x + _drawables.background.getPosition().x, player->y * boxSize.y + _drawables.background.getPosition().y);
+
+        player->setDisplaySize(boxSize);
+        player->setDisplayPosition(position);
+    }
 }
 
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -126,5 +140,9 @@ void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
         for (auto &box : row) {
             target.draw(box, states);
         }
+    }
+
+    for (auto &player : _players) {
+        target.draw(*player, states);
     }
 }

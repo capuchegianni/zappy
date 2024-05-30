@@ -11,7 +11,7 @@ zappy::BoxDrawables::BoxDrawables()
 {
     background.setFillColor(sf::Color::Transparent);
     background.setOutlineColor(sf::Color::Black);
-    background.setOutlineThickness(2);
+    background.setOutlineThickness(1);
 }
 
 zappy::BoxDrawables::~BoxDrawables() = default;
