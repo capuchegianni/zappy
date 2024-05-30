@@ -30,8 +30,8 @@ namespace zappy
     class Map : public sf::Drawable
     {
         public:
-            Map();
-            Map(std::size_t width, std::size_t height);
+            Map(Assets &assets);
+            Map(std::size_t width, std::size_t height, Assets &assets);
             ~Map() override;
 
             class MapError : public std::exception
@@ -58,7 +58,7 @@ namespace zappy
             std::vector<std::shared_ptr<Trantorien>> _players = {};
             std::size_t _getPlayerIndexById(std::size_t id);
 
-            Assets _assets;
+            Assets &_assets;
 
             MapDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

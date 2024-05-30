@@ -13,15 +13,17 @@
 int main(int ac, char **av)
 {
     std::size_t width = 15;
-    std::size_t height = 10;
+    std::size_t height = 15;
 
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy", sf::Style::Close);
-    zappy::Map map(width, height);
+
+    zappy::Assets assets;
+    zappy::Map map(width, height, assets);
 
     window.setFramerateLimit(10);
 
     sf::Vector2f position(0, 0);
-    sf::Vector2f size(750, 500);
+    sf::Vector2f size(1080, 1080);
 
     map.addPlayer(std::make_shared<zappy::Trantorien>(0));
     map.addPlayer(std::make_shared<zappy::Trantorien>(1));

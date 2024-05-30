@@ -14,9 +14,9 @@ zappy::MapDrawables::MapDrawables()
 
 zappy::MapDrawables::~MapDrawables() = default;
 
-zappy::Map::Map() : Map(10, 10) {}
+zappy::Map::Map(Assets &assets) : Map(10, 10, assets) {}
 
-zappy::Map::Map(std::size_t width, std::size_t height)
+zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets(assets)
 {
     _map.reserve(width);
 
