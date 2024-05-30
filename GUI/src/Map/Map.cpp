@@ -132,6 +132,21 @@ void zappy::Map::setDisplayPosition(sf::Vector2f &position)
     }
 }
 
+void zappy::Map::updateDisplay()
+{
+    sf::Vector2f position(_drawables.background.getPosition());
+    sf::Vector2f size(_drawables.background.getSize());
+
+    for (auto &row : _map) {
+        for (auto &box : row) {
+            box.updateText();
+        }
+    }
+
+    setDisplayPosition(position);
+    setDisplaySize(size);
+}
+
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(_drawables.background, states);

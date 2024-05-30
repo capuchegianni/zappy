@@ -50,6 +50,8 @@ namespace zappy
 
              void setDisplaySize(sf::Vector2f &size);
              void setDisplayPosition(sf::Vector2f &position);
+
+             void updateDisplay();
         private:
             std::vector<std::vector<Box>> _map;
             std::vector<std::shared_ptr<Trantorien>> _players = {};

@@ -15,6 +15,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "../Characters/Trantorien.hpp"
 
@@ -26,7 +27,27 @@ namespace zappy
             BoxDrawables();
             ~BoxDrawables();
 
+            class BoxDrawablesError : public std::exception
+            {
+                public:
+                    BoxDrawablesError(std::string const &message) : _message(message) {}
+                    const char *what() const noexcept override { return _message.c_str(); }
+                private:
+                    std::string _message;
+            };
+
             sf::RectangleShape background;
+
+            sf::Text food = sf::Text();
+            sf::Text linemate = sf::Text();
+            sf::Text deraumere = sf::Text();
+            sf::Text sibur = sf::Text();
+            sf::Text mendiane = sf::Text();
+            sf::Text phiras = sf::Text();
+            sf::Text thystame = sf::Text();
+
+        private:
+            sf::Font _font;
     };
 
     class Box : public sf::Drawable
@@ -46,6 +67,7 @@ namespace zappy
 
             void setDisplaySize(sf::Vector2f &size);
             void setDisplayPosition(sf::Vector2f &position);
+            void updateText();
 
             std::size_t food = 0;
             std::size_t linemate = 0;
