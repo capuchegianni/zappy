@@ -6,11 +6,11 @@
 */
 
 #include <iostream>
-#include <sys/reboot.h>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include "Map/Map.hpp"
 
 int main(int ac, char **av)
 {
-    std::cout << "Hello World from GUI!" << std::endl;
-
-    return 0;
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy");
+    zappy::Map map;
 }

@@ -7,6 +7,8 @@
 
 #include "Map.hpp"
 
+zappy::Map::Map() : Map(10, 10) {}
+
 zappy::Map::Map(std::size_t width, std::size_t height)
 {
     for (std::size_t i = 0; i < width; i++) {
@@ -75,4 +77,8 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
 
     player->x = x;
     player->y = y;
+}
+
+void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
 }

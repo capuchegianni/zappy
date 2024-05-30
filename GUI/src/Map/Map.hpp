@@ -8,15 +8,27 @@
 #pragma once
 
 #include <string>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include "Box.hpp"
 
 namespace zappy
 {
-    class Map
+    class MapDrawables
     {
         public:
-            Map(std::size_t width = 10, std::size_t height = 10);
+            MapDrawables() = default;
+            ~MapDrawables() = default;
 
+            sf::RectangleShape background;
+    };
+
+    class Map : public sf::Drawable
+    {
+        public:
+            Map();
+            Map(std::size_t width, std::size_t height);
             ~Map();
 
             class MapError : public std::exception
@@ -33,10 +45,13 @@ namespace zappy
              void addPlayer(const std::shared_ptr<Trantorien>& player);
              void removePlayerById(std::size_t id);
              void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
-
         private:
+
             std::vector<std::vector<Box>> _map;
             std::vector<std::shared_ptr<Trantorien>> _players = {};
             std::size_t _getPlayerIndexById(std::size_t id);
+
+        protected:
+            void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };
 }
