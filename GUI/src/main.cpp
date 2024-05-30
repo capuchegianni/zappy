@@ -15,8 +15,10 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy");
     zappy::Map map;
 
-    sf::Vector2f position(0, 0);
-    sf::Vector2f size(512, 250);
+    window.setFramerateLimit(60);
+
+    sf::Vector2f position(50, 20);
+    sf::Vector2f size(512, 512);
 
     map.setDisplayPosition(position);
     map.setDisplaySize(size);
@@ -24,5 +26,10 @@ int main(int ac, char **av)
     window.draw(map);
     window.display();
 
-    while (1);
+    while (1)
+    {
+        window.clear(sf::Color::Blue);
+        window.draw(map);
+        window.display();
+    }
 }

@@ -94,9 +94,9 @@ void zappy::Map::setDisplaySize(sf::Vector2f &size)
 
     for (auto &row : _map) {
         for (auto &box : row) {
-            sf::Vector2f position(box.x * boxSize.x, box.y * boxSize.y);
+            sf::Vector2f position(box.x * boxSize.x + _drawables.background.getPosition().x, box.y * boxSize.y + _drawables.background.getPosition().y);
 
-            box.setDisplaySize(size);
+            box.setDisplaySize(boxSize);
             box.setDisplayPosition(position);
         }
     }
@@ -105,6 +105,17 @@ void zappy::Map::setDisplaySize(sf::Vector2f &size)
 void zappy::Map::setDisplayPosition(sf::Vector2f &position)
 {
     _drawables.background.setPosition(position);
+
+    sf::Vector2f boxSize(_drawables.background.getSize().x / _map.size(), _drawables.background.getSize().y / _map[0].size());
+
+    for (auto &row : _map) {
+        for (auto &box : row) {
+            sf::Vector2f position(box.x * boxSize.x + _drawables.background.getPosition().x, box.y * boxSize.y + _drawables.background.getPosition().y);
+
+            box.setDisplaySize(boxSize);
+            box.setDisplayPosition(position);
+        }
+    }
 }
 
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
