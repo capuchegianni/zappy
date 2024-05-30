@@ -9,16 +9,25 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Map/Map.hpp"
+#include "Display/EventLogger.hpp"
 
 int main(int ac, char **av)
 {
-    std::size_t width = 15;
-    std::size_t height = 15;
+    std::size_t width = 6;
+    std::size_t height = 6;
 
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy", sf::Style::Close);
 
     zappy::Assets assets;
     zappy::Map map(width, height, assets);
+
+    zappy::EventLogger eventLogger(10, assets);
+
+    sf::Vector2f loggerPos(1090, 10);
+    sf::Vector2f loggerSize(820, 512
+    );
+    eventLogger.setDisplayPosition(loggerPos);
+    eventLogger.setDisplaySize(loggerSize);
 
     window.setFramerateLimit(10);
 
@@ -58,6 +67,7 @@ int main(int ac, char **av)
     map(0, 0).thystame = 1;
 
     for (std::size_t y = 0; y < height; y++)
+    {
         for (std::size_t x = 0; x < width; x++)
         {
             map(x, y).food = rand() % 10;
@@ -68,9 +78,16 @@ int main(int ac, char **av)
             map(x, y).phiras = rand() % 10;
             map(x, y).thystame = rand() % 10;
         }
+    }
+
+    std::size_t frame = 0;
+
+    std::string log = "Frame: " + std::to_string(frame);
 
     while (1)
     {
+        log = "Frame: " + std::to_string(frame);
+
         window.clear(sf::Color::Blue);
 
         map(map.getPlayerById(0)->x, map.getPlayerById(0)->y).food++;
@@ -90,7 +107,12 @@ int main(int ac, char **av)
 
         map.updateDisplay();
 
+        eventLogger.log(log);
+
         window.draw(map);
+        window.draw(eventLogger);
         window.display();
+
+        frame++;
     }
 }
