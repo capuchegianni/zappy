@@ -63,7 +63,6 @@ typedef struct input_s {
 
 typedef struct client_s {
     int fd;
-    bool append_mode;
     bool is_connected;
     input_t *input;
     struct sockaddr_in addr;

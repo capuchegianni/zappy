@@ -41,10 +41,10 @@ static int accept_clients(server_t *server)
     return 0;
 }
 
-static int isset_read(server_t *server, client_t *client, fd_set *readfds)
+static int isset_read(client_t *client, fd_set *readfds)
 {
     if (client->fd > -1 && FD_ISSET(client->fd, readfds)) {
-        if (init_read_buffer(server, client))
+        if (init_read_buffer(client))
             return 84;
     }
     return 0;
@@ -67,7 +67,7 @@ static int isset_client_and_server(server_t *server, fd_set *readfds,
             return 84;
     }
     for (int i = 0; i < FD_SETSIZE; i++) {
-        if (isset_read(server, &server->clients[i], readfds))
+        if (isset_read(&server->clients[i], readfds))
             return 84;
         if (isset_write(server, &server->clients[i], writefds))
             return 84;
@@ -125,7 +125,6 @@ static int init_server(server_t *server)
 static void client_init(server_t *server, int i)
 {
     server->clients[i].fd = -1;
-    server->clients[i].append_mode = true;
     server->clients[i].is_connected = false;
     server->clients[i].input = malloc(sizeof(input_t));
     server->clients[i].input->args = calloc(1, sizeof(char *));

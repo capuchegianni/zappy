@@ -19,6 +19,8 @@ static void free_client_args(client_t *client)
     for (int i = 0; client->input->args[i]; i++)
         free(client->input->args[i]);
     free(client->input->args);
+    free(client->input->body);
+    client->input->body = NULL;
     client->input->args = calloc(1, sizeof(char *));
 }
 
@@ -35,8 +37,6 @@ static int find_cmd(server_t *server, client_t *client)
 
 static void execute_cmd(server_t *server, client_t *client)
 {
-    if (quotes_parser(client))
-        return;
     if (!find_cmd(server, client)) {
         if (client->input->args && client->input->args[0])
             dprintf(client->fd, "event_failed_input::%s\n",
@@ -47,10 +47,6 @@ static void execute_cmd(server_t *server, client_t *client)
 static void store_args(server_t *server, client_t *client, char *token,
     char *cmd)
 {
-    if (!space_remover(&token)) {
-        dprintf(client->fd, "event_failed_input\n");
-        return;
-    }
     cmd = strtok(token, " ");
     for (int i = 0; cmd; i++) {
         client->input->args = realloc(client->input->args, sizeof(char *) *
@@ -63,7 +59,6 @@ static void store_args(server_t *server, client_t *client, char *token,
         client->input->args[i + 1] = NULL;
         cmd = strtok(NULL, " ");
     }
-    replace_backticks(client);
     execute_cmd(server, client);
 }
 
@@ -84,17 +79,15 @@ static void parse_buffer(server_t *server, char *buffer, client_t *client)
 static bool check_spaces(char *buffer)
 {
     for (int i = 0; buffer[i]; i++)
-        if (buffer[i] != ' ' && buffer[i] != '\t' && buffer[i] != '\n'
-        && buffer[i] != '\r')
+        if (buffer[i] != ' ' && buffer[i] != '\t')
             return true;
     return false;
 }
 
 int execute_command(server_t *server, client_t *client)
 {
-    if (client->append_mode)
+    if (!client->input->body)
         return 0;
-    client->append_mode = true;
     if (!check_spaces(client->input->body)) {
         dprintf(client->fd, "event_failed_input\n");
         free_client_args(client);
