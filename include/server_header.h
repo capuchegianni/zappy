@@ -10,7 +10,6 @@
 #define _POSIX_C_SOURCE 200809L
 #define _GNU_SOURCE
 
-#include "../libs/mydb/db.h"
 #include "struct.h"
 
 /**
@@ -39,7 +38,7 @@ int fserver(char **av, server_t *server);
  * @param client_t* client
  * @return 0 if success, 84 if error
 */
-int init_read_buffer(server_t *server, client_t *client);
+int init_read_buffer(client_t *client);
 
 /**
  * @brief Execute the command
@@ -73,10 +72,9 @@ int check_listen(int fd);
 
 /**
  * @brief Reset the client
- * @param server_t* server
  * @param client_t* client
 */
-void reset_client(server_t *server, client_t *client);
+void reset_client(client_t *client);
 
 /**
  * @brief is the server running
@@ -91,30 +89,3 @@ bool is_running(int new);
  * @return void
 */
 void sigint_handler(int sig);
-
-/**
- * @brief remove quotes from a string
- * @param client
- * @return 0 if all quotes removed, 1 if string have an odd number of quotes
-*/
-int quotes_parser(client_t *client);
-
-/**
- * @brief remove spaces from a string
- * @param buffer
- * @return True if all spaces are removed, false if the command is invalid
-*/
-bool space_remover(char **buffer);
-
-/**
- * @brief replace the backticks with spaces
- * @param client
-*/
-void replace_backticks(client_t *client);
-
-/**
- * @brief Transform a string into a tab
- * @param str
- * @return A new char ** containing the string and NULL
-*/
-char **s_to_t(char *str);

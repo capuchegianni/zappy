@@ -12,27 +12,6 @@
 #include <unistd.h>
 #include <string.h>
 
-static void modify_current_status(server_t *server, client_t *client)
-{
-    char *status = get_val_from_key("db/users", client->user->id, "status");
-
-    for (int i = 0; i < LEN; i++) {
-        if (server->clients[i].is_connected &&
-        server->clients[i].fd != client->fd &&
-        strcmp(server->clients[i].user->id, client->user->id) == 0)
-            return;
-    }
-    for (int i = 0; status[i] != '\0'; i++) {
-        if (status[i] == '1') {
-            status[i] = '0';
-            break;
-        }
-    }
-    db_file_delete_line("db/users", client->user->id, "status");
-    db_file_write("db/users", client->user->id,
-        &(db_t){"status", s_to_t(status)}, false);
-}
-
 char **s_to_t(char *str)
 {
     char **tab = calloc(2, sizeof(char *));
@@ -41,11 +20,8 @@ char **s_to_t(char *str)
     return tab;
 }
 
-void reset_client(server_t *server, client_t *client)
+void reset_client(client_t *client)
 {
-    if (client->is_connected)
-        modify_current_status(server, client);
-    client->append_mode = true;
     client->is_connected = false;
     close(client->fd);
     client->fd = -1;

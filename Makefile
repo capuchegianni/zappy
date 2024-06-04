@@ -9,7 +9,7 @@
 
 WARNING_FLAGS := -Wall -Wextra -W -g -std=gnu2x
 
-LIB_FLAGS := -I include/ -L libs/ -lmydb -luuid
+LIB_FLAGS := -I include/ -luuid
 
 FILE = coding-style.sh
 
@@ -20,13 +20,12 @@ NAME = zappy_server
 
 OBJ_DIR = ./obj/
 
-SRC = 	src/server/main.c									\
-		src/server/utils.c 									\
-		src/server/loop/server.c 							\
-		src/server/loop/execute.c							\
-		src/server/loop/server_utils.c 						\
-		src/server/loop/commands.c							\
-		src/server/loop/quotes_parser.c
+SRC = 	src/server/main.c					\
+		src/server/utils.c 					\
+		src/server/loop/server.c 			\
+		src/server/loop/execute.c			\
+		src/server/loop/server_utils.c 		\
+		src/server/loop/commands.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))
@@ -37,7 +36,6 @@ OBJ = $(addprefix $(OBJ_DIR), \
 all: $(OBJ_DIR) $(NAME)
 
 $(NAME): $(OBJ)
-	@$(MAKE) -sC libs/mydb
 	gcc $(SRC) $(WARNING_FLAGS) -o $(NAME) $(LIB_FLAGS)
 	@echo -n "[ "
 	@echo -n "\e[1;34mOK\e[0m"
@@ -53,7 +51,6 @@ $(OBJ_DIR):
 
 clean:
 	rm -f $(OBJ)
-	@$(MAKE) -sC libs/mydb clean
 	@echo -n "[ "
 	@echo -n "\e[1;34mOK\e[0m"
 	@echo -n " ] "
@@ -82,7 +79,6 @@ fclean: clean
 	rm -rf $(OBJ_DIR)
 	rm -f $(NAME)
 	rm -f *.log
-	@$(MAKE) -sC libs/mydb fclean
 	@echo -n "[ "
 	@echo -n "\e[1;34mOK\e[0m"
 	@echo -n " ] "
