@@ -15,8 +15,22 @@
 
 int main(int ac, char **av)
 {
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy");
     zappy::Assets assets;
     zappy::render3d::Camera camera;
     zappy::render3d::Tile tile(assets);
 
+    window.setFramerateLimit(60);
+
+    camera.rotate(math::Vector3D(0, 0, 0));
+
+    tile.computeTileImage(camera);
+
+    while (1) {
+        window.clear();
+        camera.rotate(math::Vector3D(0.1, 0.1, 0.1));
+        tile.computeTileImage(camera);
+        window.draw(tile);
+        window.display();
+    }
 }

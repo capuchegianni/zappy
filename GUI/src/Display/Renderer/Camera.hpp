@@ -34,6 +34,8 @@ namespace zappy
                 double yOffset;
 
                 math::Vector3D direction;
+                math::Vector3D up;
+                math::Vector3D right;
 
                 math::Point3D projectPoint(math::Point3D point) const;
                 void rotate(math::Vector3D direction);

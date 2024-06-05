@@ -12,8 +12,8 @@ zappy::Assets::Assets()
     if (!font.loadFromFile("../assets/fonts/LEMONMILK-Regular.otf"))
         throw Assets::AssetsError("Could not load font");
 
-    if (!placeholderTexture.loadFromFile("../assets/textures/placeholder.png"))
-        throw Assets::AssetsError("Could not load placeholder texture");
+    if (!placeholderImage.loadFromFile("../assets/textures/placeholder.png"))
+        throw Assets::AssetsError("Could not load placeholder baseImage");
 }
 
 zappy::Assets::~Assets() = default;

@@ -29,7 +29,7 @@ namespace zappy
             };
 
             sf::Font font;
-            sf::Texture placeholderTexture;
+            sf::Image placeholderImage;
             std::vector<std::unique_ptr<sf::Texture>> tilesTextures;
     };
 }

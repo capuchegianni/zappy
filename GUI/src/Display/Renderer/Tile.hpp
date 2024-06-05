@@ -23,10 +23,10 @@ namespace zappy
         class TileDrawables
         {
             public:
-                TileDrawables(sf::Texture &texture);
+                TileDrawables(sf::Image &image);
                 ~TileDrawables();
 
-                sf::Texture &texture;
+                sf::Image &baseImage;
                 sf::Texture displayTexture;
                 sf::Sprite sprite;
         };
