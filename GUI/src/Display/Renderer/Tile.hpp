@@ -31,7 +31,7 @@ namespace zappy
                 sf::Sprite sprite;
         };
 
-        class Tile
+        class Tile : public sf::Drawable
         {
             public:
                 Tile(Assets &assets);
@@ -47,6 +47,8 @@ namespace zappy
 
             private:
                 TileDrawables _drawables;
+
+                void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
         };
     }
 }
