@@ -9,6 +9,8 @@
 
 #include <SFML/Graphics/Font.hpp>
 
+#include <memory>
+
 namespace zappy
 {
     class Assets
@@ -27,5 +29,7 @@ namespace zappy
             };
 
             sf::Font font;
+            sf::Texture placeholderTexture;
+            std::vector<std::unique_ptr<sf::Texture>> tilesTextures;
     };
 }
