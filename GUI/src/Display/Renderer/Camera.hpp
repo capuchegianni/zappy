@@ -9,6 +9,8 @@
 
 #include <cstddef>
 
+#include "../../../include/Math/Ray3D.hpp"
+
 namespace zappy
 {
     namespace render3d
@@ -31,9 +33,9 @@ namespace zappy
                 double xOffset;
                 double yOffset;
 
-                double zAngle;
-                double xAngle;
-                double yAngle;
+                Vector3D direction;
+
+                Point3D projectPoint(Point3D point) const;
         };
     }
 }
