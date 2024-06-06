@@ -13,7 +13,7 @@ zappy::Assets::Assets()
         throw Assets::AssetsError("Could not load font");
 
     if (!placeholderImage.loadFromFile("../assets/textures/placeholder.png"))
-        throw Assets::AssetsError("Could not load placeholder baseImage");
+        throw Assets::AssetsError("Could not load placeholder _baseImage");
 }
 
 zappy::Assets::~Assets() = default;

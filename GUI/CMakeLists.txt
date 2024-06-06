@@ -21,8 +21,8 @@ add_executable(zappy_gui
         src/Display/Assets.cpp
         src/Display/EventLogger.hpp
         src/Display/EventLogger.cpp
-        src/Display/Renderer/Tile.hpp
-        src/Display/Renderer/Tile.cpp
+        src/Display/Renderer/DisplayTile.hpp
+        src/Display/Renderer/DisplayTile.cpp
         src/Display/Renderer/Camera.hpp
         src/Display/Renderer/Camera.cpp
 )

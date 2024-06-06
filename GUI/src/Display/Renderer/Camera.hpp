@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstddef>
+#include <SFML/System/Vector2.hpp>
 
 #include "../../../include/Math/Ray3D.hpp"
 
@@ -32,6 +33,11 @@ namespace zappy
 
                 double xOffset;
                 double yOffset;
+
+                sf::Vector2f unitaryX;
+                sf::Vector2f unitaryY;
+                sf::Vector2f unitaryZ;
+                std::size_t unitaryPixelsSize;
 
                 math::Vector3D direction;
                 math::Vector3D up;

@@ -1,35 +1,20 @@
 /*
 ** EPITECH PROJECT, 2024
-** Tile.cpp
+** DisplayTile.cpp
 ** File description:
 ** zappy_gui
 */
 
-#include "Tile.hpp"
+#include "DisplayTile.hpp"
 
-zappy::render3d::TileDrawables::TileDrawables(sf::Image &image) : baseImage(image) {}
+zappy::render3d::DisplayTile::DisplayTile(Assets &assets) : _baseImage(assets.placeholderImage) {}
 
-zappy::render3d::TileDrawables::~TileDrawables() = default;
+zappy::render3d::DisplayTile::~DisplayTile() = default;
 
-zappy::render3d::Tile::Tile(Assets &assets) : _drawables(assets.placeholderImage) {}
-
-zappy::render3d::Tile::~Tile() = default;
-
-void zappy::render3d::Tile::update(zappy::Box &box)
-{
-    x = box.x;
-    y = box.y;
-}
-
-void zappy::render3d::Tile::setTileTexture(sf::Texture &texture)
-{
-    _drawables.displayTexture = texture;
-}
-
-void zappy::render3d::Tile::computeTileImage(zappy::render3d::Camera &camera)
+void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &camera)
 {
     // Project tile corners to screen
-    sf::Vector2<unsigned int> size = _drawables.baseImage.getSize();
+    sf::Vector2<unsigned int> size = _baseImage.getSize();
 
     math::Point3D topLeft = camera.projectPoint(math::Point3D(0, 0, 0));
     math::Point3D topRight = camera.projectPoint(math::Point3D(size.x, 0, 0));
@@ -55,16 +40,6 @@ void zappy::render3d::Tile::computeTileImage(zappy::render3d::Camera &camera)
     sf::Image image;
     image.create(imageWidth, imageHeight, sf::Color::Transparent);
 
-    // Set corner pixels (ensure they are within image bounds)
-    if (topLeft.x < imageWidth && topLeft.y < imageHeight)
-        image.setPixel(topLeft.x, topLeft.y, sf::Color::White);
-    if (topRight.x < imageWidth && topRight.y < imageHeight)
-        image.setPixel(topRight.x, topRight.y, sf::Color::White);
-    if (bottomLeft.x < imageWidth && bottomLeft.y < imageHeight)
-        image.setPixel(bottomLeft.x, bottomLeft.y, sf::Color::White);
-    if (bottomRight.x < imageWidth && bottomRight.y < imageHeight)
-        image.setPixel(bottomRight.x, bottomRight.y, sf::Color::White);
-
     // Draw points for the entire tile
     for (unsigned int i = 0; i < size.x; i++) {
         for (unsigned int j = 0; j < size.y; j++) {
@@ -72,22 +47,19 @@ void zappy::render3d::Tile::computeTileImage(zappy::render3d::Camera &camera)
             unsigned int px = static_cast<unsigned int>(point.x - minWidth);
             unsigned int py = static_cast<unsigned int>(point.y - minHeight);
             if (px < imageWidth && py < imageHeight)
-                image.setPixel(px, py, _drawables.baseImage.getPixel(i, j));
+                image.setPixel(px, py, _baseImage.getPixel(i, j));
         }
     }
 
-    _drawables.displayTexture.create(1, 1);
+    _displayTexture.create(1, 1);
 
-    // Draw the baseImage on the new baseImage
-    if (!_drawables.displayTexture.loadFromImage(image)) {
-        std::cerr << "Error loading baseImage from image" << std::endl;
+    // Draw the _baseImage on the new _baseImage
+    if (!_displayTexture.loadFromImage(image)) {
+        std::cerr << "Error loading _baseImage from image" << std::endl;
     }
-    _drawables.sprite = sf::Sprite(_drawables.displayTexture);
-    _drawables.sprite.setPosition(150, 150);
 }
 
-
-void zappy::render3d::Tile::draw(sf::RenderTarget &target, sf::RenderStates states) const
+sf::Texture &zappy::render3d::DisplayTile::getTexture()
 {
-    target.draw(_drawables.sprite, states);
+    return _displayTexture;
 }
