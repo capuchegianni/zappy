@@ -1,0 +1,5 @@
+__pycache__
+*.pdf
+zappy_ai
+zappy_server
+zappy_gui
