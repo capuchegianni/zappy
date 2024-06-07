@@ -22,20 +22,41 @@ int main(int ac, char **av)
 
     window.setFramerateLimit(60);
 
-    camera.rotate(math::Vector3D(0, 0, 0));
+    camera.rotate(math::Vector3D(45, 0, 45));
 
     tile.computeTileImage(camera);
 
-    sf::Sprite sprite(tile.getTexture());
+    std::vector<sf::Sprite> sprites;
+
+    for (int i = -5; i < 5; i++) {
+        for (int j = -5; j < 5; j++) {
+            sf::Sprite sprite;
+            sprite.setTexture(tile.getTexture());
+            sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
+            sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.displayUnitaryZ.x * i + window.getSize().x / 2,
+                               camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.displayUnitaryZ.y * i + window.getSize().y / 2);
+            sprites.push_back(sprite);
+        }
+    }
 
     while (1) {
-        window.clear();
-        camera.rotate(math::Vector3D(5, 5, 5));
+        camera.rotate(math::Vector3D(0, 0, 1));
         tile.computeTileImage(camera);
-        sprite = sf::Sprite(tile.getTexture());
-        sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
-        sprite.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-        window.draw(sprite);
+        sprites.clear();
+        for (int i = -5; i < 5; i++) {
+            for (int j = -5; j < 5; j++) {
+                sf::Sprite sprite;
+                sprite.setTexture(tile.getTexture());
+                sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
+                sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.displayUnitaryZ.x * -i + window.getSize().x / 2,
+                                   camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.displayUnitaryZ.y * -i + window.getSize().y / 2);
+                sprites.push_back(sprite);
+            }
+        }
+        window.clear();
+        for (auto &sprite : sprites) {
+            window.draw(sprite);
+        }
         window.display();
     }
 }

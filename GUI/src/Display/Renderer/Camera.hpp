@@ -34,9 +34,9 @@ namespace zappy
                 double xOffset;
                 double yOffset;
 
-                sf::Vector2f unitaryX;
-                sf::Vector2f unitaryY;
-                sf::Vector2f unitaryZ;
+                sf::Vector2f displayUnitaryX;
+                sf::Vector2f displayUnitaryY;
+                sf::Vector2f displayUnitaryZ;
                 std::size_t unitaryPixelsSize;
 
                 math::Vector3D direction;

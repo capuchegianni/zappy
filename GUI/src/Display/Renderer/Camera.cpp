@@ -7,7 +7,7 @@
 
 #include "Camera.hpp"
 
-zappy::render3d::Camera::Camera() : size(0), aspectRatio(0), xOffset(0), direction(0, 0, 1), up(0, 1, 0), right(1, 0, 0) {}
+zappy::render3d::Camera::Camera() : size(0), aspectRatio(0), xOffset(0), unitaryPixelsSize(50), direction(0, 0, 1), up(0, 1, 0), right(1, 0, 0) {}
 
 zappy::render3d::Camera::~Camera() = default;
 
@@ -59,4 +59,13 @@ void zappy::render3d::Camera::rotate(math::Vector3D rotation)
     newRight = math::Point3D::rotateAroundCenter(newRight, center, rotation.x, rotation.y, rotation.z);
     right = math::Vector3D(newRight.x, newRight.y, newRight.z);
     right.normalize();
+
+    // Project unitary vectors to screen
+    math::Point3D unitaryX = projectPoint(math::Point3D(unitaryPixelsSize, 0, 0));
+    math::Point3D unitaryY = projectPoint(math::Point3D(0, unitaryPixelsSize, 0));
+    math::Point3D unitaryZ = projectPoint(math::Point3D(0, 0, unitaryPixelsSize));
+
+    displayUnitaryX = sf::Vector2f(unitaryX.x, unitaryX.y);
+    displayUnitaryY = sf::Vector2f(unitaryY.x, unitaryY.y);
+    displayUnitaryZ = sf::Vector2f(unitaryZ.x, unitaryZ.y);
 }

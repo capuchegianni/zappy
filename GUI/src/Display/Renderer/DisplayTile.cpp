@@ -13,8 +13,28 @@ zappy::render3d::DisplayTile::~DisplayTile() = default;
 
 void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &camera)
 {
+    // Create a scaled version of the _baseImage to match the unitary size
+    sf::Image _scaledImage;
+    unsigned int sizeX = _baseImage.getSize().x;
+    unsigned int sizeY = _baseImage.getSize().y;
+    unsigned int maxScale = std::max(sizeX, sizeY);
+
+    _scaledImage.create(sizeX * camera.unitaryPixelsSize / maxScale, sizeY * camera.unitaryPixelsSize / maxScale,
+                        sf::Color::Transparent);
+
+    double xRatio = static_cast<double>(_baseImage.getSize().x) / _scaledImage.getSize().x;
+    double yRatio = static_cast<double>(_baseImage.getSize().y) / _scaledImage.getSize().y;
+
+    for (unsigned int i = 0; i < sizeX; i++)
+    {
+        for (unsigned int j = 0; j < sizeY; j++)
+        {
+            _scaledImage.setPixel(i / xRatio, j / yRatio, _baseImage.getPixel(i, j));
+        }
+    }
+
     // Project tile corners to screen
-    sf::Vector2<unsigned int> size = _baseImage.getSize();
+    sf::Vector2<unsigned int> size = _scaledImage.getSize();
 
     math::Point3D topLeft = camera.projectPoint(math::Point3D(0, 0, 0));
     math::Point3D topRight = camera.projectPoint(math::Point3D(size.x, 0, 0));
@@ -47,7 +67,7 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
             unsigned int px = static_cast<unsigned int>(point.x - minWidth);
             unsigned int py = static_cast<unsigned int>(point.y - minHeight);
             if (px < imageWidth && py < imageHeight)
-                image.setPixel(px, py, _baseImage.getPixel(i, j));
+                image.setPixel(px, py, _scaledImage.getPixel(i, j));
         }
     }
 
