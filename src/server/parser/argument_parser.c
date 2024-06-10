@@ -51,21 +51,43 @@ static char **get_arguments(char **av, int flag_index, size_t args_number)
     return args;
 }
 
-bool flag_parser(char **av, char *flag, size_t args_number, char ***args)
+static char **get_arguments_with_no_limit(char **av, int flag_index)
+{
+    char **args = calloc(1, sizeof(char *));
+    size_t j = 0;
+
+    for (size_t i = flag_index + 1; av[i] && av[i][0] != '-'; i++) {
+        args[j] = strdup(av[i]);
+        j++;
+        args = realloc(args, sizeof(char *) * (j + 1));
+    }
+    if (!j) {
+        free_tab(args);
+        return NULL;
+    }
+    args[j] = NULL;
+    return args;
+}
+
+bool flag_parser(char **av, char *flag, int args_number, char ***args)
 {
     int flag_index = flag_exists(flag, av);
 
     if (flag_index < 0)
-        return false;
-    if (flag_index + args_number >= tablen(av))
         return false;
     if (!args) {
         if (!args_number)
             return true;
         return false;
     }
-    *args = get_arguments(av, flag_index, args_number);
-    if (*args == NULL)
+    if (args_number == -1) {
+        *args = get_arguments_with_no_limit(av, flag_index);
+    } else {
+        if (flag_index + (size_t)args_number >= tablen(av))
+            return false;
+        *args = get_arguments(av, flag_index, args_number);
+    }
+    if (!*args)
         return false;
     return true;
 }
