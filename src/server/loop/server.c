@@ -131,14 +131,13 @@ static void client_init(server_t *server, int i)
     server->clients[i].input->body = NULL;
 }
 
-int fserver(char **av, server_t *server)
+int fserver(server_t *server)
 {
     int return_val = 0;
 
     server->fd = init_fd();
     if (server->fd < 0)
         return 84;
-    server->port = atoi(av[1]);
     server->clients = malloc(sizeof(client_t) * FD_SETSIZE);
     if (!server->clients)
         return 84;

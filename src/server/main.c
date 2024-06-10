@@ -11,29 +11,43 @@
 #include <string.h>
 #include <sys/select.h>
 
-static int help(void)
+static int help(char **av)
 {
-    printf("USAGE: ./zappy_server port\n");
-    printf("\tport  is the port number on which the server socket listens\n");
+    if (flag_parser(av, "--help", 0, NULL) || flag_parser(av, "-h", 0, NULL)) {
+        printf("USAGE: ./zappy_server -p port -x width -y height "
+        "-n name1 name2 ... -c clientsNb -f freq\n");
+        return 1;
+    }
     return 0;
+}
+
+void free_tab(char **tab)
+{
+    for (size_t i = 0; tab[i]; i++) {
+        free(tab[i]);
+    }
+    free(tab);
+}
+
+size_t tablen(char **tab)
+{
+    size_t i = 0;
+
+    for (; tab[i]; i++);
+    return i;
 }
 
 int main(int ac, char **av)
 {
-    server_t *server = malloc(sizeof(server_t));
+    server_t *server = NULL;
 
-    if (ac != 2) {
-        free(server);
-        printf("Invalid number of arguments\n");
-        return 84;
-    }
-    if (strcmp(av[1], "--help") == 0 || strcmp(av[1], "-h") == 0) {
-        free(server);
-        return help();
-    }
-    if (error_management(atoi(av[1])) == 84) {
+    (void)ac;
+    if (help(av))
+        return 0;
+    server = malloc(sizeof(server_t));
+    if (!store_arguments_in_server(server, av)) {
         free(server);
         return 84;
     }
-    return fserver(av, server);
+    return fserver(server);
 }

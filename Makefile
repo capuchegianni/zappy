@@ -20,13 +20,19 @@ NAME = zappy_server
 
 OBJ_DIR = ./obj/
 
-SRC = 	src/server/main.c					\
-		src/server/utils.c 					\
-		src/server/loop/server.c 			\
-		src/server/loop/execute.c			\
-		src/server/loop/server_utils.c 		\
-		src/server/loop/commands.c			\
-		src/server/parser/argument_parser.c
+SRC = 	src/server/main.c						\
+		src/server/utils.c 						\
+		src/server/loop/server.c 				\
+		src/server/loop/execute.c				\
+		src/server/loop/server_utils.c 			\
+		src/server/loop/commands.c				\
+		src/server/parser/argument_parser.c 	\
+		src/server/parser/flags.c 				\
+		src/server/parser/flags/clients.c 		\
+		src/server/parser/flags/frequency.c 	\
+		src/server/parser/flags/map.c 			\
+		src/server/parser/flags/port.c 			\
+		src/server/parser/flags/teams.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))

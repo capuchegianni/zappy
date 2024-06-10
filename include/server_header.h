@@ -26,11 +26,10 @@ void free_clients(server_t *server);
 
 /**
  * @brief Initialize the server socket
- * @param char** av
  * @param server_t* server
  * @return 0 if success, 84 if error
 */
-int fserver(char **av, server_t *server);
+int fserver(server_t *server);
 
 /**
  * @brief Get the input from the client
@@ -98,4 +97,31 @@ void sigint_handler(int sig);
  * @param args
  * @return true if a flag exists and the given number of arguments is right
 */
-bool flag_parser(char **av, char *flag, size_t args_number, char ***args);
+bool flag_parser(char **av, char *flag, int args_number, char ***args);
+
+/**
+ * @brief Free a char **
+ * @param tab
+*/
+void free_tab(char **tab);
+
+/**
+ * @brief Get the lenght of a char **
+ * @param tab
+ * @return the size of the tab
+*/
+size_t tablen(char **tab);
+
+bool clients_flag(server_t *server, char **av);
+
+bool port_flag(server_t *server, char **av);
+
+bool teams_flag(server_t *server, char **av);
+
+bool height_flag(server_t *server, char **av);
+
+bool width_flag(server_t *server, char **av);
+
+bool frequency_flag(server_t *server, char **av);
+
+bool store_arguments_in_server(server_t *server, char **av);

@@ -5,25 +5,11 @@
 ** argument_parser
 */
 
+#include "server_header.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-static size_t tablen(char **tab)
-{
-    size_t i = 0;
-
-    for (; tab[i]; i++);
-    return i;
-}
-
-static void free_tab(char **tab)
-{
-    for (size_t i = 0; tab[i]; i++) {
-        free(tab[i]);
-    }
-    free(tab);
-}
 
 static size_t flag_exists(char *flag, char **av)
 {
@@ -48,6 +34,10 @@ static char **get_arguments(char **av, int flag_index, size_t args_number)
         j++;
     }
     args[j] = NULL;
+    if (!j) {
+        free_tab(args);
+        return NULL;
+    }
     return args;
 }
 
@@ -75,18 +65,12 @@ bool flag_parser(char **av, char *flag, int args_number, char ***args)
 
     if (flag_index < 0)
         return false;
-    if (!args) {
-        if (!args_number)
-            return true;
-        return false;
-    }
-    if (args_number == -1) {
+    if (!args_number)
+        return true;
+    if (args_number == -1)
         *args = get_arguments_with_no_limit(av, flag_index);
-    } else {
-        if (flag_index + (size_t)args_number >= tablen(av))
-            return false;
+    else
         *args = get_arguments(av, flag_index, args_number);
-    }
     if (!*args)
         return false;
     return true;
