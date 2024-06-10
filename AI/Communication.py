@@ -12,6 +12,8 @@ class Communication:
         self.stop_listening = False
         self.listen_thread = threading.Thread(target=self.listenServer, daemon=True)
         self.listen_thread.start()
+        self.response_event = threading.Event()
+        self.data = None
 
 
     def openConnection(self, port, name, host):
@@ -50,16 +52,18 @@ class Communication:
 
 
     def sendCommand(self, command):
+        self.response_event.clear()
         self.client_socket.sendall(command.encode())
         print(f"Sent command: {command}")
-
+        self.response_event.wait()
 
     def listenServer(self):
         while not self.stop_listening:
-            data = self.client_socket.recv(1024).decode()
-            if not data:
+            received_data = self.client_socket.recv(1024).decode()
+            if not received_data:
                 print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
                 self.closeConnection(join=False)
                 break
-            print(f"Received data: {data}")
-            sleep(0.5)
+            self.data = received_data
+            print(f"Received data: {self.data}")
+            self.response_event.set()
