@@ -25,7 +25,8 @@ SRC = 	src/server/main.c					\
 		src/server/loop/server.c 			\
 		src/server/loop/execute.c			\
 		src/server/loop/server_utils.c 		\
-		src/server/loop/commands.c
+		src/server/loop/commands.c			\
+		src/server/parser/argument_parser.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))

@@ -89,3 +89,13 @@ bool is_running(int new);
  * @return void
 */
 void sigint_handler(int sig);
+
+/**
+ * @brief Check if the given flags exists and parse its arguments
+ * @param av
+ * @param flag
+ * @param args_number
+ * @param args
+ * @return true if a flag exists and the given number of arguments is right
+*/
+bool flag_parser(char **av, char *flag, size_t args_number, char ***args);
