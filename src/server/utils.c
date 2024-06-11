@@ -38,6 +38,7 @@ void free_clients(server_t *server)
             close(server->clients[i].fd);
     }
     free(server->clients);
+    free_tab(server->teams);
     free(server);
 }
 

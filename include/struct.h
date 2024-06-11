@@ -76,6 +76,11 @@ typedef struct server_s {
     struct sockaddr_in addr;
     socklen_t addrlen;
     int port;
+    size_t initial_client_number;
+    size_t frequence;
+    size_t height;
+    size_t width;
+    char **teams;
     client_t *clients;
 } server_t;
 

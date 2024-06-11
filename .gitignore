@@ -4,3 +4,5 @@ obj
 *.a
 *.o
 zappy_server
+*.log
+*.pdf
