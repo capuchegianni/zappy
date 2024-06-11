@@ -15,7 +15,7 @@ bool width_flag(server_t *server, char **av)
     char **args = NULL;
 
     if (!flag_parser(av, "-x", 1, &args)) {
-        printf("Error on -x flag.\n");
+        printf("%s%s", HELP, HELP2);
         return false;
     }
     server->width = atoi(args[0]);
@@ -33,7 +33,7 @@ bool height_flag(server_t *server, char **av)
     char **args = NULL;
 
     if (!flag_parser(av, "-y", 1, &args)) {
-        printf("Error on -y flag.\n");
+        printf("%s%s", HELP, HELP2);
         return false;
     }
     server->height = atoi(args[0]);

@@ -15,7 +15,7 @@ bool clients_flag(server_t *server, char **av)
     char **args = NULL;
 
     if (!flag_parser(av, "-c", 1, &args)) {
-        printf("Error with -c flag.\n");
+        printf("%s%s", HELP, HELP2);
         return false;
     }
     server->initial_client_number = atoi(args[0]);

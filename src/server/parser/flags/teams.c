@@ -16,8 +16,8 @@ bool teams_flag(server_t *server, char **av)
     char **args = NULL;
     size_t i = 0;
 
-    if (!flag_parser(av, "-n", 1, &args)) {
-        printf("Error on -n flag.\n");
+    if (!flag_parser(av, "-n", -1, &args)) {
+        printf("%s%s", HELP, HELP2);
         return false;
     }
     server->teams = calloc(tablen(args) + 1, sizeof(char *));

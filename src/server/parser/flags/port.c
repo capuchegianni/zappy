@@ -15,7 +15,7 @@ bool port_flag(server_t *server, char **av)
     char **args = NULL;
 
     if (!flag_parser(av, "-p", 1, &args)) {
-        printf("Error on -p flag.\n");
+        printf("%s%s", HELP, HELP2);
         return false;
     }
     if (atoi(args[0]) < 1024 || atoi(args[0]) > 65535) {

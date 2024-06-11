@@ -15,7 +15,7 @@ bool frequency_flag(server_t *server, char **av)
     char **args = NULL;
 
     if (!flag_parser(av, "-f", 1, &args)) {
-        printf("Error on -f flag.\n");
+        printf("%s%s", HELP, HELP2);
         return false;
     }
     server->frequence = atoi(args[0]);
