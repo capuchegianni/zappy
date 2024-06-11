@@ -11,11 +11,11 @@
 #include <string.h>
 #include <sys/select.h>
 
-static int help(char **av)
+static int help(int ac, char **av)
 {
-    if (flag_parser(av, "--help", 0, NULL) || flag_parser(av, "-h", 0, NULL)) {
-        printf("USAGE: ./zappy_server -p port -x width -y height "
-        "-n name1 name2 ... -c clientsNb -f freq\n");
+    if ((ac == 2 && (flag_parser(av, "--help", 0, NULL) ||
+        flag_parser(av, "-h", 0, NULL))) || ac == 1) {
+        printf("%s%s", HELP, HELP2);
         return 1;
     }
     return 0;
@@ -41,8 +41,7 @@ int main(int ac, char **av)
 {
     server_t *server = NULL;
 
-    (void)ac;
-    if (help(av))
+    if (help(ac, av))
         return 0;
     server = malloc(sizeof(server_t));
     if (!store_arguments_in_server(server, av)) {

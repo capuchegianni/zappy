@@ -10,6 +10,9 @@
 #define _POSIX_C_SOURCE 200809L
 #define _GNU_SOURCE
 
+#define HELP "USAGE: ./zappy_server -p port -x width -y height "
+#define HELP2 "-n name1 name2 ... -c clientsNb -f freq\n"
+
 #include "struct.h"
 
 /**
@@ -112,16 +115,58 @@ void free_tab(char **tab);
 */
 size_t tablen(char **tab);
 
+/**
+ * @brief Handle -c flag
+ * @param server
+ * @param av
+ * @return true if arguments of the flag have been retrieved correctly
+*/
 bool clients_flag(server_t *server, char **av);
 
+/**
+ * @brief Handle -p flag
+ * @param server
+ * @param av
+ * @return true if arguments of the flag have been retrieved correctly
+*/
 bool port_flag(server_t *server, char **av);
 
+/**
+ * @brief Handle -n flag
+ * @param server
+ * @param av
+ * @return true if arguments of the flag have been retrieved correctly
+*/
 bool teams_flag(server_t *server, char **av);
 
+/**
+ * @brief Handle -y flag
+ * @param server
+ * @param av
+ * @return true if arguments of the flag have been retrieved correctly
+*/
 bool height_flag(server_t *server, char **av);
 
+/**
+ * @brief Handle -x flag
+ * @param server
+ * @param av
+ * @return true if arguments of the flag have been retrieved correctly
+*/
 bool width_flag(server_t *server, char **av);
 
+/**
+ * @brief Handle -f flag
+ * @param server
+ * @param av
+ * @return true if arguments of the flag have been retrieved correctly
+*/
 bool frequency_flag(server_t *server, char **av);
 
+/**
+ * @brief Store all the arguments for each given flag
+ * @param server
+ * @param av
+ * @return true if all the arguments have been stored correctly
+*/
 bool store_arguments_in_server(server_t *server, char **av);
