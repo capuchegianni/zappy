@@ -22,7 +22,7 @@ char **s_to_t(char *str)
 
 void reset_client(client_t *client)
 {
-    client->is_connected = false;
+    client->is_playing = false;
     close(client->fd);
     client->fd = -1;
 }
@@ -38,7 +38,8 @@ void free_clients(server_t *server)
             close(server->clients[i].fd);
     }
     free(server->clients);
-    free_tab(server->teams);
+    free_tab(server->game->teams);
+    free(server->game);
     free(server);
 }
 

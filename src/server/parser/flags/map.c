@@ -18,8 +18,8 @@ bool width_flag(server_t *server, char **av)
         printf("%s%s", HELP, HELP2);
         return false;
     }
-    server->width = atoi(args[0]);
-    if (server->width < 1) {
+    server->game->map_size[0] = atoi(args[0]);
+    if (server->game->map_size[0] < 1) {
         printf("The width must be higher than 0.\n");
         free_tab(args);
         return false;
@@ -36,8 +36,8 @@ bool height_flag(server_t *server, char **av)
         printf("%s%s", HELP, HELP2);
         return false;
     }
-    server->height = atoi(args[0]);
-    if (server->height < 1) {
+    server->game->map_size[1] = atoi(args[0]);
+    if (server->game->map_size[1] < 1) {
         printf("The height must be higher than 0.\n");
         free_tab(args);
         return false;

@@ -44,6 +44,7 @@ int main(int ac, char **av)
     if (help(ac, av))
         return 0;
     server = malloc(sizeof(server_t));
+    server->game = malloc(sizeof(game_t));
     if (!store_arguments_in_server(server, av)) {
         free(server);
         return 84;

@@ -20,10 +20,10 @@ bool teams_flag(server_t *server, char **av)
         printf("%s%s", HELP, HELP2);
         return false;
     }
-    server->teams = calloc(tablen(args) + 1, sizeof(char *));
+    server->game->teams = calloc(tablen(args) + 1, sizeof(char *));
     for (; args[i]; i++)
-        server->teams[i] = strdup(args[i]);
-    server->teams[i] = NULL;
+        server->game->teams[i] = strdup(args[i]);
+    server->game->teams[i] = NULL;
     free_tab(args);
     return true;
 }

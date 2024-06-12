@@ -39,8 +39,7 @@ static void execute_cmd(server_t *server, client_t *client)
 {
     if (!find_cmd(server, client)) {
         if (client->input->args && client->input->args[0])
-            dprintf(client->fd, "event_failed_input::%s\n",
-            client->input->args[0]);
+            dprintf(client->fd, "ko\n");
     }
 }
 
@@ -89,7 +88,7 @@ int execute_command(server_t *server, client_t *client)
     if (!client->input->body)
         return 0;
     if (!check_spaces(client->input->body)) {
-        dprintf(client->fd, "event_failed_input\n");
+        dprintf(client->fd, "ko\n");
         free_client_args(client);
         return 0;
     }

@@ -18,8 +18,8 @@ bool clients_flag(server_t *server, char **av)
         printf("%s%s", HELP, HELP2);
         return false;
     }
-    server->initial_client_number = atoi(args[0]);
-    if (server->initial_client_number < 1) {
+    server->game->initial_team_size = atoi(args[0]);
+    if (server->game->initial_team_size < 1) {
         printf("The initial client number must be higher than 0.\n");
         free_tab(args);
         return false;
