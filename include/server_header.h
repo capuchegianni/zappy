@@ -170,3 +170,5 @@ bool frequency_flag(server_t *server, char **av);
  * @return true if all the arguments have been stored correctly
 */
 bool store_arguments_in_server(server_t *server, char **av);
+
+void init_levels(game_t *game);

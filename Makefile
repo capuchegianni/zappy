@@ -32,7 +32,8 @@ SRC = 	src/server/main.c						\
 		src/server/parser/flags/frequency.c 	\
 		src/server/parser/flags/map.c 			\
 		src/server/parser/flags/port.c 			\
-		src/server/parser/flags/teams.c
+		src/server/parser/flags/teams.c			\
+		src/server/game/levels.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))

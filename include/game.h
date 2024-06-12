@@ -33,7 +33,7 @@ typedef struct items_s {
 
 typedef struct level_s {
     size_t level;
-    size_t nb_players;
+    size_t required_players;
     items_t required_items;
 } level_t;
 
@@ -54,5 +54,7 @@ typedef struct game_s {
     size_t initial_team_size;
     size_t frequence;
     size_t map_size[2];
-    char **teams;
+    team_t *teams;
+    size_t teams_number;
+    level_t levels[7];
 } game_t;

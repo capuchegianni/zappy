@@ -46,8 +46,10 @@ int main(int ac, char **av)
     server = malloc(sizeof(server_t));
     server->game = malloc(sizeof(game_t));
     if (!store_arguments_in_server(server, av)) {
+        free(server->game);
         free(server);
         return 84;
     }
+    init_levels(server->game);
     return fserver(server);
 }
