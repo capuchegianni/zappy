@@ -21,7 +21,7 @@ int main(int ac, char **av)
     zappy::Assets assets;
     zappy::Map map(width, height, assets);
 
-    zappy::EventLogger eventLogger(10, assets);
+    zappy::EventLogger eventLogger(20, assets);
 
     sf::Vector2f loggerPos(1090, 10);
     sf::Vector2f loggerSize(820, 512
@@ -29,7 +29,7 @@ int main(int ac, char **av)
     eventLogger.setDisplayPosition(loggerPos);
     eventLogger.setDisplaySize(loggerSize);
 
-    window.setFramerateLimit(10);
+    window.setFramerateLimit(60);
 
     sf::Vector2f position(0, 0);
     sf::Vector2f size(1080, 1080);
