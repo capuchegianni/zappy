@@ -39,17 +39,34 @@ int main(int ac, char **av)
         }
     }
 
+    bool rsising = false;
+
     while (1) {
         camera.rotate(math::Vector3D(0, 0, 1));
         tile.computeTileImage(camera);
         sprites.clear();
-        for (int i = -5; i < 5; i++) {
-            for (int j = -5; j < 5; j++) {
+
+        if (rsising)
+        {
+            camera.unitaryPixelsSize++;
+            if (camera.unitaryPixelsSize > 100)
+                rsising = false;
+        }
+
+        else
+        {
+            camera.unitaryPixelsSize--;
+            if (camera.unitaryPixelsSize < 4)
+                rsising = true;
+        }
+
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
                 sf::Sprite sprite;
                 sprite.setTexture(tile.getTexture());
                 sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
-                sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.displayUnitaryZ.x * -i + window.getSize().x / 2,
-                                   camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.displayUnitaryZ.y * -i + window.getSize().y / 2);
+                sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + window.getSize().x / 2,
+                                   camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + window.getSize().y / 2);
                 sprites.push_back(sprite);
             }
         }
