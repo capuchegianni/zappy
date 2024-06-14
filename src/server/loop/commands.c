@@ -5,7 +5,7 @@
 ** commands
 */
 
-#include "server_header.h"
+#include "server.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -39,7 +39,7 @@ int init_read_buffer(client_t *client)
     int read_val = 0;
 
     memset(buffer, 0, LEN);
-    read_val = read(client->fd, buffer, LEN);
+    read_val = read(client->fd, buffer, LEN - 1);
     if (read_val <= 0) {
         printf("Client disconnected\n");
         reset_client(client);

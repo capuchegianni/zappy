@@ -5,7 +5,8 @@
 ** argument_parser
 */
 
-#include "server_header.h"
+#include "server.h"
+#include "misc.h"
 
 #include <stdio.h>
 #include <string.h>

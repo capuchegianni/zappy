@@ -5,7 +5,7 @@
 ** utils
 */
 
-#include "server_header.h"
+#include "server.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/select.h>
@@ -25,6 +25,10 @@ void reset_client(client_t *client)
     client->is_playing = false;
     close(client->fd);
     client->fd = -1;
+    init_items(&client->player->inventory);
+    free(client->input->args);
+    client->input->args = calloc(1, sizeof(char *));
+    client->input->body = NULL;
 }
 
 void free_clients(server_t *server)
@@ -36,11 +40,13 @@ void free_clients(server_t *server)
         free(server->clients[i].input);
         if (server->clients[i].fd > -1)
             close(server->clients[i].fd);
+        free(server->clients[i].player);
     }
     free(server->clients);
     for (size_t i = 0; i < server->game->teams_number; i++)
         free(server->game->teams[i].name);
     free(server->game->teams);
+    free_map(server->game);
     free(server->game);
     free(server);
 }

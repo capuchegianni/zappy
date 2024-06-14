@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "server_header.h"
+#include "server.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,5 +51,10 @@ int main(int ac, char **av)
         return 84;
     }
     init_levels(server->game);
+    if (!init_map(server->game)) {
+        free(server->game);
+        free(server);
+        return 84;
+    }
     return fserver(server);
 }

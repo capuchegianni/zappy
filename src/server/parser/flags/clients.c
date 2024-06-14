@@ -5,7 +5,8 @@
 ** clients
 */
 
-#include "server_header.h"
+#include "server.h"
+#include "misc.h"
 
 #include <stdlib.h>
 #include <stdio.h>
