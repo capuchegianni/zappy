@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from AI.Bot import Bot
 from AI.Communication import Communication
 from AI.Color import Color
 
@@ -24,20 +25,19 @@ def parse_args():
 
 
 def main():
-    communication = Communication(*parse_args())
-    print(f"Size of the map: {communication.size_map}")
-    return communication
+    bot = Bot(Communication(*parse_args()))
+    bot.run()
+    return bot
 
 
 if __name__ == "__main__":
-    communication = None
+    bot = None
     try:
-        communication = main()
-        while True:
-            if not communication.listen_thread.is_alive():
-                break
+        bot = main()
+        while bot and bot.comm and bot.comm.listen_thread.is_alive():
             pass
     except KeyboardInterrupt:
-        print(f"\r\r{Color.BLUE}Interrupted by user. Closing...{Color.RESET}")
-        if communication is not None:
-            communication.closeConnection()
+        print(f"\r{Color.BLUE}Interrupted by user. Closing...{Color.RESET}")
+    finally:
+        if bot and bot.comm is not None:
+            bot.comm.closeConnection()

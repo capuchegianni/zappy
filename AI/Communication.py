@@ -46,24 +46,28 @@ class Communication:
 
     def closeConnection(self, join=True):
         self.stop_listening = True
+        self.client_socket.close()
         if join:
             self.listen_thread.join(timeout=1)
-        self.client_socket.close()
 
 
     def sendCommand(self, command):
         self.response_event.clear()
-        self.client_socket.sendall(command.encode())
-        print(f"Sent command: {command}")
-        self.response_event.wait()
+        self.client_socket.sendall((command + "\n").encode())
+        if not self.stop_listening:
+            self.response_event.wait(timeout=1)
+
 
     def listenServer(self):
         while not self.stop_listening:
-            received_data = self.client_socket.recv(1024).decode()
-            if not received_data:
-                print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
-                self.closeConnection(join=False)
+            try:
+                received_data = self.client_socket.recv(1024).decode()
+                if not received_data:
+                    print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
+                    break
+            except socket.error as e:
+                print(f"{Color.RED}Error receiving data: {e}{Color.RESET}")
                 break
             self.data = received_data
-            print(f"Received data: {self.data}")
             self.response_event.set()
+        self.closeConnection(join=False)
