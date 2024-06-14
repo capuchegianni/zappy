@@ -5,7 +5,7 @@
 ** main
 */
 
-#include "server_header.h"
+#include "server.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,7 +44,15 @@ int main(int ac, char **av)
     if (help(ac, av))
         return 0;
     server = malloc(sizeof(server_t));
+    server->game = malloc(sizeof(game_t));
     if (!store_arguments_in_server(server, av)) {
+        free(server->game);
+        free(server);
+        return 84;
+    }
+    init_levels(server->game);
+    if (!init_map(server->game)) {
+        free(server->game);
         free(server);
         return 84;
     }

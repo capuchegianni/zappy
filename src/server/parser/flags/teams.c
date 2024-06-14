@@ -5,7 +5,8 @@
 ** teams
 */
 
-#include "server_header.h"
+#include "server.h"
+#include "misc.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,10 +21,10 @@ bool teams_flag(server_t *server, char **av)
         printf("%s%s", HELP, HELP2);
         return false;
     }
-    server->teams = calloc(tablen(args) + 1, sizeof(char *));
+    server->game->teams_number = tablen(args);
+    server->game->teams = malloc(sizeof(team_t) * tablen(args));
     for (; args[i]; i++)
-        server->teams[i] = strdup(args[i]);
-    server->teams[i] = NULL;
+        server->game->teams[i].name = strdup(args[i]);
     free_tab(args);
     return true;
 }

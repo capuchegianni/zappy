@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** my_ftp
 ** File description:
-** server_header
+** server
 */
 
 #pragma once
@@ -12,8 +12,40 @@
 
 #define HELP "USAGE: ./zappy_server -p port -x width -y height "
 #define HELP2 "-n name1 name2 ... -c clientsNb -f freq\n"
+#define LEN 1024
 
-#include "struct.h"
+#include <arpa/inet.h>
+
+#include "game.h"
+
+typedef struct input_s {
+    char *body;
+    size_t body_len;
+    char **args;
+    size_t nb_args;
+} input_t;
+
+typedef struct client_s {
+    int fd;
+    bool is_playing;
+    input_t *input;
+    player_t *player;
+} client_t;
+
+typedef struct server_s {
+    int fd;
+    int port;
+    struct sockaddr_in addr;
+    socklen_t addrlen;
+    game_t *game;
+    client_t *clients;
+} server_t;
+
+
+typedef struct commands_s {
+    char *name;
+    int (*function)(server_t *server, client_t *client);
+} commands_t;
 
 /**
  * @brief Open a file descriptor for the socket
@@ -101,19 +133,6 @@ void sigint_handler(int sig);
  * @return true if a flag exists and the given number of arguments is right
 */
 bool flag_parser(char **av, char *flag, int args_number, char ***args);
-
-/**
- * @brief Free a char **
- * @param tab
-*/
-void free_tab(char **tab);
-
-/**
- * @brief Get the lenght of a char **
- * @param tab
- * @return the size of the tab
-*/
-size_t tablen(char **tab);
 
 /**
  * @brief Handle -c flag
