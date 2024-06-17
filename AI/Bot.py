@@ -82,3 +82,27 @@ class Bot:
                         nearest_coords = (i, j)
 
         return nearest_coords
+
+    def hasEnoughFoodForAction(self, action):
+        food_required = self.getFoodRequiredForAction(action)
+        return self.inventory.get('Element.FOOD', 0) >= food_required
+
+
+    def getFoodRequiredForAction(self, action):
+        food_requirements = {
+            'Forward' : 3,
+            'Right' : 3,
+            'Left' : 3,
+            'Look' : 3,
+            'Inventory' : 3,
+            'Broadcast text' : 3,
+            'Connect_nbr' : 3,
+            'Fork' : 10,
+            'Eject' : 3,
+            'Take object' : 3,
+            'Set object' : 3,
+            'Incantation' : 10,
+        }
+        # faut changer les valeurs
+        return food_requirements.get(action, 0)
+
