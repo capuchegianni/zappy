@@ -81,12 +81,12 @@ int main(int ac, char **av)
                 camera.centerY -= movRight.y;
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && camera.unitaryPixelsSize < 200)
             {
                 camera.unitaryPixelsSize += 1;
                 didRotate = true;
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && camera.unitaryPixelsSize > 10)
             {
                 camera.unitaryPixelsSize -= 1;
                 didRotate = true;
