@@ -24,6 +24,9 @@ int main(int ac, char **av)
     window.setFramerateLimit(60);
 
     camera.rotate(math::Vector3D(-45, 0, -45));
+    camera.centerX = -2.0;
+    camera.centerY = -2.0;
+    camera.centerZ = 0.0;
 
     tile.computeTileImage(camera);
 
@@ -40,7 +43,6 @@ int main(int ac, char **av)
         }
     }
 
-    bool rsising = false;
     sf::Event event;
     sf::Clock frameClock;
 
@@ -81,22 +83,22 @@ int main(int ac, char **av)
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             {
-                camera.rotate(math::Vector3D(0, 0, 1));
+                camera.unitaryPixelsSize += 1;
                 didRotate = true;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             {
-                camera.rotate(math::Vector3D(0, 0, -1));
+                camera.unitaryPixelsSize -= 1;
                 didRotate = true;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             {
-                camera.rotate(math::Vector3D(0, 1, 0));
+                camera.rotate(math::Vector3D(0, 0, 1));
                 didRotate = true;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
-                camera.rotate(math::Vector3D(0, -1, 0));
+                camera.rotate(math::Vector3D(0, 0, -1));
                 didRotate = true;
             }
 
@@ -110,8 +112,6 @@ int main(int ac, char **av)
                         sf::Sprite sprite;
                         sprite.setTexture(tile.getTexture());
                         sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
-                        sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ + window.getSize().x / 2,
-                                           camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + window.getSize().y / 2);
                         sprites.push_back(sprite);
                     }
                 }
