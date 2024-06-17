@@ -8,6 +8,7 @@
 #include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include "Map/Map.hpp"
 #include "Display/EventLogger.hpp"
 #include "Display/Renderer/Camera.hpp"
@@ -18,62 +19,121 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy");
     zappy::Assets assets;
     zappy::render3d::Camera camera;
-    zappy::render3d::DisplayTile tile(assets);
+    zappy::render3d::DisplayTile tile(assets.placeholderImage);
 
     window.setFramerateLimit(60);
 
-    camera.rotate(math::Vector3D(45, 0, 45));
+    camera.rotate(math::Vector3D(-45, 0, -45));
 
     tile.computeTileImage(camera);
 
     std::vector<sf::Sprite> sprites;
 
-    for (int i = -5; i < 5; i++) {
-        for (int j = -5; j < 5; j++) {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
             sf::Sprite sprite;
             sprite.setTexture(tile.getTexture());
             sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
-            sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.displayUnitaryZ.x * i + window.getSize().x / 2,
-                               camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.displayUnitaryZ.y * i + window.getSize().y / 2);
+            sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ + window.getSize().x / 2,
+                                 camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + window.getSize().y / 2);
             sprites.push_back(sprite);
         }
     }
 
     bool rsising = false;
+    sf::Event event;
+    sf::Clock frameClock;
 
-    while (1) {
-        camera.rotate(math::Vector3D(0, 0, 1));
-        tile.computeTileImage(camera);
-        sprites.clear();
-
-        if (rsising)
-        {
-            camera.unitaryPixelsSize++;
-            if (camera.unitaryPixelsSize > 100)
-                rsising = false;
+    while (window.isOpen()) {
+        if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
+            continue;
         }
 
-        else
-        {
-            camera.unitaryPixelsSize--;
-            if (camera.unitaryPixelsSize < 4)
-                rsising = true;
-        }
+        while (window.pollEvent(event)) {
+            bool didRotate = false;
 
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
-                sf::Sprite sprite;
-                sprite.setTexture(tile.getTexture());
-                sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
-                sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + window.getSize().x / 2,
-                                   camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + window.getSize().y / 2);
-                sprites.push_back(sprite);
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+            math::Vector3D movForward = camera.direction * 0.01 * frameClock.getElapsedTime().asMilliseconds();
+            math::Vector3D movRight = camera.right * 0.01 * frameClock.getElapsedTime().asMilliseconds();
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+            {
+                camera.centerX += movForward.x;
+                camera.centerY += movForward.y;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            {
+                camera.centerX -= movForward.x;
+                camera.centerY -= movForward.y;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            {
+                camera.centerX += movRight.x;
+                camera.centerY += movRight.y;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            {
+                camera.centerX -= movRight.x;
+                camera.centerY -= movRight.y;
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            {
+                camera.rotate(math::Vector3D(0, 0, 1));
+                didRotate = true;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            {
+                camera.rotate(math::Vector3D(0, 0, -1));
+                didRotate = true;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            {
+                camera.rotate(math::Vector3D(0, 1, 0));
+                didRotate = true;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            {
+                camera.rotate(math::Vector3D(0, -1, 0));
+                didRotate = true;
+            }
+
+            if (didRotate)
+            {
+                tile.computeTileImage(camera);
+                sprites.clear();
+
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        sf::Sprite sprite;
+                        sprite.setTexture(tile.getTexture());
+                        sprite.setOrigin(tile.getTexture().getSize().x / 2, tile.getTexture().getSize().y / 2);
+                        sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ + window.getSize().x / 2,
+                                           camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + window.getSize().y / 2);
+                        sprites.push_back(sprite);
+                    }
+                }
             }
         }
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                sf::Sprite &sprite = sprites[i * 5 + j];
+                sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ + window.getSize().x / 2,
+                                   camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + window.getSize().y / 2);
+            }
+
+        }
+
         window.clear();
         for (auto &sprite : sprites) {
             window.draw(sprite);
         }
         window.display();
+        frameClock.restart();
     }
+
+    return 0;
 }

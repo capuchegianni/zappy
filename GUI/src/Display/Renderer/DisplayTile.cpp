@@ -7,7 +7,7 @@
 
 #include "DisplayTile.hpp"
 
-zappy::render3d::DisplayTile::DisplayTile(Assets &assets) : _baseImage(assets.placeholderImage) {}
+zappy::render3d::DisplayTile::DisplayTile(sf::Image &tile) : _baseImage(tile) {}
 
 zappy::render3d::DisplayTile::~DisplayTile() = default;
 

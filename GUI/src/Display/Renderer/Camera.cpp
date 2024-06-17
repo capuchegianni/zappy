@@ -7,7 +7,7 @@
 
 #include "Camera.hpp"
 
-zappy::render3d::Camera::Camera() : size(0), aspectRatio(0), xOffset(0), unitaryPixelsSize(50), direction(0, 0, 1), up(0, 1, 0), right(1, 0, 0) {}
+zappy::render3d::Camera::Camera() : size(0), aspectRatio(0), unitaryPixelsSize(50), direction(0, 0, 1), up(0, 1, 0), right(1, 0, 0) {}
 
 zappy::render3d::Camera::~Camera() = default;
 

@@ -23,11 +23,12 @@ namespace zappy
         class DisplayTile
         {
             public:
-                DisplayTile(Assets &assets);
+                DisplayTile(sf::Image &tile);
                 ~DisplayTile();
 
                 void computeTileImage(Camera &camera);
                 sf::Texture &getTexture();
+
             private:
                 sf::Image &_baseImage;
                 sf::Texture _displayTexture;

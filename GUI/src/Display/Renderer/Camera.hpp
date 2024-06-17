@@ -31,8 +31,9 @@ namespace zappy
 
                 double scale;
 
-                double xOffset;
-                double yOffset;
+                double centerX;
+                double centerY;
+                double centerZ;
 
                 sf::Vector2f displayUnitaryX;
                 sf::Vector2f displayUnitaryY;

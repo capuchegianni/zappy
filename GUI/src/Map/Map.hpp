@@ -15,6 +15,7 @@
 
 #include "Box.hpp"
 #include "../Display/Assets.hpp"
+#include "../Display/Renderer/DisplayTile.hpp"
 
 namespace zappy
 {
@@ -25,6 +26,7 @@ namespace zappy
             ~MapDrawables();
 
             sf::RectangleShape background;
+            std::vector<render3d::DisplayTile> tiles = {};
     };
 
     class Map : public sf::Drawable
