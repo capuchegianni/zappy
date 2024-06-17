@@ -84,11 +84,13 @@ int main(int ac, char **av)
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && camera.unitaryPixelsSize < 200)
             {
                 camera.unitaryPixelsSize += 1;
+                camera.rotate(math::Vector3D(0, 0, 0));
                 didRotate = true;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && camera.unitaryPixelsSize > 10)
             {
                 camera.unitaryPixelsSize -= 1;
+                camera.rotate(math::Vector3D(0, 0, 0));
                 didRotate = true;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
