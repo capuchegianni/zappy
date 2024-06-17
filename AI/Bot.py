@@ -25,6 +25,23 @@ class Bot:
         self.run()
 
 
+    def forward(self):
+        self.comm.sendCommand("Forward")
+
+
+    def right(self):
+        self.comm.sendCommand("Right")
+
+
+    def left(self):
+        self.comm.sendCommand("Left")
+
+
+    def uTurn(self):
+        self.right()
+        self.right()
+
+
     def run(self):
         while True:
             if not self.lookAround():
@@ -83,6 +100,36 @@ class Bot:
 
         return nearest_coords
 
+
+    def goTo(self, y, x):
+        if y < 0:
+            self.uTurn()
+            for i in range(abs(y)):
+                if self.comm.stop_listening:
+                    return False
+                self.comm.sendCommand("Forward")
+        elif y > 0:
+            for i in range(y):
+                if self.comm.stop_listening:
+                    return False
+                self.comm.sendCommand("Forward")
+
+        if x < 0:
+            self.left()
+            for i in range(abs(x)):
+                if self.comm.stop_listening:
+                    return False
+                self.comm.sendCommand("Forward")
+        elif x > 0:
+            self.right()
+            for i in range(x):
+                if self.comm.stop_listening:
+                    return False
+                self.comm.sendCommand("Forward")
+
+        return True
+
+
     def hasEnoughFoodForAction(self, action):
         food_required = self.getFoodRequiredForAction(action)
         return self.inventory.get('Element.FOOD', 0) >= food_required
@@ -105,4 +152,3 @@ class Bot:
         }
         # faut changer les valeurs
         return food_requirements.get(action, 0)
-
