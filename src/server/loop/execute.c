@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include "command.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -47,9 +48,9 @@ static int find_cmd(server_t *server, client_t *client)
 
 static void execute_cmd(server_t *server, client_t *client)
 {
-    if (client->team == NULL) {
-        client->team = malloc(strlen(client->input->args[0]));
-        strcpy(client->team, client->input->args[0]);
+    if (client->player->team_name == NULL) {
+        client->player->team_name = malloc(strlen(client->input->args[0]));
+        strcpy(client->player->team_name, client->input->args[0]);
         command_msz(server, client);
         command_sgt(server, client);
         return;
@@ -111,7 +112,7 @@ int execute_command(server_t *server, client_t *client)
         free_client_args(client);
         return 0;
     }
-    printf("[%s] %s\n", client->team, client->input->body);
+    printf("[%s] %s\n", client->player->team_name, client->input->body);
     parse_buffer(server, client->input->body, client);
     free_client_args(client);
     return 0;

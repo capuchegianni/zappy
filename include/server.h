@@ -44,6 +44,7 @@ typedef struct server_s {
 
 typedef struct commands_s {
     char *name;
+    bool isGuiOnly;
     int (*function)(server_t *server, client_t *client);
 } commands_t;
 

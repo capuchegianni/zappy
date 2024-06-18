@@ -9,13 +9,13 @@
 #include <unistd.h>
 #include <string.h>
 #include <malloc.h>
-#include "server_header.h"
+#include "command.h"
 
 int command_sgt(server_t *server, client_t *client)
 {
     char *str;
 
-    asprintf(&str, "sgt %li\n", server->frequence);
+    asprintf(&str, "sgt %li\n", server->game->frequence);
     write(client->fd, str, strlen(str));
     free(str);
     return 1;
