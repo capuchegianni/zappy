@@ -186,3 +186,27 @@ int command_msz(server_t *server, client_t *client);
  * @return return the status of the execution, 1 for OK
 */
 int command_sgt(server_t *server, client_t *client);
+
+/**
+ * @brief bct command for the GUI
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_bct(server_t *server, client_t *client);
+
+/**
+ * @brief bct command for internal use of zappy
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int internal_bct(int x, int y, int fd);
+
+/**
+ * @brief mct command for the GUI
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_mct(server_t *server, client_t *client);

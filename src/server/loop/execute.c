@@ -13,8 +13,8 @@
 
 commands_t commands[] = {
     {"msz", 1, command_msz},
-    {"bct", 1, NULL},
-    {"mct", 1, NULL},
+    {"bct", 1, command_bct},
+    {"mct", 1, command_mct},
     {"tna", 1, NULL},
     {"ppo", 1, NULL},
     {"plv", 1, NULL},
