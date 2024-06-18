@@ -52,9 +52,6 @@ namespace zappy
              void removePlayerById(std::size_t id);
              void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 
-             void setDisplaySize(sf::Vector2f &size);
-             void setDisplayPosition(sf::Vector2f &position);
-
              void updateDisplay();
 
             MapDrawables sceneDate;

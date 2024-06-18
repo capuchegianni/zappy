@@ -26,7 +26,7 @@ zappy::MapDrawables::~MapDrawables() = default;
 
 zappy::Map::Map(Assets &assets) : Map(10, 10, assets) {}
 
-zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets(assets), sceneDate(assets, math::Vector3D(width, height, 0))
+zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : sceneDate(assets, math::Vector3D(width, height, 0)), _assets(assets)
 {
     _map.reserve(width);
 
@@ -100,14 +100,6 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
 
     player->x = x;
     player->y = y;
-}
-
-void zappy::Map::setDisplaySize(sf::Vector2f &size)
-{
-}
-
-void zappy::Map::setDisplayPosition(sf::Vector2f &position)
-{
 }
 
 void zappy::Map::updateDisplay()

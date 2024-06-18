@@ -22,8 +22,8 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy", sf::Style::Close);
     zappy::Assets assets;
 
-    std::size_t width = 10;
-    std::size_t height = 10;
+    std::size_t width = 30;
+    std::size_t height = 30;
 
     window.setFramerateLimit(60);
 
@@ -43,7 +43,6 @@ int main(int ac, char **av)
             continue;
         }
 
-        bool didRotate = false;
         math::Vector3D movForward = map.sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
         math::Vector3D movRight = map.sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;
 
@@ -72,23 +71,19 @@ int main(int ac, char **av)
         {
             map.sceneDate.sceneData.camera.unitaryPixelsSize += 1;
             map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-            didRotate = true;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && map.sceneDate.sceneData.camera.unitaryPixelsSize > 10)
         {
             map.sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
             map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-            didRotate = true;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
             map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
-            didRotate = true;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
-            didRotate = true;
         }
 
         while (window.pollEvent(event)) {
