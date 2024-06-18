@@ -19,7 +19,7 @@ commands_t commands[] = {
     {"ppo", 1, NULL},
     {"plv", 1, NULL},
     {"pin", 1, NULL},
-    {"sgt", 1, NULL},
+    {"sgt", 1, command_sgt},
     {"sst", 1, NULL},
     {NULL, 0, NULL}
 };
@@ -47,7 +47,6 @@ static int find_cmd(server_t *server, client_t *client)
 
 static void execute_cmd(server_t *server, client_t *client)
 {
-    printf("%s\n", client->input->body);
     if (client->team == NULL) {
         client->team = malloc(strlen(client->input->args[0]));
         strcpy(client->team, client->input->args[0]);
@@ -112,6 +111,7 @@ int execute_command(server_t *server, client_t *client)
         free_client_args(client);
         return 0;
     }
+    printf("[%s] %s\n", client->team, client->input->body);
     parse_buffer(server, client->input->body, client);
     free_client_args(client);
     return 0;
