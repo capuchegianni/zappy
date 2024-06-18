@@ -121,6 +121,11 @@ void zappy::Communication::commandReceiver() {
 
 void zappy::Communication::commandSender() {
     while (this->_run) {
+        for (auto &player : this->_playersToUpdate) {
+            this->sendCommand("ppo " + std::to_string(player));
+            this->sendCommand("pin " + std::to_string(player));
+        }
+        this->_playersToUpdate.clear();
         std::string command;
         std::getline(std::cin, command);
         this->sendCommand(command);
@@ -184,4 +189,13 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
     trantorien.direction = direction;
     trantorien.level = level;
     (*this->map).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
+}
+
+void zappy::Communication::pex(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw std::runtime_error("Invalid number of arguments for pex command");
+    if (this->map == nullptr)
+        return;
+    int id = std::stoi(args[0]);
+    this->_playersToUpdate.push_back(id);
 }

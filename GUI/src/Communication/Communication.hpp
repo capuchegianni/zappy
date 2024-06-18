@@ -25,7 +25,7 @@ namespace zappy {
         sf::TcpSocket _socket {};
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
-
+        std::vector<int> _playersToUpdate {};
         std::string getLine();
         void sendCommand(std::string command);
         void commandSender();
@@ -48,7 +48,7 @@ namespace zappy {
             //{"ppo", [this](std::vector<std::string> &args) { zappy::Communication::ppo(args); }},
             //{"plv", [this](std::vector<std::string> &args) { zappy::Communication::plv(args); }},
             //{"pin", [this](std::vector<std::string> &args) { zappy::Communication::pin(args); }},
-            //{"pex", [this](std::vector<std::string> &args) { zappy::Communication::pex(args); }},
+            {"pex", [this](std::vector<std::string> &args) { zappy::Communication::pex(args); }},
             //{"pbc", [this](std::vector<std::string> &args) { zappy::Communication::pbc(args); }},
             //{"pic", [this](std::vector<std::string> &args) { zappy::Communication::pic(args); }},
             //{"pie", [this](std::vector<std::string> &args) { zappy::Communication::pie(args); }},
@@ -73,7 +73,7 @@ namespace zappy {
         //void ppo(std::vector<std::string> &args);
         //void plv(std::vector<std::string> &args);
         //void pin(std::vector<std::string> &args);
-        //void pex(std::vector<std::string> &args);
+        void pex(std::vector<std::string> &args);
         //void pbc(std::vector<std::string> &args);
         //void pic(std::vector<std::string> &args);
         //void pie(std::vector<std::string> &args);
