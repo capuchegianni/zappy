@@ -27,6 +27,8 @@ add_executable(zappy_gui
         src/Display/Renderer/Camera.cpp
         src/Display/SceneData.hpp
         src/Display/SceneData.cpp
+        src/Characters/Team.hpp
+        src/Characters/Team.cpp
 )
 
 target_link_libraries(zappy_gui Math)

@@ -54,38 +54,39 @@ zappy::Box &zappy::Map::operator()(std::size_t x, std::size_t y)
 
 std::shared_ptr<zappy::Trantorien> zappy::Map::getPlayerById(std::size_t id)
 {
-    for (auto &player : _players) {
-        if (player->id == id)
-            return player;
+    for (auto &team : _teams) {
+        try {
+            return team.getPlayerById(id);
+        } catch (Team::TeamError &e) {
+            continue;
+        }
     }
 
-    throw Map::MapError("Player not found");
+    throw Map::MapError("Player " + std::to_string(id) + " not found");
 }
 
-void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player)
+void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team)
 {
-    _players.push_back(player);
+    Team &storedTeam = getTeam(team);
+    player->team = team;
+    storedTeam.addPlayer(player);
 }
 
 void zappy::Map::removePlayerById(std::size_t id)
 {
     std::shared_ptr<Trantorien> player = getPlayerById(id);
+    zappy::Team &team = getTeam(player->team);
 
-    if (_players.empty())
-        throw Map::MapError("No more players in map");
-
-    if (player != nullptr)
-        _players.erase(_players.begin() + _getPlayerIndexById(id));
+    _map[player->x][player->y].removePlayerById(id);
+    team.removePlayerById(id);
 }
 
 std::size_t zappy::Map::_getPlayerIndexById(std::size_t id)
 {
-    for (std::size_t i = 0; i < _players.size(); i++) {
-        if (_players[i]->id == id)
-            return i;
-    }
+    std::shared_ptr<zappy::Trantorien> player = getPlayerById(id);
+    zappy::Team &team = getTeam(getPlayerById(id)->team);
 
-    throw Map::MapError("Player not found");
+    return team.getPlayerIndexById(id);
 }
 
 void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
@@ -121,7 +122,26 @@ void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
         }
     }
 
-    for (auto &player : _players) {
-        target.draw(*player, states);
+    for (auto &team : _teams)
+    {
+        for (auto &player: team.players)
+        {
+            target.draw(*player, states);
+        }
     }
+}
+
+zappy::Team &zappy::Map::getTeam(std::string &name)
+{
+    for (auto &team : _teams) {
+        if (team.name == name)
+            return team;
+    }
+
+    throw Map::MapError("Team " + name + " not found");
+}
+
+void zappy::Map::addTeam(std::string &name)
+{
+    _teams.emplace_back(name);
 }

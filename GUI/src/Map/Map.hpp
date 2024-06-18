@@ -15,6 +15,7 @@
 
 #include "Box.hpp"
 #include "../Display/Assets.hpp"
+#include "../Characters/Team.hpp"
 #include "../Display/SceneData.hpp"
 
 namespace zappy
@@ -48,20 +49,22 @@ namespace zappy
 
              Box &operator()(std::size_t x, std::size_t y);
              std::shared_ptr<Trantorien> getPlayerById(std::size_t id);
-             void addPlayer(const std::shared_ptr<Trantorien>& player);
+             void addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team);
              void removePlayerById(std::size_t id);
              void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 
              void updateDisplay();
+             Team &getTeam(std::string &name);
+             void addTeam(std::string &name);
 
             MapDrawables sceneDate;
         private:
             std::vector<std::vector<Box>> _map;
-            std::vector<std::shared_ptr<Trantorien>> _players = {};
-
             std::size_t _getPlayerIndexById(std::size_t id);
 
             Assets &_assets;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+
+            std::vector<Team> _teams = {};
     };
 }
