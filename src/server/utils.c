@@ -23,6 +23,7 @@ char **s_to_t(char *str)
 void reset_client(client_t *client)
 {
     client->is_playing = false;
+    client->is_graphic = false;
     close(client->fd);
     client->fd = -1;
     init_items(&client->player->inventory);

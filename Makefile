@@ -33,6 +33,7 @@ SRC = 	src/server/main.c						\
 		src/server/command/bct.c 				\
 		src/server/command/mct.c 				\
 		src/server/parser/flags/clients.c 		\
+		src/server/game/game_loop.c 			\
 		src/server/parser/flags/frequency.c 	\
 		src/server/parser/flags/map.c 			\
 		src/server/parser/flags/port.c 			\

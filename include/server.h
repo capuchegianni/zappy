@@ -28,6 +28,7 @@ typedef struct input_s {
 typedef struct client_s {
     int fd;
     bool is_playing;
+    bool is_graphic;
     input_t *input;
     player_t *player;
 } client_t;
@@ -190,3 +191,10 @@ bool frequency_flag(server_t *server, char **av);
  * @return true if all the arguments have been stored correctly
 */
 bool store_arguments_in_server(server_t *server, char **av);
+
+/**
+ * @brief Update data
+ * @param server
+ * @return 0 if everything goods
+*/
+int update_game(server_t *server);

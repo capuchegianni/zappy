@@ -51,6 +51,9 @@ static void execute_cmd(server_t *server, client_t *client)
     if (client->player->team_name == NULL) {
         client->player->team_name = malloc(strlen(client->input->args[0]));
         strcpy(client->player->team_name, client->input->args[0]);
+        if (!strcmp(client->player->team_name, "GRAPHIC")) {
+            client->is_graphic = true;
+        }
         command_msz(server, client);
         command_sgt(server, client);
         return;

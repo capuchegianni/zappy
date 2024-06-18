@@ -95,7 +95,7 @@ static int check_connection(server_t *server)
 {
     fd_set writefds;
     fd_set readfds;
-    struct timeval tv = {0, 10000};
+    struct timeval tv = {10, 10000};
 
     set_fds(&readfds, &writefds, server);
     if (select(FD_SETSIZE, &readfds, &writefds, NULL, &tv) < 0) {
@@ -106,6 +106,7 @@ static int check_connection(server_t *server)
     }
     if (isset_client_and_server(server, &readfds, &writefds))
         return 84;
+    update_game(server);
     return 0;
 }
 
