@@ -24,6 +24,7 @@ namespace zappy
         {
             public:
                 DisplayTile(sf::Image &tile);
+                DisplayTile(const DisplayTile &other);
                 ~DisplayTile();
 
                 void computeTileImage(Camera &camera);

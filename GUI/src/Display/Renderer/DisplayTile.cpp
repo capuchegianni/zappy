@@ -9,6 +9,10 @@
 
 zappy::render3d::DisplayTile::DisplayTile(sf::Image &tile) : _baseImage(tile) {}
 
+zappy::render3d::DisplayTile::DisplayTile(const zappy::render3d::DisplayTile &other) : _baseImage(other._baseImage)
+{
+}
+
 zappy::render3d::DisplayTile::~DisplayTile() = default;
 
 void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &camera)

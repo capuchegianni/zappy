@@ -13,9 +13,6 @@ zappy::render3d::Camera::~Camera() = default;
 
 math::Point3D zappy::render3d::Camera::projectPoint(math::Point3D point) const
 {
-    // Epsilon value for floating point comparisons
-    double epsilon = 0.0001;
-
     // Plane's origin point
     math::Point3D planePoint(0, 0, 0);
 

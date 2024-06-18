@@ -26,7 +26,7 @@ namespace zappy
             ~MapDrawables();
 
             sf::RectangleShape background;
-            std::vector<render3d::DisplayTile> tiles = {};
+            std::vector<std::unique_ptr<render3d::DisplayTile>> displayTiles;
     };
 
     class Map : public sf::Drawable

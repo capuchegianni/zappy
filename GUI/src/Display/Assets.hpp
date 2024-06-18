@@ -10,6 +10,8 @@
 #include <SFML/Graphics/Font.hpp>
 
 #include <memory>
+#include <iostream>
+#include <filesystem>
 
 namespace zappy
 {
@@ -30,6 +32,6 @@ namespace zappy
 
             sf::Font font;
             sf::Image placeholderImage;
-            std::vector<std::unique_ptr<sf::Texture>> tilesTextures;
+            std::vector<std::unique_ptr<sf::Image>> tilesTextures;
     };
 }
