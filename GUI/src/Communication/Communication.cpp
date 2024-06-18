@@ -157,6 +157,15 @@ void zappy::Communication::bct(std::vector<std::string> &args) {
     (*this->map)(x, y).thystame = thystame;
 }
 
+void zappy::Communication::tna(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw std::runtime_error("Invalid number of arguments for tna command");
+    if (this->map == nullptr)
+        return;
+    std::string team = args[0];
+    (*this->map).addTeam(team);
+}
+
 void zappy::Communication::pnw(std::vector<std::string> &args) {
     if (args.size() != 6)
         throw std::runtime_error("Invalid number of arguments for pnw command");
