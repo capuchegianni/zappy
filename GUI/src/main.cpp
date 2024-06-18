@@ -29,15 +29,25 @@ int main(int ac, char **av)
     eventLogger.setDisplayPosition(loggerPos);
     eventLogger.setDisplaySize(loggerSize);
 
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(5);
 
     sf::Vector2f position(0, 0);
     sf::Vector2f size(1080, 1080);
 
-    map.addPlayer(std::make_shared<zappy::Trantorien>(0));
-    map.addPlayer(std::make_shared<zappy::Trantorien>(1));
-    map.addPlayer(std::make_shared<zappy::Trantorien>(2));
-    map.addPlayer(std::make_shared<zappy::Trantorien>(3));
+    std::string team1 = "Team 1";
+    std::string team2 = "Team 2";
+    std::string team3 = "Team 3";
+    std::string team4 = "Team 4";
+
+    map.addTeam(team1);
+    map.addTeam(team2);
+    map.addTeam(team3);
+    map.addTeam(team4);
+
+    map.addPlayer(std::make_shared<zappy::Trantorien>(0), team1);
+    map.addPlayer(std::make_shared<zappy::Trantorien>(1), team2);
+    map.addPlayer(std::make_shared<zappy::Trantorien>(2), team3);
+    map.addPlayer(std::make_shared<zappy::Trantorien>(3), team4);
 
     map.getPlayerById(0)->x = 2;
     map.getPlayerById(0)->y = 2;

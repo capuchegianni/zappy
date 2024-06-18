@@ -60,6 +60,7 @@ namespace zappy
             std::size_t x = 0;
             std::size_t y = 0;
 
+            std::string team;
         private:
             TrantorienDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
