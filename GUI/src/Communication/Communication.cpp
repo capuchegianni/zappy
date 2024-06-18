@@ -190,6 +190,19 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
     (*this->map).getTeam(team).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
 }
 
+void zappy::Communication::ppo(std::vector<std::string> &args) {
+    if (args.size() != 4)
+        throw std::runtime_error("Invalid number of arguments for ppo command");
+    if (this->map == nullptr)
+        return;
+    int id = std::stoi(args[0]);
+    int x = std::stoi(args[1]);
+    int y = std::stoi(args[2]);
+    short direction = std::stoi(args[3]);
+    (*this->map).getPlayerById(id)->direction = direction;
+    (*this->map).movePlayerById(x, y, id);
+}
+
 void zappy::Communication::pex(std::vector<std::string> &args) {
     if (args.size() != 1)
         throw std::runtime_error("Invalid number of arguments for pex command");
