@@ -5,7 +5,7 @@
 ** flags
 */
 
-#include "server_header.h"
+#include "server.h"
 
 bool store_arguments_in_server(server_t *server, char **av)
 {

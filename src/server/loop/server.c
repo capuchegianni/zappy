@@ -5,7 +5,7 @@
 ** server
 */
 
-#include "server_header.h"
+#include "server.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -127,10 +127,12 @@ static int init_server(server_t *server)
 static void client_init(server_t *server, int i)
 {
     server->clients[i].fd = -1;
-    server->clients[i].is_connected = false;
+    server->clients[i].is_playing = false;
     server->clients[i].input = malloc(sizeof(input_t));
     server->clients[i].input->args = calloc(1, sizeof(char *));
     server->clients[i].input->body = NULL;
+    server->clients[i].player = malloc(sizeof(player_t));
+    init_items(&server->clients[i].player->inventory);
 }
 
 int fserver(server_t *server)

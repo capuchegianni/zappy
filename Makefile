@@ -36,7 +36,9 @@ SRC = 	src/server/main.c						\
 		src/server/parser/flags/frequency.c 	\
 		src/server/parser/flags/map.c 			\
 		src/server/parser/flags/port.c 			\
-		src/server/parser/flags/teams.c
+		src/server/parser/flags/teams.c			\
+		src/server/game/levels.c				\
+		src/server/game/map.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))
@@ -93,7 +95,7 @@ fclean: clean
 	@echo -n "[ "
 	@echo -n "\e[1;34mOK\e[0m"
 	@echo -n " ] "
-	@echo "\e[1;32mSuccessfully removed binary files\e[0m"
+	@echo "\e[1;32mSuccessfully removed $(NAME)\e[0m"
 
 re:
 	@$(MAKE) fclean

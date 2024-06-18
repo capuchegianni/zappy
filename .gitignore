@@ -1,0 +1,8 @@
+.cache
+compile_commands.json
+obj
+*.a
+*.o
+zappy_server
+*.log
+*.pdf
