@@ -39,6 +39,32 @@ int main(int ac, char **av)
     }
     /*
 
+    map.addPlayer(std::make_shared<zappy::Trantorien>(0));
+    map.addPlayer(std::make_shared<zappy::Trantorien>(1));
+    map.addPlayer(std::make_shared<zappy::Trantorien>(2));
+    map.addPlayer(std::make_shared<zappy::Trantorien>(3));
+    try {
+        zappy::Communication server(5001, "10.17.70.247");
+        server.connect();
+        server.run();
+    } catch (std::exception &e) {
+        try {
+            zappy::Communication server(5000, "10.17.70.247");
+            server.connect();
+            server.run();
+        } catch (std::exception &e) {
+            try {
+                zappy::Communication server(4242, "localhost");
+                server.connect();
+                server.run();
+            } catch (std::exception &e) {
+                std::cerr << e.what() << std::endl;
+                return 1;
+            }
+        }
+    }
+    /*
+
     std::string team1 = "Team 1";
     std::string team2 = "Team 2";
     std::string team3 = "Team 3";
