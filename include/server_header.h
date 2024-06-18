@@ -178,3 +178,11 @@ bool store_arguments_in_server(server_t *server, char **av);
  * @return return the status of the execution, 1 for OK
 */
 int command_msz(server_t *server, client_t *client);
+
+/**
+ * @brief sgt command for the GUI
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_sgt(server_t *server, client_t *client);

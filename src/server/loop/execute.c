@@ -47,16 +47,12 @@ static int find_cmd(server_t *server, client_t *client)
 
 static void execute_cmd(server_t *server, client_t *client)
 {
-    char *str;
-
     printf("%s\n", client->input->body);
     if (client->team == NULL) {
-        asprintf(&str, "msz %li %li\nsgt %li\n",
-    server->height, server->width, 2);
         client->team = malloc(strlen(client->input->args[0]));
         strcpy(client->team, client->input->args[0]);
-        write(client->fd, str, strlen(str));
-        free(str);
+        command_msz(server, client);
+        command_sgt(server, client);
         return;
     }
     if (!find_cmd(server, client)) {

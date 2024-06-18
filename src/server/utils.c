@@ -24,6 +24,10 @@ void reset_client(client_t *client)
 {
     client->is_connected = false;
     close(client->fd);
+    if (client->team) {
+        free(client->team);
+        client->team = NULL;
+    }
     client->fd = -1;
 }
 

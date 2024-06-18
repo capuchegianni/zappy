@@ -29,6 +29,7 @@ SRC = 	src/server/main.c						\
 		src/server/parser/argument_parser.c 	\
 		src/server/parser/flags.c 				\
 		src/server/command/msz.c 				\
+		src/server/command/sgt.c 				\
 		src/server/parser/flags/clients.c 		\
 		src/server/parser/flags/frequency.c 	\
 		src/server/parser/flags/map.c 			\
