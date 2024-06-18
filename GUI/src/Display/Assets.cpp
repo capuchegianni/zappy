@@ -15,9 +15,10 @@ zappy::Assets::Assets()
     if (!placeholderImage.loadFromFile("../assets/textures/placeholder.png"))
         throw Assets::AssetsError("Could not load placeholder _baseImage");
 
-    // load all png files in assets/textures/tiles
+    // load all png and jpg files in assets/textures/tiles
     for (const auto &entry : std::filesystem::directory_iterator("../assets/textures/tiles")) {
-        if (entry.path().extension() == ".png") {
+        if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg")
+        {
             sf::Image texture;
             if (!texture.loadFromFile(entry.path().string()))
                 throw Assets::AssetsError("Could not load tile texture");
