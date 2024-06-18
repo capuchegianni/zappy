@@ -6,33 +6,38 @@
 */
 
 #include <iostream>
+#include <unordered_map>
+#include <functional>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Map/Map.hpp"
 #include "Display/EventLogger.hpp"
+#include "Communication/Communication.hpp"
 
 int main(int ac, char **av)
 {
-    std::size_t width = 6;
-    std::size_t height = 6;
-
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy", sf::Style::Close);
-
-    zappy::Assets assets;
-    zappy::Map map(width, height, assets);
-
-    zappy::EventLogger eventLogger(20, assets);
-
-    sf::Vector2f loggerPos(1090, 10);
-    sf::Vector2f loggerSize(820, 512
-    );
-    eventLogger.setDisplayPosition(loggerPos);
-    eventLogger.setDisplaySize(loggerSize);
-
-    window.setFramerateLimit(5);
-
-    sf::Vector2f position(0, 0);
-    sf::Vector2f size(1080, 1080);
+    try {
+        zappy::Communication server(5001, "10.17.70.247");
+        server.connect();
+        server.run();
+    } catch (std::exception &e) {
+        try {
+            zappy::Communication server(5000, "10.17.70.247");
+            server.connect();
+            server.run();
+        } catch (std::exception &e) {
+            try {
+                zappy::Communication server(4242, "localhost");
+                server.connect();
+                server.run();
+            } catch (std::exception &e) {
+                std::cerr << e.what() << std::endl;
+                return 1;
+            }
+        }
+    }
+    /*
 
     std::string team1 = "Team 1";
     std::string team2 = "Team 2";
