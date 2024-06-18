@@ -123,6 +123,7 @@ void zappy::Communication::commandSender() {
     while (this->_run) {
         for (auto &player : this->_playersToUpdate) {
             this->sendCommand("ppo " + std::to_string(player));
+            this->sendCommand("plv " + std::to_string(player));
             this->sendCommand("pin " + std::to_string(player));
         }
         this->_playersToUpdate.clear();
@@ -188,6 +189,7 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
     trantorien.direction = direction;
     trantorien.level = level;
     (*this->map).getTeam(team).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
+    this->_playersToUpdate.push_back(id);
 }
 
 void zappy::Communication::ppo(std::vector<std::string> &args) {
@@ -211,6 +213,33 @@ void zappy::Communication::plv(std::vector<std::string> &args) {
     int id = std::stoi(args[0]);
     int level = std::stoi(args[1]);
     (*this->map).getPlayerById(id)->level = level;
+}
+
+void zappy::Communication::pin(std::vector<std::string> &args) {
+    if (args.size() != 10)
+        throw std::runtime_error("Invalid number of arguments for pin command");
+    if (this->map == nullptr)
+        return;
+    int id = std::stoi(args[0]);
+    int x = std::stoi(args[1]);
+    int y = std::stoi(args[2]);
+    int food = std::stoi(args[3]);
+    int linemate = std::stoi(args[4]);
+    int deraumere = std::stoi(args[5]);
+    int sibur = std::stoi(args[6]);
+    int mendiane = std::stoi(args[7]);
+    int phiras = std::stoi(args[8]);
+    int thystame = std::stoi(args[9]);
+    std::shared_ptr<zappy::Trantorien> player = (*this->map).getPlayerById(id);
+    player->x = x;
+    player->y = y;
+    player->food = food;
+    player->linemate = linemate;
+    player->deraumere = deraumere;
+    player->sibur = sibur;
+    player->mendiane = mendiane;
+    player->phiras = phiras;
+    player->thystame = thystame;
 }
 
 void zappy::Communication::pex(std::vector<std::string> &args) {
