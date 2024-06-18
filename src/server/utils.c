@@ -29,6 +29,10 @@ void reset_client(client_t *client)
     free(client->input->args);
     client->input->args = calloc(1, sizeof(char *));
     client->input->body = NULL;
+    if (client->player->team_name) {
+        free(client->player->team_name);
+        client->player->team_name = NULL;
+    }
 }
 
 void free_clients(server_t *server)
