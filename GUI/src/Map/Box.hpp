@@ -18,13 +18,15 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "../Characters/Trantorien.hpp"
+#include "../Display/Renderer/DisplayTile.hpp"
+#include "../Display/SceneData.hpp"
 
 namespace zappy
 {
     class BoxDrawables
     {
         public:
-            BoxDrawables(sf::Font &font);
+            BoxDrawables(render3d::DisplayTile &displayTile, render3d::Camera &camera, std::size_t x, std::size_t y);
             ~BoxDrawables();
 
             class BoxDrawablesError : public std::exception
@@ -36,24 +38,20 @@ namespace zappy
                     std::string _message;
             };
 
-            sf::RectangleShape background;
-
-            sf::Text food;
-            sf::Text linemate;
-            sf::Text deraumere;
-            sf::Text sibur;
-            sf::Text mendiane;
-            sf::Text phiras;
-            sf::Text thystame;
-
+            void updateSprite();
+            sf::Sprite sprite;
         private:
-            sf::Font _font;
+            render3d::DisplayTile &_tile;
+            render3d::Camera &_camera;
+
+            std::size_t _x;
+            std::size_t _y;
     };
 
     class Box : public sf::Drawable
     {
         public:
-            Box(std::size_t x, std::size_t y, sf::Font &font);
+            Box(std::size_t x, std::size_t y, SceneData &data);
             ~Box() override;
 
             class BoxError : public std::exception
@@ -65,9 +63,7 @@ namespace zappy
                     std::string _message;
             };
 
-            void setDisplaySize(sf::Vector2f &size);
-            void setDisplayPosition(sf::Vector2f &position);
-            void updateText();
+            void updateSprite();
 
             std::size_t food = 0;
             std::size_t linemate = 0;

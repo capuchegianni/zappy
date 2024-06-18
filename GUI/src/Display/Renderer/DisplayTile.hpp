@@ -12,7 +12,6 @@
 
 #include "Camera.hpp"
 #include "../Assets.hpp"
-#include "../../Map/Box.hpp"
 
 #include "../../../include/Math/Ray3D.hpp"
 

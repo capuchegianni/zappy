@@ -20,13 +20,16 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets
 {
     _map.reserve(width);
 
-    for (std::size_t i = 0; i < width; i++) {
-        _map.emplace_back();
+    for (std::size_t i = 0; i < width; i++)
+    {
+        _map.push_back({});
+        _map[i].reserve(height);
 
-        _map.back().reserve(height);
-        for (std::size_t j = 0; j < height; j++) {
-            _map[i].emplace_back(i, j, _assets.font);
+        for (std::size_t j = 0; j < height; j++)
+        {
+            _map[i].push_back(Box(i, j, assets));
         }
+
     }
 }
 
@@ -153,15 +156,5 @@ void zappy::Map::updateDisplay()
 
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    target.draw(_drawables.background, states);
 
-    for (auto &row : _map) {
-        for (auto &box : row) {
-            target.draw(box, states);
-        }
-    }
-
-    for (auto &player : _players) {
-        target.draw(*player, states);
-    }
 }

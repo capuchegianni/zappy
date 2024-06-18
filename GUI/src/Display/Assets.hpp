@@ -13,6 +13,9 @@
 #include <iostream>
 #include <filesystem>
 
+#include "Renderer/Camera.hpp"
+#include "Renderer/DisplayTile.hpp"
+
 namespace zappy
 {
     class Assets
@@ -33,5 +36,6 @@ namespace zappy
             sf::Font font;
             sf::Image placeholderImage;
             std::vector<std::unique_ptr<sf::Image>> tilesTextures;
+            render3d::Camera camera;
     };
 }
