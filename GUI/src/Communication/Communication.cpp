@@ -176,7 +176,6 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
         throw std::runtime_error("Invalid number of arguments for pnw command");
     if (this->map == nullptr)
         return;
-    //TODO: Bind player to team
     int id = std::stoi(args[0]);
     int x = std::stoi(args[1]);
     int y = std::stoi(args[2]);
@@ -188,7 +187,7 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
     trantorien.y = y;
     trantorien.direction = direction;
     trantorien.level = level;
-    (*this->map).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
+    (*this->map).getTeam(team).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
 }
 
 void zappy::Communication::pex(std::vector<std::string> &args) {
