@@ -47,8 +47,8 @@ int main(int ac, char **av)
 
     sprites.clear();
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (std::size_t i = 0; i < width; i++) {
+        for (std::size_t j = 0; j < height; j++) {
             sf::Sprite sprite;
             int random_index = rand() % assets.tilesTextures.size();
 
@@ -119,8 +119,8 @@ int main(int ac, char **av)
 
             sprites.clear();
 
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
+            for (std::size_t i = 0; i < width; i++) {
+                for (std::size_t j = 0; j < height; j++) {
                     sf::Sprite sprite;
                     int random_index = rand() % assets.tilesTextures.size();
 
@@ -139,8 +139,8 @@ int main(int ac, char **av)
             }
         }
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (std::size_t i = 0; i < width; i++) {
+            for (std::size_t j = 0; j < height; j++) {
                 sf::Sprite &sprite = sprites[i * width + j];
                 sprite.setPosition(camera.displayUnitaryX.x * i + camera.displayUnitaryY.x * j + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ + window.getSize().x / 2,
                                    camera.displayUnitaryX.y * i + camera.displayUnitaryY.y * j + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + window.getSize().y / 2);

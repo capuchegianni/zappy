@@ -15,18 +15,17 @@
 
 #include "Box.hpp"
 #include "../Display/Assets.hpp"
-#include "../Display/Renderer/DisplayTile.hpp"
+#include "../Display/SceneData.hpp"
 
 namespace zappy
 {
     class MapDrawables
     {
         public:
-            MapDrawables();
+            MapDrawables(Assets &assets);
             ~MapDrawables();
 
-            sf::RectangleShape background;
-            std::vector<std::unique_ptr<render3d::DisplayTile>> displayTiles;
+            SceneData sceneData;
     };
 
     class Map : public sf::Drawable

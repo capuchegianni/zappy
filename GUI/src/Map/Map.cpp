@@ -7,16 +7,15 @@
 
 #include "Map.hpp"
 
-zappy::MapDrawables::MapDrawables()
+zappy::MapDrawables::MapDrawables(zappy::Assets &assets) : sceneData(assets)
 {
-    background.setFillColor(sf::Color::White);
 }
 
 zappy::MapDrawables::~MapDrawables() = default;
 
 zappy::Map::Map(Assets &assets) : Map(10, 10, assets) {}
 
-zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets(assets)
+zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets(assets), _drawables(assets)
 {
     _map.reserve(width);
 
@@ -27,9 +26,8 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets
 
         for (std::size_t j = 0; j < height; j++)
         {
-            _map[i].push_back(Box(i, j, assets));
+            _map[i].push_back(Box(i, j, _drawables.sceneData));
         }
-
     }
 }
 
@@ -95,66 +93,30 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
 
 void zappy::Map::setDisplaySize(sf::Vector2f &size)
 {
-    _drawables.background.setSize(size);
-
-    sf::Vector2f boxSize(size.x / _map.size(), size.y / _map[0].size());
-
-    for (auto &row : _map) {
-        for (auto &box : row) {
-            sf::Vector2f position(box.x * boxSize.x + _drawables.background.getPosition().x, box.y * boxSize.y + _drawables.background.getPosition().y);
-
-            box.setDisplaySize(boxSize);
-            box.setDisplayPosition(position);
-        }
-    }
-
-    for (auto &player : _players) {
-        sf::Vector2f position(player->x * boxSize.x + _drawables.background.getPosition().x, player->y * boxSize.y + _drawables.background.getPosition().y);
-
-        player->setDisplaySize(boxSize);
-        player->setDisplayPosition(position);
-    }
 }
 
 void zappy::Map::setDisplayPosition(sf::Vector2f &position)
 {
-    _drawables.background.setPosition(position);
-
-    sf::Vector2f boxSize(_drawables.background.getSize().x / _map.size(), _drawables.background.getSize().y / _map[0].size());
-
-    for (auto &row : _map) {
-        for (auto &box : row) {
-            sf::Vector2f position(box.x * boxSize.x + _drawables.background.getPosition().x, box.y * boxSize.y + _drawables.background.getPosition().y);
-
-            box.setDisplaySize(boxSize);
-            box.setDisplayPosition(position);
-        }
-    }
-
-    for (auto &player : _players) {
-        sf::Vector2f position(player->x * boxSize.x + _drawables.background.getPosition().x, player->y * boxSize.y + _drawables.background.getPosition().y);
-
-        player->setDisplaySize(boxSize);
-        player->setDisplayPosition(position);
-    }
 }
 
 void zappy::Map::updateDisplay()
 {
-    sf::Vector2f position(_drawables.background.getPosition());
-    sf::Vector2f size(_drawables.background.getSize());
-
     for (auto &row : _map) {
         for (auto &box : row) {
-            box.updateText();
+            box.updateSprite();
         }
     }
-
-    setDisplayPosition(position);
-    setDisplaySize(size);
 }
 
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    for (auto &row : _map) {
+        for (auto &box : row) {
+            target.draw(box, states);
+        }
+    }
 
+    for (auto &player : _players) {
+        target.draw(*player, states);
+    }
 }
