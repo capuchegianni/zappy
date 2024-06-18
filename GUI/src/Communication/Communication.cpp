@@ -203,6 +203,16 @@ void zappy::Communication::ppo(std::vector<std::string> &args) {
     (*this->map).movePlayerById(x, y, id);
 }
 
+void zappy::Communication::plv(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw std::runtime_error("Invalid number of arguments for plv command");
+    if (this->map == nullptr)
+        return;
+    int id = std::stoi(args[0]);
+    int level = std::stoi(args[1]);
+    (*this->map).getPlayerById(id)->level = level;
+}
+
 void zappy::Communication::pex(std::vector<std::string> &args) {
     if (args.size() != 1)
         throw std::runtime_error("Invalid number of arguments for pex command");

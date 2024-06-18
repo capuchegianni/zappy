@@ -46,7 +46,7 @@ namespace zappy {
             {"tna", [this](std::vector<std::string> &args) { zappy::Communication::tna(args); }},
             {"pnw", [this](std::vector<std::string> &args) { zappy::Communication::pnw(args); }},
             {"ppo", [this](std::vector<std::string> &args) { zappy::Communication::ppo(args); }},
-            //{"plv", [this](std::vector<std::string> &args) { zappy::Communication::plv(args); }},
+            {"plv", [this](std::vector<std::string> &args) { zappy::Communication::plv(args); }},
             //{"pin", [this](std::vector<std::string> &args) { zappy::Communication::pin(args); }},
             {"pex", [this](std::vector<std::string> &args) { zappy::Communication::pex(args); }},
             //{"pbc", [this](std::vector<std::string> &args) { zappy::Communication::pbc(args); }},
@@ -71,7 +71,7 @@ namespace zappy {
         void tna(std::vector<std::string> &args);
         void pnw(std::vector<std::string> &args);
         void ppo(std::vector<std::string> &args);
-        //void plv(std::vector<std::string> &args);
+        void plv(std::vector<std::string> &args);
         //void pin(std::vector<std::string> &args);
         void pex(std::vector<std::string> &args);
         //void pbc(std::vector<std::string> &args);
