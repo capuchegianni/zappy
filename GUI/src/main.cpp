@@ -15,8 +15,7 @@
 #include "Display/EventLogger.hpp"
 #include "Communication/Communication.hpp"
 
-int main(int ac, char **av)
-{
+int main(int ac, char **av) {
     try {
         zappy::Communication server(5001, "10.17.70.247");
         server.connect();
@@ -155,5 +154,5 @@ int main(int ac, char **av)
         window.display();
 
         frame++;
-    }
+    }*/
 }
