@@ -7,15 +7,26 @@
 
 #include "Map.hpp"
 
-zappy::MapDrawables::MapDrawables(zappy::Assets &assets) : sceneData(assets)
+zappy::MapDrawables::MapDrawables(zappy::Assets &assets, math::Vector3D mapSize) : sceneData(assets)
 {
+    sceneData.camera.rotate(math::Vector3D(-45, 0, -45));
+    sceneData.camera.centerX = -mapSize.x / 2;
+    sceneData.camera.centerY = -mapSize.y / 2;
+    sceneData.camera.centerZ = mapSize.z / 2;
+}
+
+void zappy::MapDrawables::updateDisplay()
+{
+    for (auto &tile : sceneData.tiles) {
+        tile->computeTileImage(sceneData.camera);
+    }
 }
 
 zappy::MapDrawables::~MapDrawables() = default;
 
 zappy::Map::Map(Assets &assets) : Map(10, 10, assets) {}
 
-zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets(assets), _drawables(assets)
+zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets(assets), sceneDate(assets, math::Vector3D(width, height, 0))
 {
     _map.reserve(width);
 
@@ -26,7 +37,7 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : _assets
 
         for (std::size_t j = 0; j < height; j++)
         {
-            _map[i].push_back(Box(i, j, _drawables.sceneData));
+            _map[i].push_back(Box(i, j, sceneDate.sceneData));
         }
     }
 }
@@ -101,6 +112,8 @@ void zappy::Map::setDisplayPosition(sf::Vector2f &position)
 
 void zappy::Map::updateDisplay()
 {
+    sceneDate.updateDisplay();
+
     for (auto &row : _map) {
         for (auto &box : row) {
             box.updateSprite();

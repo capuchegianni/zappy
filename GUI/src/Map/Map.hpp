@@ -22,8 +22,10 @@ namespace zappy
     class MapDrawables
     {
         public:
-            MapDrawables(Assets &assets);
+            MapDrawables(Assets &assets, math::Vector3D mapSize);
             ~MapDrawables();
+
+            void updateDisplay();
 
             SceneData sceneData;
     };
@@ -54,14 +56,15 @@ namespace zappy
              void setDisplayPosition(sf::Vector2f &position);
 
              void updateDisplay();
+
+            MapDrawables sceneDate;
         private:
             std::vector<std::vector<Box>> _map;
             std::vector<std::shared_ptr<Trantorien>> _players = {};
+
             std::size_t _getPlayerIndexById(std::size_t id);
 
             Assets &_assets;
-
-            MapDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };
 }
