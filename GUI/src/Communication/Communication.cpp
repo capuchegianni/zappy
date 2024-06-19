@@ -126,6 +126,10 @@ void zappy::Communication::commandSender() {
             this->sendCommand("pin " + std::to_string(player));
         }
         this->_playersToUpdate.clear();
+        for (auto &block : this->_blockToUpdate) {
+            this->sendCommand("bct " + std::to_string(block.first) + " " + std::to_string(block.second));
+        }
+        this->_blockToUpdate.clear();
         std::string command;
         std::getline(std::cin, command);
         this->sendCommand(command);
@@ -271,6 +275,23 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
         return;
     int id = std::stoi(args[0]);
     this->_playersToUpdate.push_back(id);
+}
+
+void zappy::Communication::pgt(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw CommandError("Invalid number of arguments for pgt command");
+    if (this->map == nullptr)
+        return;
+    try {
+        int id = std::stoi(args[0]);
+        auto player = (*this->map).getPlayerById(id);
+        if (player == nullptr)
+            return;
+        this->_blockToUpdate.emplace_back(player->x, player->y);
+        this->_playersToUpdate.push_back(id);
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments for pgt command");
+    }
 }
 
 void zappy::Communication::pdi(std::vector<std::string> &args) {

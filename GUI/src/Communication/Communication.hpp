@@ -26,6 +26,7 @@ namespace zappy {
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
         std::vector<int> _playersToUpdate {};
+        std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
         std::string getLine();
         void sendCommand(std::string command);
         void commandSender();
@@ -69,7 +70,7 @@ namespace zappy {
             //{"pie", [this](std::vector<std::string> &args) { zappy::Communication::pie(args); }},
             //{"pfk", [this](std::vector<std::string> &args) { zappy::Communication::pfk(args); }},
             //{"pdr", [this](std::vector<std::string> &args) { zappy::Communication::pdr(args); }},
-            //{"pgt", [this](std::vector<std::string> &args) { zappy::Communication::pgt(args); }},
+            {"pgt", [this](std::vector<std::string> &args) { zappy::Communication::pgt(args); }},
             {"pdi", [this](std::vector<std::string> &args) { zappy::Communication::pdi(args); }},
             {"enw", [this](std::vector<std::string> &args) { zappy::Communication::enw(args); }},
             {"ebo", [this](std::vector<std::string> &args) { zappy::Communication::ebo(args); }},
@@ -94,7 +95,7 @@ namespace zappy {
         //void pie(std::vector<std::string> &args);
         //void pfk(std::vector<std::string> &args);
         //void pdr(std::vector<std::string> &args);
-        //void pgt(std::vector<std::string> &args);
+        void pgt(std::vector<std::string> &args);
         void pdi(std::vector<std::string> &args);
         void enw(std::vector<std::string> &args);
         void ebo(std::vector<std::string> &args);
