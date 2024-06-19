@@ -39,10 +39,12 @@ namespace zappy
                 sf::Vector2f displayUnitaryY;
                 sf::Vector2f displayUnitaryZ;
                 std::size_t unitaryPixelsSize;
+                std::size_t unitaryPixelsSizeBackup;
 
                 math::Vector3D direction;
                 math::Vector3D up;
                 math::Vector3D right;
+                math::Vector3D directionBackup;
 
                 math::Point3D projectPoint(math::Point3D point) const;
                 void rotate(math::Vector3D direction);

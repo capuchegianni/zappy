@@ -112,6 +112,8 @@ void zappy::Map::updateDisplay()
     for (auto &row : _map) {
         for (auto &box : row) {
             box.updateSprite();
+            sceneDate.sceneData.camera.directionBackup = sceneDate.sceneData.camera.direction;
+            sceneDate.sceneData.camera.unitaryPixelsSizeBackup = sceneDate.sceneData.camera.unitaryPixelsSize;
             sceneDate.renderTexture.draw(box);
         }
     }

@@ -37,8 +37,9 @@ namespace math
 
             Vector3D cross(const Vector3D &other) const;
 
-            Vector3D normalize();
+            bool operator==(const Vector3D& other) const { return x == other.x && y == other.y && z == other.z; }
 
+            Vector3D normalize();
 
             double x = 0;
             double y = 0;

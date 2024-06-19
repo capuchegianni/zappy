@@ -32,6 +32,7 @@ namespace zappy
             private:
                 sf::Image &_baseImage;
                 sf::Texture _displayTexture;
+                sf::Image _scaledImage;
         };
     }
 }
