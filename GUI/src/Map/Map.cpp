@@ -74,6 +74,9 @@ void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player, std::strin
     Team &storedTeam = getTeam(team);
     player->team = team;
     storedTeam.addPlayer(player);
+
+    player->color = storedTeam.color;
+    _players.push_back(player);
 }
 
 void zappy::Map::removePlayerById(std::size_t id)
@@ -105,8 +108,9 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
 
 void zappy::Map::updateDisplay()
 {
-    sceneDate.updateDisplay();
+    _sortPlayersByDistance();
 
+    sceneDate.updateDisplay();
     sceneDate.renderTexture.clear(sf::Color::Transparent);
 
     for (auto &row : _map) {
@@ -116,6 +120,11 @@ void zappy::Map::updateDisplay()
             sceneDate.sceneData.camera.unitaryPixelsSizeBackup = sceneDate.sceneData.camera.unitaryPixelsSize;
             sceneDate.renderTexture.draw(box);
         }
+    }
+
+    for (auto &player : _players) {
+        player->updateDisplay(sceneDate.sceneData.camera);
+        sceneDate.renderTexture.draw(*player);
     }
 
     sceneDate.renderTexture.display();
@@ -168,6 +177,18 @@ void zappy::Map::setDisplaySize(sf::Vector2f &size)
 void zappy::Map::setDisplayPosition(sf::Vector2f &position)
 {
     sceneDate.sprite.setPosition(position);
+}
+
+void zappy::Map::_sortPlayersByDistance()
+{
+    math::Point3D cameraPosition = math::Vector3D(sceneDate.sceneData.camera.centerX - sceneDate.sceneData.camera.direction.x * 10000, sceneDate.sceneData.camera.centerY - sceneDate.sceneData.camera.direction.y * 10000, sceneDate.sceneData.camera.centerZ - sceneDate.sceneData.camera.direction.z * 10000);
+
+    if (_players.empty())
+        return;
+
+    std::sort(_players.begin(), _players.end(), [cameraPosition](const std::shared_ptr<Trantorien> &a, const std::shared_ptr<Trantorien> &b) {
+        return math::Point3D::distance(cameraPosition, math::Point3D(a->x, a->y, 0)) < math::Point3D::distance(cameraPosition, math::Point3D(b->x, b->y, 0));
+    });
 }
 
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const

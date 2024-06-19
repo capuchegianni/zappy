@@ -13,6 +13,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
+#include "../Display/Renderer/Camera.hpp"
+
 namespace zappy
 {
     enum Direction
@@ -40,8 +42,7 @@ namespace zappy
 
             ~Trantorien() override;
 
-            void setDisplaySize(sf::Vector2f &size);
-            void setDisplayPosition(sf::Vector2f &position);
+            void updateDisplay(render3d::Camera &camera);
 
             std::size_t food = 0;
             std::size_t linemate = 0;
@@ -52,7 +53,6 @@ namespace zappy
             std::size_t thystame = 0;
 
             std::size_t level = 0;
-
             std::size_t id;
 
             short direction = 0;
@@ -61,6 +61,7 @@ namespace zappy
             std::size_t y = 0;
 
             std::string team;
+            sf::Color color;
         private:
             TrantorienDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

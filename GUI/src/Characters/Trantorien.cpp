@@ -10,8 +10,15 @@
 
 zappy::TrantorienDrawables::TrantorienDrawables()
 {
-    body.setFillColor(sf::Color::Green);
-    head.setFillColor(sf::Color::Red);
+    head.setFillColor(sf::Color::Transparent);
+
+    body.setRadius(50);
+
+    body.setOrigin(body.getGlobalBounds().width / 2, body.getGlobalBounds().height / 2);
+    body.setScale(1, 2);
+
+    body.setOutlineColor(sf::Color::Black);
+    body.setOutlineThickness(2);
 }
 
 zappy::TrantorienDrawables::~TrantorienDrawables() = default;
@@ -20,36 +27,13 @@ zappy::Trantorien::Trantorien(std::size_t id) : id(id) {}
 
 zappy::Trantorien::~Trantorien() = default;
 
-void zappy::Trantorien::setDisplaySize(sf::Vector2f &size)
+void zappy::Trantorien::updateDisplay(zappy::render3d::Camera &camera)
 {
-    float minSize = size.x < size.y ? size.x : size.y;
-
-    _drawables.body.setRadius(minSize / 2);
-    _drawables.head.setRadius(minSize / 10);
-}
-
-void zappy::Trantorien::setDisplayPosition(sf::Vector2f &position)
-{
-    _drawables.body.setPosition(position);
-
-    sf::Vector2f headPosition = position + sf::Vector2f(_drawables.body.getRadius() - _drawables.head.getRadius(), _drawables.body.getRadius() - _drawables.head.getRadius());
-
-    switch (direction) {
-        case UP:
-            headPosition.y -= _drawables.body.getRadius() / 1.5f;
-            break;
-        case RIGHT:
-            headPosition.x += _drawables.body.getRadius() / 1.5f;
-            break;
-        case DOWN:
-            headPosition.y += _drawables.body.getRadius() / 1.5f;
-            break;
-        case LEFT:
-            headPosition.x -= _drawables.body.getRadius() / 1.5f;
-            break;
-    }
-
-    _drawables.head.setPosition(headPosition);
+    _drawables.body.setFillColor(color);
+    _drawables.body.setRadius(camera.unitaryPixelsSize / 2);
+    _drawables.body.setOrigin(_drawables.body.getGlobalBounds().width / 2, _drawables.body.getGlobalBounds().height / 2);
+    _drawables.body.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
+                                camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ);
 }
 
 void zappy::Trantorien::draw(sf::RenderTarget &target, sf::RenderStates states) const

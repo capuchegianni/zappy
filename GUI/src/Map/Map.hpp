@@ -74,6 +74,10 @@ namespace zappy
             std::vector<std::vector<Box>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);
 
+            std::vector<std::shared_ptr<Trantorien>> _players = {};
+
+            void _sortPlayersByDistance();
+
             Assets &_assets;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
