@@ -73,7 +73,7 @@ namespace zappy {
             //{"pdi", [this](std::vector<std::string> &args) { zappy::Communication::pdi(args); }},
             //{"enw", [this](std::vector<std::string> &args) { zappy::Communication::enw(args); }},
             //{"ebo", [this](std::vector<std::string> &args) { zappy::Communication::ebo(args); }},
-            //{"edi", [this](std::vector<std::string> &args) { zappy::Communication::edi(args); }},
+            {"edi", [this](std::vector<std::string> &args) { zappy::Communication::edi(args); }},
             //{"sgt", [this](std::vector<std::string> &args) { zappy::Communication::sgt(args); }},
             //{"sst", [this](std::vector<std::string> &args) { zappy::Communication::sst(args); }},
             //{"seg", [this](std::vector<std::string> &args) { zappy::Communication::seg(args); }},
@@ -98,7 +98,7 @@ namespace zappy {
         //void pdi(std::vector<std::string> &args);
         //void enw(std::vector<std::string> &args);
         //void ebo(std::vector<std::string> &args);
-        //void edi(std::vector<std::string> &args);
+        void edi(std::vector<std::string> &args);
         //void sgt(std::vector<std::string> &args);
         //void sst(std::vector<std::string> &args);
         //void seg(std::vector<std::string> &args);

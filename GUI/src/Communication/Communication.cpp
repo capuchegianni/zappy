@@ -272,3 +272,16 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
     int id = std::stoi(args[0]);
     this->_playersToUpdate.push_back(id);
 }
+
+void zappy::Communication::edi(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments for edi command");
+    if (this->map == nullptr)
+        return;
+    try {
+        int id = std::stoi(args[0]);
+        (*this->map).removeEggById(id);
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments for edi command");
+    }
+}
