@@ -16,7 +16,7 @@ commands_t commands[] = {
     {"msz", 1, command_msz},
     {"bct", 1, command_bct},
     {"mct", 1, command_mct},
-    {"tna", 1, NULL},
+    {"tna", 1, command_tna},
     {"ppo", 1, NULL},
     {"plv", 1, NULL},
     {"pin", 1, NULL},
@@ -40,7 +40,8 @@ static int find_cmd(server_t *server, client_t *client)
     for (int j = 0; commands[j].name; j++) {
         if (!client->input->args || !client->input->args[0])
             continue;
-        if (strcmp(client->input->args[0], commands[j].name) == 0)
+        if (strcmp(client->input->args[0], commands[j].name) == 0
+            && client->is_graphic == commands[j].isGuiOnly)
             return commands[j].function(server, client);
     }
     return 0;
@@ -60,8 +61,7 @@ static void execute_cmd(server_t *server, client_t *client)
     }
     if (!find_cmd(server, client)) {
         if (client->input->args && client->input->args[0]) {
-            dprintf(client->fd, "event_failed_input::%s\n",
-            client->input->args[0]);
+            dprintf(client->fd, "suc\n");
         }
     }
 }

@@ -28,7 +28,8 @@ int internal_bct(int x, int y, int fd, server_t *server)
 int command_bct(server_t *server, client_t *client)
 {
     if (!client->input->args[1] || !client->input->args[2]) {
-        return 0;
+        write(client->fd, "sbp\n", 4);
+        return 1;
     }
     return internal_bct(atoi(client->input->args[1]),
     atoi(client->input->args[2]), client->fd, server);

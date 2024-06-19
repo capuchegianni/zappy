@@ -43,10 +43,16 @@ int internal_bct(int x, int y, int fd, server_t *server);
 
 /**
  * @brief mct command for the GUI
- * @param x
- * @param y
- * @param fd
  * @param server
+ * @param client
  * @return return the status of the execution, 1 for OK
 */
 int command_mct(server_t *server, client_t *client);
+
+/**
+ * @brief bct command for internal use of zappy
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_tna(server_t *server, client_t *client);
