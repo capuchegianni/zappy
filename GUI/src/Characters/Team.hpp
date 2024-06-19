@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <vector>
+#include <random>
 #include <string>
 
 #include "Trantorien.hpp"
@@ -39,9 +40,11 @@ namespace zappy
             void addEgg(const std::shared_ptr<Egg>& egg);
             void removeEggById(std::size_t id);
 
+            static sf::Color generateColor(const std::string &name);
+
             std::string name;
             std::vector<std::shared_ptr<Trantorien>> players = {};
             std::vector<std::shared_ptr<Egg>> eggs = {};
-        private:
+            sf::Color color;
     };
 }

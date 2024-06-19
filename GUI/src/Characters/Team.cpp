@@ -9,6 +9,7 @@
 
 zappy::Team::Team(std::string &name) : name(name)
 {
+    color = generateColor(name);
 }
 
 zappy::Team::~Team()
@@ -67,4 +68,17 @@ void zappy::Team::removeEggById(std::size_t id)
     }
 
     throw Team::TeamError("Egg " + std::to_string(id) + " not found");
+}
+
+sf::Color zappy::Team::generateColor(const std::string &name)
+{
+    std::seed_seq seed(name.begin(), name.end());
+    std::mt19937 generator(seed);
+    std::uniform_int_distribution<int> distribution(0, 255);
+
+    int red = distribution(generator);
+    int green = distribution(generator);
+    int blue = distribution(generator);
+
+    return sf::Color(red, green, blue);
 }

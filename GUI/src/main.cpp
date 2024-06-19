@@ -23,8 +23,8 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
     zappy::Assets assets;
 
-    std::size_t width = 5;
-    std::size_t height = 5;
+    std::size_t width = 30;
+    std::size_t height = 30;
 
     window.setFramerateLimit(60);
 
@@ -38,8 +38,8 @@ int main(int ac, char **av)
 
     sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
 
-    sf::Vector2f rawr = {150, -150};
-    sf::Vector2f rawr2 = {600, 150};
+    sf::Vector2f rawr = {-300, -300};
+    sf::Vector2f rawr2 = {600, 600};
     map.setDisplayPosition(rawr);
     map.setDisplaySize(rawr2);
 
@@ -100,7 +100,7 @@ int main(int ac, char **av)
 
             if (event.type == sf::Event::Resized)
             {
-                view = sf::View(sf::FloatRect(-(static_cast<float>(event.size.width) / 2) + 250, -(static_cast<float>(event.size.height) / 2) + 250, static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
+                view = sf::View(sf::FloatRect(-(static_cast<float>(event.size.width) / 2), -(static_cast<float>(event.size.height) / 2), static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
                 window.setView(view);
             }
         }
