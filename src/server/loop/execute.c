@@ -49,19 +49,15 @@ static int find_cmd(server_t *server, client_t *client)
 static void execute_cmd(server_t *server, client_t *client)
 {
     if (client->player->team_name == NULL) {
-        client->player->team_name = malloc(strlen(client->input->args[0]));
-        strcpy(client->player->team_name, client->input->args[0]);
-        if (!strcmp(client->player->team_name, "GRAPHIC")) {
-            client->is_graphic = true;
-        }
-        command_msz(server, client);
-        command_sgt(server, client);
+        if (team_exists(server->game, client->input->args[0]))
+            set_player_team(client->input->args[0], server->game, client);
+        else
+            write(client->fd, "ko\n", 4);
         return;
     }
     if (!find_cmd(server, client)) {
         if (client->input->args && client->input->args[0]) {
-            dprintf(client->fd, "event_failed_input::%s\n",
-            client->input->args[0]);
+            dprintf(client->fd, "ko\n");
         }
     }
 }
@@ -111,11 +107,12 @@ int execute_command(server_t *server, client_t *client)
     if (!client->input->body)
         return 0;
     if (!check_spaces(client->input->body)) {
-        dprintf(client->fd, "event_failed_input\n");
+        dprintf(client->fd, "ko\n");
         free_client_args(client);
         return 0;
     }
-    printf("[%s] %s\n", client->player->team_name, client->input->body);
+    printf("[%s] %s\n", client->player->team_name ?
+    client->player->team_name : "Anonymous", client->input->body);
     parse_buffer(server, client->input->body, client);
     free_client_args(client);
     return 0;

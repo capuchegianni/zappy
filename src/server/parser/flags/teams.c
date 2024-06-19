@@ -23,8 +23,12 @@ bool teams_flag(server_t *server, char **av)
     }
     server->game->teams_number = tablen(args);
     server->game->teams = malloc(sizeof(team_t) * tablen(args));
-    for (; args[i]; i++)
+    for (; args[i]; i++) {
         server->game->teams[i].name = strdup(args[i]);
+        server->game->teams[i].available_slots =
+        server->game->initial_team_size;
+        server->game->teams[i].total_players_connected = 0;
+    }
     free_tab(args);
     return true;
 }

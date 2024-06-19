@@ -129,10 +129,16 @@ static void client_init(server_t *server, int i)
 {
     server->clients[i].fd = -1;
     server->clients[i].is_playing = false;
+    server->clients[i].is_graphic = false;
     server->clients[i].input = malloc(sizeof(input_t));
     server->clients[i].input->args = calloc(1, sizeof(char *));
     server->clients[i].input->body = NULL;
     server->clients[i].player = malloc(sizeof(player_t));
+    server->clients[i].player->direction = NORTH;
+    server->clients[i].player->level = 1;
+    server->clients[i].player->team_name = NULL;
+    server->clients[i].player->x = 0;
+    server->clients[i].player->y = 0;
     init_items(&server->clients[i].player->inventory);
 }
 

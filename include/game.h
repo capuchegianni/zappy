@@ -21,6 +21,13 @@ enum ITEMS {
     THYSTAME = 5
 };
 
+enum DIRECTION {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+};
+
 typedef struct items_s {
     size_t food;
     size_t linemate;
@@ -43,6 +50,7 @@ typedef struct player_s {
     size_t level;
     size_t x;
     size_t y;
+    enum DIRECTION direction;
 } player_t;
 
 typedef struct team_s {
@@ -65,6 +73,8 @@ typedef struct game_s {
     level_t levels[7];
     tile_t **map;
 } game_t;
+
+typedef struct client_s client_t;
 
 /**
  * @brief Initialize all levels related data
@@ -90,3 +100,7 @@ void free_map(game_t *game);
  * @param items
 */
 void init_items(items_t *items);
+
+bool team_exists(game_t *game, char *name);
+
+void set_player_team(char *team_name, game_t *game, client_t *client);
