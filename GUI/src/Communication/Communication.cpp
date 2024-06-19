@@ -273,6 +273,19 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
     this->_playersToUpdate.push_back(id);
 }
 
+void zappy::Communication::pdi(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments for pdi command");
+    if (this->map == nullptr)
+        return;
+    try {
+        int id = std::stoi(args[0]);
+        (*this->map).removePlayerById(id);
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments for pdi command");
+    }
+}
+
 void zappy::Communication::enw(std::vector<std::string> &args) {
     if (args.size() != 4)
         throw CommandError("Invalid number of arguments for enw command");
