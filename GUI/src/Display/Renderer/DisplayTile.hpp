@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 #include "Camera.hpp"
 #include "../Assets.hpp"

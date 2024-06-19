@@ -19,24 +19,35 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
 {
     if (camera.unitaryPixelsSize != camera.unitaryPixelsSizeBackup)
     {
-        // Create a scaled version of the _baseImage to match the unitary size
-        unsigned int sizeX = _baseImage.getSize().x;
-        unsigned int sizeY = _baseImage.getSize().y;
-        unsigned int maxScale = std::max(sizeX, sizeY);
+        sf::Texture originalTexture;
+        originalTexture.loadFromImage(_baseImage);
 
-        _scaledImage.create(sizeX * camera.unitaryPixelsSize / maxScale, sizeY * camera.unitaryPixelsSize / maxScale,
-                            sf::Color::Transparent);
+        sf::Sprite sprite(originalTexture);
 
-        double xRatio = static_cast<double>(_baseImage.getSize().x) / _scaledImage.getSize().x;
-        double yRatio = static_cast<double>(_baseImage.getSize().y) / _scaledImage.getSize().y;
+        // Set the desired size
+        unsigned int desiredWidth = camera.unitaryPixelsSize;
+        unsigned int desiredHeight = camera.unitaryPixelsSize;
 
-        for (unsigned int i = 0; i < sizeX; i++)
-        {
-            for (unsigned int j = 0; j < sizeY; j++)
-            {
-                _scaledImage.setPixel(i / xRatio, j / yRatio, _baseImage.getPixel(i, j));
-            }
+        sf::RenderTexture renderTexture;
+        if (!renderTexture.create(desiredWidth, desiredHeight)) {
+            // handle error
         }
+
+        // Scale the sprite to fit the RenderTexture
+        sprite.setScale(
+            static_cast<float>(desiredWidth) / originalTexture.getSize().x,
+            static_cast<float>(desiredHeight) / originalTexture.getSize().y
+        );
+
+        // Draw the sprite onto the RenderTexture
+        renderTexture.clear();
+        renderTexture.draw(sprite);
+        renderTexture.display();
+
+        // Get the new texture
+        sf::Texture newTexture = renderTexture.getTexture();
+
+        _scaledImage = newTexture.copyToImage();
     }
 
     if (camera.unitaryPixelsSize != camera.unitaryPixelsSizeBackup || camera.direction != camera.directionBackup)
