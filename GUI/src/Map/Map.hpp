@@ -48,25 +48,19 @@ namespace zappy
                     std::string _message;
             };
 
-             Box &operator()(std::size_t x, std::size_t y);
-             std::shared_ptr<Trantorien> getPlayerById(std::size_t id);
-             void addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team);
-             void removePlayerById(std::size_t id);
-             void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
             Box &operator()(std::size_t x, std::size_t y);
+            std::shared_ptr<Trantorien> getPlayerById(std::size_t id);
+            void addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team);
+            void removePlayerById(std::size_t id);
+            void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 
-             void updateDisplay();
-             Team &getTeam(std::string &name);
-             void addTeam(std::string &name);
+            void updateDisplay();
+            Team &getTeam(std::string &name);
+            void addTeam(std::string &name);
 
             MapDrawables sceneDate;
             void addEgg(std::size_t x, std::size_t y, std::size_t id, std::string &team);
             void removeEggById(std::size_t id);
-
-            Team &getTeam(std::string &name);
-            void addTeam(std::string &name);
-
-            void updateDisplay();
 
         private:
             std::vector<std::vector<Box>> _map;
@@ -78,3 +72,4 @@ namespace zappy
             std::vector<Team> _teams = {};
     };
 }
+
