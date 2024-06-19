@@ -23,8 +23,8 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
     zappy::Assets assets;
 
-    std::size_t width = 30;
-    std::size_t height = 30;
+    std::size_t width = 5;
+    std::size_t height = 5;
 
     window.setFramerateLimit(60);
 
@@ -37,6 +37,11 @@ int main(int ac, char **av)
     frameClock.restart();
 
     sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
+
+    sf::Vector2f rawr = {150, -150};
+    sf::Vector2f rawr2 = {600, 150};
+    map.setDisplayPosition(rawr);
+    map.setDisplaySize(rawr2);
 
     while (window.isOpen()) {
         if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {

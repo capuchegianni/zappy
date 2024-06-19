@@ -68,6 +68,8 @@ namespace zappy
             void addEgg(std::size_t x, std::size_t y, std::size_t id, std::string &team);
             void removeEggById(std::size_t id);
 
+            void setDisplaySize(sf::Vector2f &size);
+            void setDisplayPosition(sf::Vector2f &position);
         private:
             std::vector<std::vector<Box>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);

@@ -158,6 +158,18 @@ void zappy::Map::removeEggById(std::size_t id)
     throw Map::MapError("Egg " + std::to_string(id) + " not found");
 }
 
+void zappy::Map::setDisplaySize(sf::Vector2f &size)
+{
+    sceneDate.view = sf::View(sf::FloatRect(-(static_cast<float>(size.x) / 2), -(static_cast<float>(size.y) / 2), static_cast<float>(size.x), static_cast<float>(size.y)));
+    sceneDate.renderTexture.create(size.x, size.y);
+    sceneDate.renderTexture.setView(sceneDate.view);
+}
+
+void zappy::Map::setDisplayPosition(sf::Vector2f &position)
+{
+    sceneDate.sprite.setPosition(position);
+}
+
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(sceneDate.sprite, states);
