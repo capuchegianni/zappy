@@ -140,6 +140,21 @@ void zappy::Communication::commandSender() {
     }
 }
 
+zappy::Direction zappy::Communication::getDirection(int direction) {
+    switch (direction) {
+        case 1:
+            return zappy::Direction::UP;
+        case 2:
+            return zappy::Direction::RIGHT;
+        case 3:
+            return zappy::Direction::DOWN;
+        case 4:
+            return zappy::Direction::LEFT;
+        default:
+            return zappy::Direction::UP;
+    }
+}
+
 void zappy::Communication::msz(std::vector<std::string> &args) {
     if (args.size() != 2) {
         throw CommandError("Invalid number of arguments for msz command");
@@ -204,7 +219,7 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
         zappy::Trantorien trantorien(id);
         trantorien.x = x;
         trantorien.y = y;
-        trantorien.direction = direction;
+        trantorien.direction = this->getDirection(direction);
         trantorien.level = level;
         (*this->map).getTeam(team).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
         this->_playersToUpdate.push_back(id);
@@ -227,7 +242,7 @@ void zappy::Communication::ppo(std::vector<std::string> &args) {
         int x = std::stoi(args[1]);
         int y = std::stoi(args[2]);
         int direction = std::stoi(args[3]);
-        (*this->map).getPlayerById(id)->direction = direction;
+        (*this->map).getPlayerById(id)->direction = this->getDirection(direction);
         (*this->map).movePlayerById(x, y, id);
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments for ppo command");
