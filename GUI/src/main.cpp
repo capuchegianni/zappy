@@ -9,6 +9,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include "Map/Map.hpp"
 #include "Display/EventLogger.hpp"
 #include "Display/Renderer/Camera.hpp"
@@ -19,7 +20,7 @@ int main(int ac, char **av)
     int winwidth = 1920;
     int winheight = 1080;
 
-    sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
     zappy::Assets assets;
 
     std::size_t width = 30;
@@ -35,8 +36,14 @@ int main(int ac, char **av)
 
     frameClock.restart();
 
-    sf::View view(sf::FloatRect(-winwidth/2, -winheight/2, winwidth, winheight));
-    window.setView(view);
+    sf::View renderView(sf::FloatRect(-250, -250, 500, 500));
+    sf::RenderTexture renderTexture;
+    renderTexture.create(500, 500);
+    renderTexture.setView(renderView);
+
+    sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
+
+    sf::Sprite sprite(renderTexture.getTexture());
 
     while (window.isOpen()) {
         if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
@@ -92,12 +99,23 @@ int main(int ac, char **av)
             {
                 window.close();
             }
+
+            if (event.type == sf::Event::Resized)
+            {
+                view = sf::View(sf::FloatRect(-(static_cast<float>(event.size.width) / 2) + 250, -(static_cast<float>(event.size.height) / 2) + 250, static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
+                window.setView(view);
+            }
         }
 
         map.updateDisplay();
-        window.clear();
+        window.clear(sf::Color::Blue);
 
-        window.draw(map);
+        renderTexture.clear(sf::Color::Transparent);
+        renderTexture.draw(map);
+        renderTexture.display();
+        sprite.setTexture(renderTexture.getTexture());
+
+        window.draw(sprite);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
