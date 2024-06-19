@@ -23,12 +23,17 @@ char **s_to_t(char *str)
 void reset_client(client_t *client)
 {
     client->is_playing = false;
+    client->is_graphic = false;
     close(client->fd);
     client->fd = -1;
     init_items(&client->player->inventory);
     free(client->input->args);
     client->input->args = calloc(1, sizeof(char *));
     client->input->body = NULL;
+    if (client->player->team_name) {
+        free(client->player->team_name);
+        client->player->team_name = NULL;
+    }
 }
 
 void free_clients(server_t *server)

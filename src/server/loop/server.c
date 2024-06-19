@@ -38,6 +38,8 @@ static int accept_clients(server_t *server)
             break;
         }
     }
+    printf("Client connected\n");
+    write(newFd, "WELCOME\n", 8);
     return 0;
 }
 
@@ -93,7 +95,7 @@ static int check_connection(server_t *server)
 {
     fd_set writefds;
     fd_set readfds;
-    struct timeval tv = {0, 10000};
+    struct timeval tv = {10, 10000};
 
     set_fds(&readfds, &writefds, server);
     if (select(FD_SETSIZE, &readfds, &writefds, NULL, &tv) < 0) {
@@ -104,6 +106,7 @@ static int check_connection(server_t *server)
     }
     if (isset_client_and_server(server, &readfds, &writefds))
         return 84;
+    update_game(server);
     return 0;
 }
 
@@ -126,10 +129,16 @@ static void client_init(server_t *server, int i)
 {
     server->clients[i].fd = -1;
     server->clients[i].is_playing = false;
+    server->clients[i].is_graphic = false;
     server->clients[i].input = malloc(sizeof(input_t));
     server->clients[i].input->args = calloc(1, sizeof(char *));
     server->clients[i].input->body = NULL;
     server->clients[i].player = malloc(sizeof(player_t));
+    server->clients[i].player->direction = NORTH;
+    server->clients[i].player->level = 1;
+    server->clients[i].player->team_name = NULL;
+    server->clients[i].player->x = 0;
+    server->clients[i].player->y = 0;
     init_items(&server->clients[i].player->inventory);
 }
 

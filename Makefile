@@ -28,13 +28,20 @@ SRC = 	src/server/main.c						\
 		src/server/loop/commands.c				\
 		src/server/parser/argument_parser.c 	\
 		src/server/parser/flags.c 				\
+		src/server/command/msz.c 				\
+		src/server/command/sgt.c 				\
+		src/server/command/bct.c 				\
+		src/server/command/mct.c 				\
+		src/server/command/tna.c 				\
 		src/server/parser/flags/clients.c 		\
+		src/server/game/game_loop.c 			\
 		src/server/parser/flags/frequency.c 	\
 		src/server/parser/flags/map.c 			\
 		src/server/parser/flags/port.c 			\
 		src/server/parser/flags/teams.c			\
 		src/server/game/levels.c				\
-		src/server/game/map.c
+		src/server/game/map.c					\
+		src/server/game/teams.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))

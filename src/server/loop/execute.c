@@ -6,12 +6,23 @@
 */
 
 #include "server.h"
+#include "command.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 commands_t commands[] = {
-    {NULL, NULL}
+    {"msz", 1, command_msz},
+    {"bct", 1, command_bct},
+    {"mct", 1, command_mct},
+    {"tna", 1, command_tna},
+    {"ppo", 1, NULL},
+    {"plv", 1, NULL},
+    {"pin", 1, NULL},
+    {"sgt", 1, command_sgt},
+    {"sst", 1, NULL},
+    {NULL, 0, NULL}
 };
 
 static void free_client_args(client_t *client)
@@ -29,7 +40,8 @@ static int find_cmd(server_t *server, client_t *client)
     for (int j = 0; commands[j].name; j++) {
         if (!client->input->args || !client->input->args[0])
             continue;
-        if (strcmp(client->input->args[0], commands[j].name) == 0)
+        if (strcmp(client->input->args[0], commands[j].name) == 0
+            && client->is_graphic == commands[j].isGuiOnly)
             return commands[j].function(server, client);
     }
     return 0;
@@ -37,9 +49,23 @@ static int find_cmd(server_t *server, client_t *client)
 
 static void execute_cmd(server_t *server, client_t *client)
 {
+    if (client->player->team_name == NULL) {
+        if (!strcmp(client->input->args[0], "GRAPHIC")) {
+            client->is_graphic = true;
+            command_msz(server, client);
+            command_sgt(server, client);
+            return;
+        }
+        if (team_exists(server->game, client->input->args[0]))
+            set_player_team(client->input->args[0], server->game, client);
+        else
+            write(client->fd, "ko\n", 4);
+        return;
+    }
     if (!find_cmd(server, client)) {
-        if (client->input->args && client->input->args[0])
+        if (client->input->args && client->input->args[0]) {
             dprintf(client->fd, "ko\n");
+        }
     }
 }
 
@@ -92,6 +118,8 @@ int execute_command(server_t *server, client_t *client)
         free_client_args(client);
         return 0;
     }
+    printf("[%s] %s\n", client->player->team_name ?
+    client->player->team_name : "Anonymous", client->input->body);
     parse_buffer(server, client->input->body, client);
     free_client_args(client);
     return 0;
