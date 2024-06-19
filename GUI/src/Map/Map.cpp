@@ -121,11 +121,6 @@ void zappy::Map::updateDisplay()
     sceneDate.sprite.setTexture(sceneDate.texture);
 }
 
-void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
-{
-    target.draw(sceneDate.sprite, states);
-}
-
 zappy::Team &zappy::Map::getTeam(std::string &name)
 {
     for (auto &team : _teams) {
@@ -159,4 +154,9 @@ void zappy::Map::removeEggById(std::size_t id)
     }
 
     throw Map::MapError("Egg " + std::to_string(id) + " not found");
+}
+
+void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(sceneDate.sprite, states);
 }
