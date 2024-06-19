@@ -12,6 +12,7 @@
 #include <string>
 
 #include "Trantorien.hpp"
+#include "Egg.hpp"
 
 namespace zappy
 {
@@ -34,8 +35,13 @@ namespace zappy
             void removePlayerById(std::size_t id);
             std::shared_ptr<Trantorien> getPlayerById(std::size_t id);
             std::size_t getPlayerIndexById(std::size_t id);
+
+            void addEgg(const std::shared_ptr<Egg>& egg);
+            void removeEggById(std::size_t id);
+
             std::string name;
             std::vector<std::shared_ptr<Trantorien>> players = {};
+            std::vector<std::shared_ptr<Egg>> eggs = {};
         private:
     };
 }

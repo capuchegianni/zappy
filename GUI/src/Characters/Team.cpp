@@ -51,3 +51,20 @@ std::size_t zappy::Team::getPlayerIndexById(std::size_t id)
 
     throw Team::TeamError("Player not found");
 }
+
+void zappy::Team::addEgg(const std::shared_ptr<Egg> &egg)
+{
+    eggs.push_back(egg);
+}
+
+void zappy::Team::removeEggById(std::size_t id)
+{
+    for (auto it = eggs.begin(); it != eggs.end(); it++) {
+        if ((*it)->id == id) {
+            eggs.erase(it);
+            return;
+        }
+    }
+
+    throw Team::TeamError("Egg " + std::to_string(id) + " not found");
+}

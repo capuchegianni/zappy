@@ -21,6 +21,8 @@ add_executable(zappy_gui
         src/Display/EventLogger.cpp
         src/Characters/Team.hpp
         src/Characters/Team.cpp
+        src/Characters/Egg.hpp
+        src/Characters/Egg.cpp
 )
 
 target_link_libraries(zappy_gui sfml-graphics sfml-window sfml-system)
