@@ -77,7 +77,6 @@ void zappy::Map::removePlayerById(std::size_t id)
     std::shared_ptr<Trantorien> player = getPlayerById(id);
     zappy::Team &team = getTeam(player->team);
 
-    _map[player->x][player->y].removePlayerById(id);
     team.removePlayerById(id);
 }
 
@@ -95,9 +94,6 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
 
     if (player == nullptr)
         throw Map::MapError("Player not found");
-
-    _map[x][y].addPlayer(player);
-    _map[player->x][player->y].removePlayerById(id);
 
     player->x = x;
     player->y = y;

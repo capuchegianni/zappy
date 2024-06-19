@@ -72,4 +72,3 @@ namespace zappy
             std::vector<Team> _teams = {};
     };
 }
-

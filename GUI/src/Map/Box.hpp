@@ -76,12 +76,7 @@ namespace zappy
             std::size_t x = 0;
             std::size_t y = 0;
 
-            void addPlayer(const std::shared_ptr<Trantorien>& player);
-            void removePlayerById(std::size_t id);
         private:
-            std::vector<std::shared_ptr<Trantorien>> _players = {};
-            std::size_t _getPlayerIndexById(std::size_t id);
-
             BoxDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };
