@@ -15,6 +15,7 @@
 #include <functional>
 #include <thread>
 #include "../Map/Map.hpp"
+#include "../Display/EventLogger.hpp"
 
 namespace zappy {
     class Communication {
@@ -25,10 +26,11 @@ namespace zappy {
         sf::TcpSocket _socket {};
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
+        zappy::EventLogger eventLogger {10, assets};
         std::vector<int> _playersToUpdate {};
         std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
         std::string getLine();
-        zappy::Direction getDirection(int direction);
+        static zappy::Direction getDirection(int direction);
         void sendCommand(std::string command);
         void commandSender();
         void commandReceiver();
