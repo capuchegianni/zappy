@@ -273,6 +273,23 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
     this->_playersToUpdate.push_back(id);
 }
 
+void zappy::Communication::enw(std::vector<std::string> &args) {
+    if (args.size() != 4)
+        throw CommandError("Invalid number of arguments for enw command");
+    if (this->map == nullptr)
+        return;
+    try {
+        int id = std::stoi(args[0]);
+        int player_id = std::stoi(args[1]);
+        int x = std::stoi(args[2]);
+        int y = std::stoi(args[3]);
+        std::string team = (*this->map).getPlayerById(player_id)->team;
+        (*this->map).addEgg(x, y, id, team);
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments for enw command");
+    }
+}
+
 void zappy::Communication::ebo(std::vector<std::string> &args) {
     if (args.size() != 1)
         throw CommandError("Invalid number of arguments for ebo command");
