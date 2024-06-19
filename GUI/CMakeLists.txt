@@ -21,6 +21,10 @@ add_executable(zappy_gui
         src/Display/Assets.cpp
         src/Display/EventLogger.hpp
         src/Display/EventLogger.cpp
+        src/Characters/Team.hpp
+        src/Characters/Team.cpp
+        src/Characters/Egg.hpp
+        src/Characters/Egg.cpp
         src/Display/Renderer/DisplayTile.hpp
         src/Display/Renderer/DisplayTile.cpp
         src/Display/Renderer/Camera.hpp

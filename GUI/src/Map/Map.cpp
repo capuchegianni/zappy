@@ -145,3 +145,23 @@ void zappy::Map::addTeam(std::string &name)
 {
     _teams.emplace_back(name);
 }
+
+void zappy::Map::addEgg(std::size_t x, std::size_t y, std::size_t id, std::string &team)
+{
+    Team &storedTeam = getTeam(team);
+    storedTeam.addEgg(std::make_shared<Egg>(x, y, id, team));
+}
+
+void zappy::Map::removeEggById(std::size_t id)
+{
+    for (auto &team : _teams) {
+        try {
+            team.removeEggById(id);
+            return;
+        } catch (Team::TeamError &e) {
+            continue;
+        }
+    }
+
+    throw Map::MapError("Egg " + std::to_string(id) + " not found");
+}
