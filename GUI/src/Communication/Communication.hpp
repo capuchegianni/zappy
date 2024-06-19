@@ -38,6 +38,21 @@ namespace zappy {
         void connect();
 
         void run();
+
+        class CommunicationError : public std::exception {
+        public:
+            explicit CommunicationError(std::string message) : _message(std::move(message)) {}
+            const char *what() const noexcept override { return _message.c_str(); }
+        private:
+            std::string _message;
+        };
+        class CommandError : public std::exception {
+        public:
+            explicit CommandError(std::string message) : _message(std::move(message)) {}
+            const char *what() const noexcept override { return _message.c_str(); }
+        private:
+            std::string _message;
+        };
     private:
         // Commands
         std::unordered_map<std::string, std::function<void(std::vector<std::string> &args)>> _commands {
