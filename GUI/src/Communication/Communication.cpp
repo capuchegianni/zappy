@@ -277,6 +277,23 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
     this->_playersToUpdate.push_back(id);
 }
 
+void zappy::Communication::pdr(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw CommandError("Invalid number of arguments for pdr command");
+    if (this->map == nullptr)
+        return;
+    try {
+        int id = std::stoi(args[0]);
+        auto player = (*this->map).getPlayerById(id);
+        if (player == nullptr)
+            return;
+        this->_blockToUpdate.emplace_back(player->x, player->y);
+        this->_playersToUpdate.push_back(id);
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments for pdr command");
+    }
+}
+
 void zappy::Communication::pgt(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandError("Invalid number of arguments for pgt command");
