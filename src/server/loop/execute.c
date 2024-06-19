@@ -49,6 +49,10 @@ static int find_cmd(server_t *server, client_t *client)
 static void execute_cmd(server_t *server, client_t *client)
 {
     if (client->player->team_name == NULL) {
+        if (!strcmp(client->input->args[0], "GRAPHIC")) {
+            client->is_graphic = true;
+            return;
+        }
         if (team_exists(server->game, client->input->args[0]))
             set_player_team(client->input->args[0], server->game, client);
         else

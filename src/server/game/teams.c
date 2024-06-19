@@ -31,10 +31,6 @@ void set_player_team(char *team_name, game_t *game, client_t *client)
 {
     team_t *team = malloc(sizeof(team_t));
 
-    if (!strcmp(team_name, "GRAPHIC")) {
-        client->is_graphic = true;
-        return;
-    }
     for (size_t i = 0; i < game->teams_number; i++) {
         if (!strcmp(game->teams[i].name, team_name)) {
             team = &game->teams[i];
