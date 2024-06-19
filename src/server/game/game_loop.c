@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "server.h"
 #include "command.h"
+#include "game.h"
 
 static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
 {
@@ -49,10 +50,35 @@ static void set_mct(server_t *server)
     }
 }
 
+void spawn_ressource(server_t *server, float ressouce_density,
+    int ressource_id)
+{
+    double max_food = (float)server->game->x *
+        (float)server->game->y * (ressouce_density / 100.f);
+    double current_food = 0;
+
+    for (size_t i = 0; i < server->game->x; ++i) {
+        for (size_t j = 0; j < server->game->y; ++j) {
+            current_food +=
+            (float)((&server->game->map[i][j].items.food)[ressource_id]);
+        }
+    }
+    if (current_food < max_food || current_food == 0) {
+        ((&server->game->map[rand() % server->game->x]
+        [rand() % server->game->y].items.food)[ressource_id]) += 1;
+    }
+}
+
+//TODO: Add tick base update
 int update_game(server_t *server)
 {
     set_mct(server);
-    server->game->map[rand() % server->game->x]
-    [rand() % server->game->y].items.phiras += 1;
+    spawn_ressource(server, FOOD, 0);
+    spawn_ressource(server, LINEMATE, 1);
+    spawn_ressource(server, DERAUMERE, 2);
+    spawn_ressource(server, SIBUR, 3);
+    spawn_ressource(server, MENDIANE, 4);
+    spawn_ressource(server, PHIRAS, 5);
+    spawn_ressource(server, THYSTAME, 6);
     return 0;
 }

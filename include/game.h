@@ -11,7 +11,7 @@
 
 typedef unsigned long size_t;
 
-enum ITEMS {
+enum ITEMS_DENSITY {
     FOOD = 50,
     LINEMATE = 30,
     DERAUMERE = 15,
