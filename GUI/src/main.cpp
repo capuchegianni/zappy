@@ -36,14 +36,7 @@ int main(int ac, char **av)
 
     frameClock.restart();
 
-    sf::View renderView(sf::FloatRect(-250, -250, 500, 500));
-    sf::RenderTexture renderTexture;
-    renderTexture.create(500, 500);
-    renderTexture.setView(renderView);
-
     sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
-
-    sf::Sprite sprite(renderTexture.getTexture());
 
     while (window.isOpen()) {
         if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
@@ -109,13 +102,7 @@ int main(int ac, char **av)
 
         map.updateDisplay();
         window.clear(sf::Color::Blue);
-
-        renderTexture.clear(sf::Color::Transparent);
-        renderTexture.draw(map);
-        renderTexture.display();
-        sprite.setTexture(renderTexture.getTexture());
-
-        window.draw(sprite);
+        window.draw(map);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();

@@ -12,6 +12,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 #include "Box.hpp"
 #include "../Display/Assets.hpp"
@@ -30,6 +31,11 @@ namespace zappy
             void updateDisplay();
 
             SceneData sceneData;
+
+            sf::RenderTexture renderTexture;
+            sf::Texture texture;
+            sf::Sprite sprite;
+            sf::View view;
     };
 
     class Map : public sf::Drawable

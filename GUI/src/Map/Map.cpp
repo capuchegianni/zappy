@@ -13,6 +13,10 @@ zappy::MapDrawables::MapDrawables(zappy::Assets &assets, math::Vector3D mapSize)
     sceneData.camera.centerX = -mapSize.x / 2;
     sceneData.camera.centerY = -mapSize.y / 2;
     sceneData.camera.centerZ = mapSize.z / 2;
+
+    view = sf::View(sf::FloatRect(-250, -250, 500, 500));
+    renderTexture.create(500, 500);
+    renderTexture.setView(view);
 }
 
 void zappy::MapDrawables::updateDisplay()
@@ -103,28 +107,23 @@ void zappy::Map::updateDisplay()
 {
     sceneDate.updateDisplay();
 
+    sceneDate.renderTexture.clear(sf::Color::Transparent);
+
     for (auto &row : _map) {
         for (auto &box : row) {
             box.updateSprite();
+            sceneDate.renderTexture.draw(box);
         }
     }
+
+    sceneDate.renderTexture.display();
+    sceneDate.texture = sceneDate.renderTexture.getTexture();
+    sceneDate.sprite.setTexture(sceneDate.texture);
 }
 
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    for (auto &row : _map) {
-        for (auto &box : row) {
-            target.draw(box, states);
-        }
-    }
-
-    for (auto &team : _teams)
-    {
-        for (auto &player: team.players)
-        {
-            target.draw(*player, states);
-        }
-    }
+    target.draw(sceneDate.sprite, states);
 }
 
 zappy::Team &zappy::Map::getTeam(std::string &name)
