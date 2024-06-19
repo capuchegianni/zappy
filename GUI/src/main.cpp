@@ -22,6 +22,7 @@ int main(int ac, char **av) {
         server.run();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
-        return 1;
+        return 42;
     }
+    return 0;
 }
