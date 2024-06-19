@@ -27,6 +27,15 @@ namespace zappy
                 DisplayTile(const DisplayTile &other);
                 ~DisplayTile();
 
+                class DisplayTileError : public std::exception
+                {
+                    public:
+                        DisplayTileError(std::string const &message) : _message(message) {}
+                        const char *what() const noexcept override { return _message.c_str(); }
+                    private:
+                        std::string _message;
+                };
+
                 void computeTileImage(Camera &camera);
                 sf::Texture &getTexture();
 

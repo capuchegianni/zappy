@@ -20,7 +20,10 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
     if (camera.unitaryPixelsSize != camera.unitaryPixelsSizeBackup)
     {
         sf::Texture originalTexture;
-        originalTexture.loadFromImage(_baseImage);
+        if (!originalTexture.loadFromImage(_baseImage))
+        {
+            throw DisplayTileError("Error loading texture from image");
+        }
 
         sf::Sprite sprite(originalTexture);
 
@@ -30,7 +33,7 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
 
         sf::RenderTexture renderTexture;
         if (!renderTexture.create(desiredWidth, desiredHeight)) {
-            // handle error
+            throw DisplayTileError("Error creating RenderTexture");
         }
 
         // Scale the sprite to fit the RenderTexture
