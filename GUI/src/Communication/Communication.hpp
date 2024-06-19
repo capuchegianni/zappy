@@ -54,6 +54,10 @@ namespace zappy {
         private:
             std::string _message;
         };
+        class MapUninitialized : public std::exception {
+        public:
+            const char *what() const noexcept override { return "Map uninitialized"; }
+        };
     private:
         // Commands
         std::unordered_map<std::string, std::function<void(std::vector<std::string> &args)>> _commands {
