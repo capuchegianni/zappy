@@ -46,6 +46,8 @@ class Bot:
         while True:
             if not self.lookAround():
                 break
+            if not self.updateInventory():
+                break
 
 
     def lookAround(self):
@@ -152,3 +154,16 @@ class Bot:
         }
         # faut changer les valeurs
         return food_requirements.get(action, 0)
+
+
+    def updateInventory(self):
+        if self.comm.stop_listening:
+            return False
+        self.comm.sendCommand("Inventory")
+        self.inventory = {}
+
+        for item in self.comm.data.strip()[1:-1].split(','):
+            key, value = item.strip().split(' ')
+            self.inventory[Element[key.upper()]] = int(value)
+
+        return True
