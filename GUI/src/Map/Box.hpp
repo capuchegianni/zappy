@@ -16,6 +16,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Vector3.hpp>
 
 #include "../Characters/Trantorien.hpp"
 #include "../Display/Renderer/DisplayTile.hpp"
@@ -38,8 +39,27 @@ namespace zappy
                     std::string _message;
             };
 
+            sf::Vector3f getRandomPosInBox();
+
             void updateSprite();
             sf::Sprite sprite;
+
+            sf::CircleShape food;
+            sf::CircleShape linemate;
+            sf::CircleShape deraumere;
+            sf::CircleShape sibur;
+            sf::CircleShape mendiane;
+            sf::CircleShape phiras;
+            sf::CircleShape thystame;
+
+            sf::Vector3f foodPosition;
+            sf::Vector3f linematePosition;
+            sf::Vector3f deraumerePosition;
+            sf::Vector3f siburPosition;
+            sf::Vector3f mendianePosition;
+            sf::Vector3f phirasPosition;
+            sf::Vector3f thystamePosition;
+
         private:
             render3d::DisplayTile &_tile;
             render3d::Camera &_camera;
