@@ -67,3 +67,19 @@ int command_tna(server_t *server, client_t *client);
  * @return 1 if the command has been successfully executed
 */
 int forward_command(server_t *server, client_t *client);
+
+/**
+ * @brief Right command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int right_command(server_t *server, client_t *client);
+
+/**
+ * @brief Left command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int left_command(server_t *server, client_t *client);
