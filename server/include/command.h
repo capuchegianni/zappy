@@ -56,3 +56,14 @@ int command_mct(server_t *server, client_t *client);
  * @return return the status of the execution, 1 for OK
 */
 int command_tna(server_t *server, client_t *client);
+
+
+// Commands for AI/server communication
+
+/**
+ * @brief Forward command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int forward_command(server_t *server, client_t *client);

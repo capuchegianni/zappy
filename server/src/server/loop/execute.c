@@ -14,14 +14,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int forward(server_t *server, client_t *client)
-{
-    (void)server;
-    (void)client;
-    dprintf(client->fd, "Forward command executed\n");
-    return 1;
-}
-
 commands_t commands[] = {
     {"msz", 1, 0, command_msz},
     {"bct", 1, 0, command_bct},
@@ -32,7 +24,7 @@ commands_t commands[] = {
     {"pin", 1, 0, NULL},
     {"sgt", 1, 0, command_sgt},
     {"sst", 1, 0, NULL},
-    {"Forward", 0, 7, forward},
+    {"Forward", 0, 7, forward_command},
     {"Right", 0, 7, NULL},
     {"Left", 0, 7, NULL},
     {"Look", 0, 7, NULL},
