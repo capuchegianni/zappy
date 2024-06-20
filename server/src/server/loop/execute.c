@@ -32,7 +32,7 @@ commands_t commands[] = {
     {"Broadcast", 0, 7, NULL},
     {"Connect_nbr", 0, 0, connect_nbr_command},
     {"Fork", 0, 42, fork_command},
-    {"Eject", 0, 7, NULL},
+    {"Eject", 0, 7, eject_command},
     {"Take", 0, 7, NULL},
     {"Set", 0, 7, NULL},
     {"Incantation", 0, 300, NULL},
