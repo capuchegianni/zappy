@@ -7,9 +7,10 @@
 
 #include "server.h"
 
-#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 bool team_exists(game_t *game, char *name)
 {
@@ -44,4 +45,23 @@ void set_player_team(char *team_name, game_t *game, client_t *client)
     team.total_players_connected++;
     client->player->team_name = strdup(team_name);
     send_response(client, &team, game);
+}
+
+static void set_player_pos(game_t *game, client_t *client, size_t i)
+{
+    for (size_t j = 0; j < game->x; j++) {
+        if (game->map[i][j].egg_here) {
+            client->player->x = j;
+            client->player->y = i;
+            break;
+        }
+    }
+}
+
+void place_player_on_map(game_t *game, client_t *client)
+{
+    srand(time(NULL));
+    for (size_t i = 0; i < game->y; i++)
+        set_player_pos(game, client, i);
+    client->player->direction = rand() % 4;
 }

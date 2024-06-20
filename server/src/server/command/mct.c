@@ -12,8 +12,8 @@ int command_mct(server_t *server, client_t *client)
 {
     int ret = 1;
 
-    for (size_t i = 0; i < server->game->x; ++i) {
-        for (size_t j = 0; j < server->game->y; ++j) {
+    for (size_t i = 0; i < server->game->y; ++i) {
+        for (size_t j = 0; j < server->game->x; ++j) {
             ret &= internal_bct(i, j, client->fd, server);
         }
     }

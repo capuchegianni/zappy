@@ -57,15 +57,15 @@ void spawn_ressource(server_t *server, float ressouce_density,
         (float)server->game->y * (ressouce_density / 100.f);
     double current_food = 0;
 
-    for (size_t i = 0; i < server->game->x; ++i) {
-        for (size_t j = 0; j < server->game->y; ++j) {
+    for (size_t i = 0; i < server->game->y; ++i) {
+        for (size_t j = 0; j < server->game->x; ++j) {
             current_food +=
             (float)((&server->game->map[i][j].items.food)[ressource_id]);
         }
     }
     if (current_food < max_food || current_food == 0) {
-        ((&server->game->map[rand() % server->game->x]
-        [rand() % server->game->y].items.food)[ressource_id]) += 1;
+        ((&server->game->map[rand() % server->game->y]
+        [rand() % server->game->x].items.food)[ressource_id]) += 1;
     }
 }
 

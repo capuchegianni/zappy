@@ -11,34 +11,34 @@
 
 static void move_up(game_t *game, player_t *player)
 {
-    if (player->x == 0)
-        player->x = game->x;
-    else
-        player->x--;
-}
-
-static void move_down(game_t *game, player_t *player)
-{
-    if (player->x == game->x)
-        player->x = 0;
-    else
-        player->x++;
-}
-
-static void move_left(game_t *game, player_t *player)
-{
     if (player->y == 0)
         player->y = game->y;
     else
         player->y--;
 }
 
-static void move_right(game_t *game, player_t *player)
+static void move_down(game_t *game, player_t *player)
 {
     if (player->y == game->y)
         player->y = 0;
     else
         player->y++;
+}
+
+static void move_left(game_t *game, player_t *player)
+{
+    if (player->x == 0)
+        player->x = game->x;
+    else
+        player->x--;
+}
+
+static void move_right(game_t *game, player_t *player)
+{
+    if (player->x == game->x)
+        player->x = 0;
+    else
+        player->x++;
 }
 
 int forward_command(server_t *server, client_t *client)

@@ -27,7 +27,7 @@ commands_t commands[] = {
     {"Forward", 0, 7, forward_command},
     {"Right", 0, 7, right_command},
     {"Left", 0, 7, left_command},
-    {"Look", 0, 7, NULL},
+    {"Look", 0, 7, look_command},
     {"Inventory", 0, 1, NULL},
     {"Broadcast", 0, 7, NULL},
     {"Connect_nbr", 0, 0, NULL},
@@ -81,16 +81,16 @@ static void execute_cmd(server_t *server, client_t *client)
             command_sgt(server, client);
             return;
         }
-        if (team_exists(server->game, client->input[0].args[0]))
+        if (team_exists(server->game, client->input[0].args[0])) {
             set_player_team(client->input[0].args[0], server->game, client);
-        else
+            place_player_on_map(server->game, client);
+        } else
             write(client->fd, "ko\n", 4);
         return;
     }
     if (!find_cmd(server, client)) {
-        if (client->input->args && client->input->args[0]) {
-            dprintf(client->fd, "ko\n");
-        }
+        if (client->input->args && client->input->args[0])
+            dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");
     }
 }
 
@@ -144,7 +144,7 @@ int execute_command(server_t *server, client_t *client)
     client->input[0].exec_time / server->game->frequence)
         return 0;
     if (!check_spaces(client->input[0].body)) {
-        dprintf(client->fd, "ko\n");
+        dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");
         move_inputs(client->input);
         return 0;
     }
