@@ -45,9 +45,13 @@ int main(int ac, char **av)
 
     std::string team1 = "team1";
     std::string team2 = "team2";
+    std::string team3 = "team3";
+    std::string team4 = "team4";
 
     map.addTeam(team1);
     map.addTeam(team2);
+    map.addTeam(team3);
+    map.addTeam(team4);
 
     std::shared_ptr<zappy::Trantorien> player1 = std::make_shared<zappy::Trantorien>();
 
@@ -67,6 +71,24 @@ int main(int ac, char **av)
 
     map.addPlayer(player2, team2);
 
+    std::shared_ptr<zappy::Trantorien> player3 = std::make_shared<zappy::Trantorien>();
+
+    player3->id = 3;
+    player3->level = 1;
+    player3->x = 2;
+    player3->y = 2;
+
+    map.addPlayer(player3, team3);
+
+    std::shared_ptr<zappy::Trantorien> player4 = std::make_shared<zappy::Trantorien>();
+
+    player4->id = 4;
+    player4->level = 1;
+    player4->x = 3;
+    player4->y = 3;
+
+    map.addPlayer(player4, team4);
+
     std::size_t frame = 0;
 
     while (window.isOpen())
@@ -84,7 +106,7 @@ int main(int ac, char **av)
             zappy::Trantorien &player2 = *map.getPlayerById(2);
             player2.x = (player2.x - 1) % width;
             player2.y = (player2.y + 1) % height;
-r        }
+        }
 
         math::Vector3D movForward = map.sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
         math::Vector3D movRight = map.sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;

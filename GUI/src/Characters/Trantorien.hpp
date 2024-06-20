@@ -33,6 +33,7 @@ namespace zappy
 
             sf::CircleShape body;
             sf::CircleShape head;
+            sf::CircleShape shadow;
     };
 
     class Trantorien : public sf::Drawable
