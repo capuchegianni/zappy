@@ -10,7 +10,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 bool team_exists(game_t *game, char *name)
 {

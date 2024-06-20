@@ -8,7 +8,6 @@
 #include "game.h"
 
 #include <stdlib.h>
-#include <time.h>
 
 void init_items(items_t *items)
 {

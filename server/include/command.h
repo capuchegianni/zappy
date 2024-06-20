@@ -107,3 +107,11 @@ int inventory_command(server_t *server, client_t *client);
  * @return 1 if the command has been successfully executed
 */
 int connect_nbr_command(server_t *server, client_t *client);
+
+/**
+ * @brief Fork command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int fork_command(server_t *server, client_t *client);

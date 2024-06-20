@@ -31,7 +31,7 @@ commands_t commands[] = {
     {"Inventory", 0, 1, inventory_command},
     {"Broadcast", 0, 7, NULL},
     {"Connect_nbr", 0, 0, connect_nbr_command},
-    {"Fork", 0, 42, NULL},
+    {"Fork", 0, 42, fork_command},
     {"Eject", 0, 7, NULL},
     {"Take", 0, 7, NULL},
     {"Set", 0, 7, NULL},
