@@ -28,7 +28,7 @@ commands_t commands[] = {
     {"Right", 0, 7, right_command},
     {"Left", 0, 7, left_command},
     {"Look", 0, 7, look_command},
-    {"Inventory", 0, 1, NULL},
+    {"Inventory", 0, 1, inventory_command},
     {"Broadcast", 0, 7, NULL},
     {"Connect_nbr", 0, 0, NULL},
     {"Fork", 0, 42, NULL},
