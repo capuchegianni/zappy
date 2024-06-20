@@ -7,9 +7,15 @@
 
 #include "Team.hpp"
 
-zappy::Team::Team(std::string &name) : name(name)
+zappy::Team::Team(std::string &name, Assets &assets) : name(name)
 {
     color = generateColor(name);
+
+    towardsCameraTexture = recolorTexture(assets.towardsCameraTexture, color);
+    towardsLeftTexture = recolorTexture(assets.towardsLeftTexture, color);
+    towardsRightTexture = recolorTexture(assets.towardsRightTexture, color);
+    towardsBackTexture = recolorTexture(assets.towardsBackTexture, color);
+    eggTexture = recolorTexture(assets.eggTexture, color);
 }
 
 zappy::Team::~Team()
@@ -19,6 +25,8 @@ zappy::Team::~Team()
 void zappy::Team::addPlayer(const std::shared_ptr<Trantorien> &player)
 {
     players.push_back(player);
+
+    player->setTextures(towardsCameraTexture, towardsLeftTexture, towardsRightTexture, towardsBackTexture);
 }
 
 void zappy::Team::removePlayerById(std::size_t id)
@@ -81,4 +89,24 @@ sf::Color zappy::Team::generateColor(const std::string &name)
     int blue = distribution(generator);
 
     return sf::Color(red, green, blue);
+}
+
+std::shared_ptr<sf::Texture>
+zappy::Team::recolorTexture(const sf::Texture &texture, const sf::Color &color)
+{
+    sf::Color colorToReplace = sf::Color::Green;
+
+    sf::Image image = texture.copyToImage();
+    for (unsigned int x = 0; x < image.getSize().x; x++) {
+        for (unsigned int y = 0; y < image.getSize().y; y++) {
+            sf::Color pixel = image.getPixel(x, y);
+            if (pixel == colorToReplace)
+                image.setPixel(x, y, color);
+        }
+    }
+
+    std::shared_ptr<sf::Texture> newTexture = std::make_shared<sf::Texture>();
+    newTexture->loadFromImage(image);
+
+    return newTexture;
 }

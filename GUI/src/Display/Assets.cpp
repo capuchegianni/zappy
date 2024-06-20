@@ -63,6 +63,21 @@ zappy::Assets::Assets()
             throw Assets::AssetsError("Could not load thystame " + std::to_string(i) + " texture");
         thystameTextures.push_back(texture);
     }
+
+    if (!eggTexture.loadFromFile("../assets/textures/characters/egg.png"))
+        throw Assets::AssetsError("Could not load egg texture");
+
+    if (!towardsCameraTexture.loadFromFile("../assets/textures/characters/towards_camera.png"))
+        throw Assets::AssetsError("Could not load towards camera texture");
+
+    if (!towardsLeftTexture.loadFromFile("../assets/textures/characters/towards_left.png"))
+        throw Assets::AssetsError("Could not load towards left texture");
+
+    if (!towardsRightTexture.loadFromFile("../assets/textures/characters/towards_right.png"))
+        throw Assets::AssetsError("Could not load towards right texture");
+
+    if (!towardsBackTexture.loadFromFile("../assets/textures/characters/towards_back.png"))
+        throw Assets::AssetsError("Could not load towards back texture");
 }
 
 zappy::Assets::~Assets() = default;

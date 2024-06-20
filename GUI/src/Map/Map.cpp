@@ -144,7 +144,7 @@ zappy::Team &zappy::Map::getTeam(std::string &name)
 
 void zappy::Map::addTeam(std::string &name)
 {
-    _teams.emplace_back(name);
+    _teams.emplace_back(name, _assets);
 }
 
 void zappy::Map::addEgg(std::size_t x, std::size_t y, std::size_t id, std::string &team)

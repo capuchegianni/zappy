@@ -92,9 +92,9 @@ int main(int ac, char **av)
     std::size_t frame = 0;
 
     srand(time(NULL));
-    for (int i = 0; i < width; i++)
+    for (std::size_t i = 0; i < width; i++)
     {
-        for (int j = 0; j < height; j++)
+        for (std::size_t j = 0; j < height; j++)
         {
             map(i, j).thystame = rand() % 2;
             map(i, j).linemate = rand() % 2;

@@ -45,5 +45,11 @@ namespace zappy
             std::vector<std::shared_ptr<sf::Texture>> mendianeTextures;
             std::vector<std::shared_ptr<sf::Texture>> phirasTextures;
             std::vector<std::shared_ptr<sf::Texture>> thystameTextures;
+
+            sf::Texture eggTexture;
+            sf::Texture towardsCameraTexture;
+            sf::Texture towardsLeftTexture;
+            sf::Texture towardsRightTexture;
+            sf::Texture towardsBackTexture;
     };
 }
