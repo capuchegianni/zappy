@@ -96,10 +96,27 @@ zappy::Box::~Box() = default;
 void zappy::Box::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(_drawables.sprite, states);
-    target.draw(_drawables.food, states);
-    target.draw(_drawables.linemate, states);
-    target.draw(_drawables.deraumere, states);
-    target.draw(_drawables.sibur, states);
+
+    if (food > 0)
+        target.draw(_drawables.food, states);
+
+    if (linemate > 0)
+        target.draw(_drawables.linemate, states);
+
+    if (deraumere > 0)
+        target.draw(_drawables.deraumere, states);
+
+    if (sibur > 0)
+        target.draw(_drawables.sibur, states);
+
+    if (mendiane > 0)
+        target.draw(_drawables.mendiane, states);
+
+    if (phiras > 0)
+        target.draw(_drawables.phiras, states);
+
+    if (thystame > 0)
+        target.draw(_drawables.thystame, states);
 }
 
 void zappy::Box::updateSprite()

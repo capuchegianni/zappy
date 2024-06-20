@@ -25,6 +25,44 @@ zappy::Assets::Assets()
             tilesTextures.push_back(std::make_unique<sf::Image>(texture));
         }
     }
+
+    for (int i = 0; i < 5; i++)
+    {
+        std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/food" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load food " + std::to_string(i) + " texture");
+        foodTextures.push_back(texture);
+
+        texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/linemate" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load linemate " + std::to_string(i) + " texture");
+        linemateTextures.push_back(texture);
+
+        texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/deraumere" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load deraumere " + std::to_string(i) + " texture");
+        deraumereTextures.push_back(texture);
+
+        texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/sibur" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load sibur " + std::to_string(i) + " texture");
+        siburTextures.push_back(texture);
+
+        texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/mendiane" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load mendiane " + std::to_string(i) + " texture");
+        mendianeTextures.push_back(texture);
+
+        texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/phiras" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load phiras " + std::to_string(i) + " texture");
+        phirasTextures.push_back(texture);
+
+        texture = std::make_shared<sf::Texture>();
+        if (!texture->loadFromFile("../assets/textures/thystame" + std::to_string(i) + ".png"))
+            throw Assets::AssetsError("Could not load thystame " + std::to_string(i) + " texture");
+        thystameTextures.push_back(texture);
+    }
 }
 
 zappy::Assets::~Assets() = default;

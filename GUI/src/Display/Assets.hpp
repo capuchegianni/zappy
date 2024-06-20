@@ -37,5 +37,13 @@ namespace zappy
             sf::Image placeholderImage;
             std::vector<std::unique_ptr<sf::Image>> tilesTextures;
             render3d::Camera camera;
+
+            std::vector<std::shared_ptr<sf::Texture>> foodTextures;
+            std::vector<std::shared_ptr<sf::Texture>> linemateTextures;
+            std::vector<std::shared_ptr<sf::Texture>> deraumereTextures;
+            std::vector<std::shared_ptr<sf::Texture>> siburTextures;
+            std::vector<std::shared_ptr<sf::Texture>> mendianeTextures;
+            std::vector<std::shared_ptr<sf::Texture>> phirasTextures;
+            std::vector<std::shared_ptr<sf::Texture>> thystameTextures;
     };
 }
