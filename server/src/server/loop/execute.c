@@ -52,6 +52,7 @@ static void execute_cmd(server_t *server, client_t *client)
     if (client->player->team_name == NULL) {
         if (!strcmp(client->input->args[0], "GRAPHIC")) {
             client->is_graphic = true;
+            client->player->team_name = strdup("GRAPHIC");
             command_msz(server, client);
             command_sgt(server, client);
             return;
