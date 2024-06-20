@@ -131,6 +131,7 @@ static void client_init(server_t *server, int i)
     server->clients[i].is_playing = false;
     server->clients[i].is_graphic = false;
     server->clients[i].player = malloc(sizeof(player_t));
+    server->clients[i].player->id = 0;
     server->clients[i].player->direction = NORTH;
     server->clients[i].player->level = 1;
     server->clients[i].player->team_name = NULL;

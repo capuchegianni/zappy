@@ -48,6 +48,7 @@ typedef struct level_s {
 } level_t;
 
 typedef struct player_s {
+    size_t id;
     char *team_name;
     items_t inventory;
     size_t level;

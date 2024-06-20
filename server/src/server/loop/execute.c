@@ -30,7 +30,7 @@ commands_t commands[] = {
     {"Look", 0, 7, look_command},
     {"Inventory", 0, 1, inventory_command},
     {"Broadcast", 0, 7, NULL},
-    {"Connect_nbr", 0, 0, NULL},
+    {"Connect_nbr", 0, 0, connect_nbr_command},
     {"Fork", 0, 42, NULL},
     {"Eject", 0, 7, NULL},
     {"Take", 0, 7, NULL},
@@ -84,6 +84,7 @@ static void execute_cmd(server_t *server, client_t *client)
         if (team_exists(server->game, client->input[0].args[0])) {
             set_player_team(client->input[0].args[0], server->game, client);
             place_player_on_map(server->game, client);
+            set_player_id(client->player);
         } else
             write(client->fd, "ko\n", 4);
         return;

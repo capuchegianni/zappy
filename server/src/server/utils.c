@@ -14,6 +14,14 @@
 #include <unistd.h>
 #include <string.h>
 
+void set_player_id(player_t *player)
+{
+    static size_t id = 0;
+
+    player->id = id;
+    id++;
+}
+
 void reset_client(client_t *client)
 {
     client->is_playing = false;
