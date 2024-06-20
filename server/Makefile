@@ -44,7 +44,8 @@ SRC = 	src/server/main.c						\
 		src/server/game/teams.c					\
 		src/server/command/ai/forward.c			\
 		src/server/command/ai/right.c 			\
-		src/server/command/ai/left.c
+		src/server/command/ai/left.c 			\
+		src/server/command/ai/look.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))

@@ -83,3 +83,11 @@ int right_command(server_t *server, client_t *client);
  * @return 1 if the command has been successfully executed
 */
 int left_command(server_t *server, client_t *client);
+
+/**
+ * @brief Look command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int look_command(server_t *server, client_t *client);
