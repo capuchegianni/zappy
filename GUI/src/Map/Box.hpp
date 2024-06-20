@@ -27,7 +27,7 @@ namespace zappy
     class BoxDrawables
     {
         public:
-            BoxDrawables(render3d::DisplayTile &displayTile, render3d::Camera &camera, std::size_t x, std::size_t y);
+            BoxDrawables(render3d::DisplayTile &displayTile, Assets &assets, render3d::Camera &camera, std::size_t x, std::size_t y);
             ~BoxDrawables();
 
             class BoxDrawablesError : public std::exception
@@ -44,13 +44,13 @@ namespace zappy
             void updateSprite();
             sf::Sprite sprite;
 
-            sf::CircleShape food;
-            sf::CircleShape linemate;
-            sf::CircleShape deraumere;
-            sf::CircleShape sibur;
-            sf::CircleShape mendiane;
-            sf::CircleShape phiras;
-            sf::CircleShape thystame;
+            sf::Sprite food;
+            sf::Sprite linemate;
+            sf::Sprite deraumere;
+            sf::Sprite sibur;
+            sf::Sprite mendiane;
+            sf::Sprite phiras;
+            sf::Sprite thystame;
 
             sf::Vector3f foodPosition;
             sf::Vector3f linematePosition;
@@ -59,6 +59,8 @@ namespace zappy
             sf::Vector3f mendianePosition;
             sf::Vector3f phirasPosition;
             sf::Vector3f thystamePosition;
+
+            Assets &_assets;
 
         private:
             render3d::DisplayTile &_tile;
@@ -71,7 +73,7 @@ namespace zappy
     class Box : public sf::Drawable
     {
         public:
-            Box(std::size_t x, std::size_t y, SceneData &data);
+            Box(std::size_t x, std::size_t y, SceneData &data, Assets &assets);
             ~Box() override;
 
             class BoxError : public std::exception

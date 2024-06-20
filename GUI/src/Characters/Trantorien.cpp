@@ -35,11 +35,11 @@ zappy::Trantorien::~Trantorien() = default;
 void zappy::Trantorien::updateDisplay(zappy::render3d::Camera &camera)
 {
     _drawables.body.setFillColor(color);
-    _drawables.body.setRadius(camera.unitaryPixelsSize / 2);
+    _drawables.body.setRadius(camera.unitaryPixelsSize / 4);
     _drawables.body.setOrigin(_drawables.body.getGlobalBounds().width / 2, _drawables.body.getGlobalBounds().height / 2);
     _drawables.body.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
                                 camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ);
-    _drawables.shadow.setRadius(camera.unitaryPixelsSize / 2);
+    _drawables.shadow.setRadius(camera.unitaryPixelsSize / 3);
     _drawables.shadow.setOrigin(_drawables.shadow.getGlobalBounds().width / 2, _drawables.shadow.getGlobalBounds().height / 2);
     _drawables.shadow.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
                                   camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ);

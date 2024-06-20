@@ -29,37 +29,37 @@ zappy::Assets::Assets()
     for (int i = 0; i < 5; i++)
     {
         std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/food" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/food/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load food " + std::to_string(i) + " texture");
         foodTextures.push_back(texture);
 
         texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/linemate" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/linemate/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load linemate " + std::to_string(i) + " texture");
         linemateTextures.push_back(texture);
 
         texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/deraumere" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/deraumere/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load deraumere " + std::to_string(i) + " texture");
         deraumereTextures.push_back(texture);
 
         texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/sibur" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/sibur/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load sibur " + std::to_string(i) + " texture");
         siburTextures.push_back(texture);
 
         texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/mendiane" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/mendiane/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load mendiane " + std::to_string(i) + " texture");
         mendianeTextures.push_back(texture);
 
         texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/phiras" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/phiras/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load phiras " + std::to_string(i) + " texture");
         phirasTextures.push_back(texture);
 
         texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile("../assets/textures/thystame" + std::to_string(i) + ".png"))
+        if (!texture->loadFromFile("../assets/textures/crystals/thystame/" + std::to_string(i) + ".png"))
             throw Assets::AssetsError("Could not load thystame " + std::to_string(i) + " texture");
         thystameTextures.push_back(texture);
     }

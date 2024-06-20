@@ -41,7 +41,7 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : sceneDa
 
         for (std::size_t j = 0; j < height; j++)
         {
-            _map[i].push_back(Box(i, j, sceneDate.sceneData));
+            _map[i].push_back(Box(i, j, sceneDate.sceneData, _assets));
         }
     }
 }

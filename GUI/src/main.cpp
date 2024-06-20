@@ -99,6 +99,10 @@ int main(int ac, char **av)
             map(i, j).thystame = rand() % 2;
             map(i, j).linemate = rand() % 2;
             map(i, j).food = rand() % 2;
+            map(i, j).deraumere = rand() % 2;
+            map(i, j).sibur = rand() % 2;
+            map(i, j).mendiane = rand() % 2;
+            map(i, j).phiras = rand() % 2;
         }
     }
 
