@@ -9,6 +9,8 @@
 
 #define TIME_UNITS 126
 
+#include <time.h>
+
 typedef unsigned long size_t;
 
 enum ITEMS_DENSITY {
@@ -51,6 +53,7 @@ typedef struct player_s {
     size_t x;
     size_t y;
     enum DIRECTION direction;
+    time_t last_command_time;
 } player_t;
 
 typedef struct team_s {

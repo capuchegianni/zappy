@@ -13,11 +13,15 @@
 
 static int add_buffer(client_t *client, char *buffer)
 {
-    client->input->body = realloc(client->input->body, strlen(buffer) + 1);
-    if (client->input->body == NULL)
+    int i = 0;
+
+    for (; client->input[i].body; i++);
+    if (i == 10)
+        return 0;
+    client->input[i].body = strdup(buffer);
+    if (client->input[i].body == NULL)
         return 84;
-    client->input->body = strcpy(client->input->body, buffer);
-    client->input->body_len = strlen(client->input->body);
+    client->input[i].body_len = strlen(client->input[i].body);
     return 0;
 }
 
