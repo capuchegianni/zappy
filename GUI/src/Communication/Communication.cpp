@@ -171,6 +171,8 @@ void zappy::Communication::TODODELETE() {
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
     }
+
+    _run = false;
 }
 
 void zappy::Communication::commandReceiver() {
