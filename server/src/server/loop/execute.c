@@ -92,8 +92,9 @@ static void handle_new_connection(server_t *server, client_t *client)
     place_player_on_map(server->game, client);
     set_player_id(client->player);
     for (int i = 0; i < FD_SETSIZE; ++i) {
-        if (server->clients[i].fd > -1 && !server->clients[i].is_graphic) {
-            command_pnw(server, &server->clients[i]);
+        if (server->clients[i].fd > -1 && !server->clients[i].is_graphic
+        && server->clients[i].is_playing) {
+            internal_pnw(&server->clients[i], client->fd);
         }
     }
 }
