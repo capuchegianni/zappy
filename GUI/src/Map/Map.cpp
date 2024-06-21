@@ -75,6 +75,7 @@ std::shared_ptr<zappy::Trantorien> zappy::Map::getPlayerById(std::size_t id)
 
 void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team)
 {
+    std::cout << "Adding player to team " << team << std::endl;
     Team &storedTeam = getTeam(team);
     player->team = team;
 

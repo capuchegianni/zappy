@@ -222,7 +222,7 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
         trantorien.y = y;
         trantorien.direction = zappy::Communication::getDirection(direction);
         trantorien.level = level;
-        (*this->map).getTeam(team).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
+        (*this->map).addPlayer(std::make_shared<zappy::Trantorien>(trantorien), team);
         this->_playersToUpdate.push_back(id);
         this->eventLogger.log("Player " + std::to_string(id) + " joined team " + team);
     } catch (std::invalid_argument &e) {
