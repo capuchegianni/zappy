@@ -73,6 +73,13 @@ int command_not_impl(server_t *server, client_t *client);
 */
 int command_pnw(server_t *server, client_t *client);
 
+/**
+ * @brief ppo command for internal use of zappy
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_ppo(server_t *server, client_t *client);
 
 // Commands for AI/server communication
 
