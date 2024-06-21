@@ -7,6 +7,8 @@
 
 #pragma once
 
+typedef struct player_s player_t;
+
 typedef unsigned long size_t;
 
 /**
@@ -21,3 +23,9 @@ void free_tab(char **tab);
  * @return the size of the tab
 */
 size_t tablen(char **tab);
+
+/**
+ * @brief Attribute an id to each newly created player
+ * @param player
+*/
+void set_player_id(player_t *player);

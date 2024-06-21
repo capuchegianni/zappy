@@ -23,13 +23,14 @@ typedef struct input_s {
     size_t body_len;
     char **args;
     size_t nb_args;
+    float exec_time;
 } input_t;
 
 typedef struct client_s {
     int fd;
     bool is_playing;
     bool is_graphic;
-    input_t *input;
+    input_t input[10];
     player_t *player;
 } client_t;
 
@@ -46,6 +47,7 @@ typedef struct server_s {
 typedef struct commands_s {
     char *name;
     bool isGuiOnly;
+    float timeout;
     int (*function)(server_t *server, client_t *client);
 } commands_t;
 
@@ -83,13 +85,6 @@ int init_read_buffer(client_t *client);
  * @return 0 if success, 1 if error
 */
 int execute_command(server_t *server, client_t *client);
-
-/**
- * @brief Check if the path is correct
- * @param int port
- * @return 0 if success, 84 if error
-*/
-int error_management(int port);
 
 /**
  * @brief Check the bind

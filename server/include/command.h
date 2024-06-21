@@ -72,3 +72,86 @@ int command_not_impl(server_t *server, client_t *client);
  * @return return the status of the execution, 1 for OK
 */
 int command_pnw(server_t *server, client_t *client);
+
+
+// Commands for AI/server communication
+
+/**
+ * @brief Forward command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int forward_command(server_t *server, client_t *client);
+
+/**
+ * @brief Right command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int right_command(server_t *server, client_t *client);
+
+/**
+ * @brief Left command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int left_command(server_t *server, client_t *client);
+
+/**
+ * @brief Look command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int look_command(server_t *server, client_t *client);
+
+/**
+ * @brief Inventory command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int inventory_command(server_t *server, client_t *client);
+
+/**
+ * @brief Connect_nbr command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int connect_nbr_command(server_t *server, client_t *client);
+
+/**
+ * @brief Fork command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int fork_command(server_t *server, client_t *client);
+
+/**
+ * @brief Eject command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int eject_command(server_t *server, client_t *client);
+
+/**
+ * @brief Take command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int take_command(server_t *server, client_t *client);
+
+/**
+ * @brief Set command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int set_command(server_t *server, client_t *client);

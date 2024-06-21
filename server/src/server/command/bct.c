@@ -14,7 +14,7 @@
 int internal_bct(int x, int y, int fd, server_t *server)
 {
     char *str;
-    tile_t tile = server->game->map[x][y];
+    tile_t tile = server->game->map[y][x];
 
     asprintf(&str, "bct %i %i %zu %zu %zu %zu %zu %zu %zu\n", x, y,
         tile.items.food, tile.items.linemate, tile.items.deraumere,
