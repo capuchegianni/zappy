@@ -24,7 +24,7 @@ enum ITEMS_DENSITY {
 };
 
 enum DIRECTION {
-    NORTH,
+    NORTH = 1,
     EAST,
     SOUTH,
     WEST
