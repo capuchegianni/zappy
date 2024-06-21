@@ -30,7 +30,6 @@ namespace zappy {
         std::vector<int> _playersToUpdate {};
         std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
         std::string getLine();
-        static zappy::Direction getDirection(int direction);
         void sendCommand(std::string command);
         void commandSender();
         void commandReceiver();
