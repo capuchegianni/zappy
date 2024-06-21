@@ -35,7 +35,7 @@ commands_t commands[] = {
     {"Eject", 0, 7, eject_command},
     {"Take", 0, 7, take_command},
     {"Set", 0, 7, set_command},
-    {"Incantation", 0, 300, NULL},
+    {"Incantation", 0, 0, incantation_command},
     {NULL, 0, 0, NULL}
 };
 

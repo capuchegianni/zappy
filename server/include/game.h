@@ -30,6 +30,12 @@ enum DIRECTION {
     WEST
 };
 
+typedef struct incantation_s {
+    bool occuring;
+    size_t level;
+    time_t start;
+} incantation_t;
+
 typedef struct items_s {
     long food;
     size_t linemate;
@@ -56,6 +62,7 @@ typedef struct player_s {
     size_t y;
     enum DIRECTION direction;
     time_t last_command_time;
+    bool in_incantation;
 } player_t;
 
 typedef struct team_s {
@@ -68,6 +75,7 @@ typedef struct tile_s {
     size_t player_here;
     size_t egg_here;
     items_t items;
+    incantation_t incantation;
 } tile_t;
 
 typedef struct game_s {

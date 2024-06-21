@@ -138,6 +138,7 @@ static void client_init(server_t *server, int i)
     server->clients[i].player->x = 0;
     server->clients[i].player->y = 0;
     server->clients[i].player->last_command_time = 0;
+    server->clients[i].player->in_incantation = false;
     for (int j = 0; j < 10; j++) {
         server->clients[i].input[j].args = NULL;
         server->clients[i].input[j].nb_args = 0;
