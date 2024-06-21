@@ -89,8 +89,10 @@ static void handle_new_connection(server_t *server, client_t *client)
         command_sgt(server, client);
         return;
     }
-    if (!team_exists(server->game, client->input->args[0]))
+    if (!team_exists(server->game, client->input->args[0])) {
         write(client->fd, "ko\n", 4);
+        return;
+    }
     set_player_team(client->input->args[0], server->game, client);
     place_player_on_map(server->game, client);
     set_player_id(client->player);
