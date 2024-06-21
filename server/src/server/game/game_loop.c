@@ -26,13 +26,14 @@ static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
     }
 }
 
-static void set_mcts(server_t *server, client_t *client, fd_set *writefds)
+static void send_infos(server_t *server, client_t *client, fd_set *writefds)
 {
     if (!client->player->team_name || !client->is_graphic) {
         return;
     }
     if (client->fd > -1 && FD_ISSET(client->fd, writefds)) {
         command_mct(server, client);
+        internal_ppo(client);
     }
 }
 
@@ -45,7 +46,7 @@ static void set_mct(server_t *server)
     set_fds(&readfds, &writefds, server);
     if (select(FD_SETSIZE, &readfds, &writefds, NULL, &tv) > 0) {
         for (int i = 0; i < FD_SETSIZE; ++i) {
-            set_mcts(server, &server->clients[i], &writefds);
+            send_infos(server, &server->clients[i], &writefds);
         }
     }
 }

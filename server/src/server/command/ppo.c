@@ -12,26 +12,29 @@
 #include <string.h>
 #include "command.h"
 
-int command_ppo(server_t *server, client_t *client)
+int internal_ppo(client_t *client)
 {
     char *str;
 
-    if (!client->input->args[1]) {
-        write(client->fd, "sbp\n", 4);
-        return 1;
-    }
+    asprintf(&str, "ppo %li %li %li %u\n", client->player->id,
+    client->player->x, client->player->y, client->player->direction);
+    write(client->fd, str, strlen(str));
+    free(str);
+    return 1;
+}
 
+int command_ppo(server_t *server, client_t *client)
+{
+    if (!client->input->args[1]) {
+        return write(client->fd, "sbp\n", 4);
+    }
     for (int i = 0; i < FD_SETSIZE; ++i) {
         if (server->clients[i].fd > -1 && server->clients[i].player->id
-        == (size_t) atoi(client->input->args[1])) {
-            asprintf(&str, "ppo %li %li %li %u\n",
-    server->clients[i].player->id,server->clients[i].player->x,
-    server->clients[i].player->y, server->clients[i].player->direction);
-            write(client->fd, str, strlen(str));
-            free(str);
+        == (size_t) atoi(client->input->args[1])
+        && !server->clients[i].is_graphic) {
+            internal_ppo(&server->clients[i]);
             return 1;
         }
     }
-    write(client->fd, "sbp\n", 4);
-    return 1;
+    return write(client->fd, "sbp\n", 4);
 }
