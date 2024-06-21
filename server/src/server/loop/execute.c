@@ -142,7 +142,8 @@ int execute_command(server_t *server, client_t *client)
     if (!client->input[0].body)
         return 0;
     if (difftime(now, client->player->last_command_time) <
-    client->input[0].exec_time / server->game->frequence)
+    client->input[0].exec_time / server->game->frequence ||
+    client->player->in_incantation)
         return 0;
     if (!check_spaces(client->input[0].body)) {
         dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");

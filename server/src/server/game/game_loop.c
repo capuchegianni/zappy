@@ -8,6 +8,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+
 #include "server.h"
 #include "command.h"
 #include "game.h"
@@ -69,7 +71,6 @@ void spawn_ressource(server_t *server, float ressouce_density,
     }
 }
 
-//TODO: Add tick base update
 int update_game(server_t *server)
 {
     set_mct(server);
@@ -81,5 +82,6 @@ int update_game(server_t *server)
     spawn_ressource(server, PHIRAS, 5);
     spawn_ressource(server, THYSTAME, 6);
     update_life_units(server);
+    check_for_incantation(server->game, server->clients);
     return 0;
 }
