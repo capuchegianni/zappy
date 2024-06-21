@@ -25,10 +25,10 @@ namespace zappy
 {
     enum Direction
     {
-        UP,
-        RIGHT,
+        UP = 1,
+        LEFT,
         DOWN,
-        LEFT
+        RIGHT,
     };
 
     enum CamDirection
