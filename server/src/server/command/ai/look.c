@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static tile_t get_tile_content(server_t *server, int x, int y)
+static tile_t get_tile_content(server_t *server, int y, int x)
 {
     tile_t tile;
 
@@ -50,7 +50,8 @@ static void look_north(server_t *server, client_t *client,
             temp = str ? str : strdup("");
             tile = get_tile_content(server, pos[0] - i, pos[1] + j);
             get_items(&tile, &str2);
-            asprintf(&str, "%s%s%s", temp, temp[0] ? "," : "", str2);
+            asprintf(&str, "%s%s%s", temp,
+            (i == 0 && j == -i) ? "" : ",", str2);
             free(temp);
             free(str2);
         }
@@ -72,7 +73,8 @@ static void look_east(server_t *server, client_t *client,
             temp = str ? str : strdup("");
             tile = get_tile_content(server, pos[0] + j, pos[1] + i);
             get_items(&tile, &str2);
-            asprintf(&str, "%s%s%s", temp, temp[0] ? "," : "", str2);
+            asprintf(&str, "%s%s%s", temp,
+            (i == 0 && j == -i) ? "" : ",", str2);
             free(temp);
             free(str2);
         }
@@ -94,7 +96,8 @@ static void look_south(server_t *server, client_t *client,
             temp = str ? str : strdup("");
             tile = get_tile_content(server, pos[0] + i, pos[1] - j);
             get_items(&tile, &str2);
-            asprintf(&str, "%s%s%s", temp, temp[0] ? "," : "", str2);
+            asprintf(&str, "%s%s%s", temp,
+            (i == 0 && j == -i) ? "" : ",", str2);
             free(temp);
             free(str2);
         }
@@ -116,7 +119,8 @@ static void look_west(server_t *server, client_t *client,
             temp = str ? str : strdup("");
             tile = get_tile_content(server, pos[0] - j, pos[1] - i);
             get_items(&tile, &str2);
-            asprintf(&str, "%s%s%s", temp, temp[0] ? "," : "", str2);
+            asprintf(&str, "%s%s%s", temp,
+            (i == 0 && j == -i) ? "" : ",", str2);
             free(temp);
             free(str2);
         }
