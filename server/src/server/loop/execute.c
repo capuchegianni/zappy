@@ -17,11 +17,11 @@ commands_t commands[] = {
     {"bct", 1, command_bct},
     {"mct", 1, command_mct},
     {"tna", 1, command_tna},
-    {"ppo", 1, NULL},
-    {"plv", 1, NULL},
-    {"pin", 1, NULL},
+    {"ppo", 1, command_not_impl},
+    {"plv", 1, command_not_impl},
+    {"pin", 1, command_not_impl},
     {"sgt", 1, command_sgt},
-    {"sst", 1, NULL},
+    {"sst", 1, command_not_impl},
     {NULL, 0, NULL}
 };
 
