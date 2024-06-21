@@ -39,7 +39,7 @@ class Communication:
             sleep(0.5)
 
         print(f"{Color.GREEN}Connected to server.{Color.RESET}")
-        self.size_map = tuple(list(map(int, data.split()))[-2:])
+        self.size_map = client_socket.recv(1024).decode()
 
         return client_socket
 
@@ -52,10 +52,16 @@ class Communication:
 
 
     def sendCommand(self, command):
+        if self.stop_listening:
+            return
         self.response_event.clear()
-        self.client_socket.sendall((command + "\n").encode())
+        try:
+            self.client_socket.sendall((command + "\n").encode())
+        except socket.error as e:
+            print(f"{Color.RED}Error sending data: {e}{Color.RESET}")
+            return
         if not self.stop_listening:
-            self.response_event.wait(timeout=1)
+            self.response_event.wait(timeout=5)
 
 
     def listenServer(self):
@@ -64,6 +70,9 @@ class Communication:
                 received_data = self.client_socket.recv(1024).decode()
                 if not received_data:
                     print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
+                    break
+                if received_data == "dead\n":
+                    print(f"{Color.BLUE}You died.{Color.RESET}")
                     break
             except socket.error as e:
                 print(f"{Color.RED}Error receiving data: {e}{Color.RESET}")

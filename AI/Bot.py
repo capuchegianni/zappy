@@ -22,24 +22,57 @@ class Bot:
         self.comm = comm
         self.direction = Direction.NORTH
         self.level = 1
-        self.run()
+        self.master = False
 
 
-    def forward(self):
-        self.comm.sendCommand("Forward")
+    def forward(self, steps=1):
+        for i in range(steps):
+            self.comm.sendCommand("Forward")
 
 
     def right(self):
         self.comm.sendCommand("Right")
+        if self.direction == Direction.NORTH:
+            self.direction = Direction.EAST
+        elif self.direction == Direction.EAST:
+            self.direction = Direction.SOUTH
+        elif self.direction == Direction.SOUTH:
+            self.direction = Direction.WEST
+        elif self.direction == Direction.WEST:
+            self.direction = Direction.NORTH
 
 
     def left(self):
         self.comm.sendCommand("Left")
+        if self.direction == Direction.NORTH:
+            self.direction = Direction.WEST
+        elif self.direction == Direction.WEST:
+            self.direction = Direction.SOUTH
+        elif self.direction == Direction.SOUTH:
+            self.direction = Direction.EAST
+        elif self.direction == Direction.EAST:
+            self.direction = Direction.NORTH
 
 
-    def uTurn(self):
-        self.right()
-        self.right()
+    def setDirection(self, direction):
+        while self.direction != direction:
+            self.right()
+
+
+    def takeObject(self, object):
+        self.comm.sendCommand("Take " + object.name.lower())
+
+
+    def setObject(self, object):
+        self.comm.sendCommand("Set " + object.name.lower())
+
+
+    def broadcast(self, text):
+        self.comm.sendCommand("Broadcast " + text)
+
+
+    def startIncantation(self):
+        self.comm.sendCommand("Incantation")
 
 
     def run(self):
@@ -47,6 +80,8 @@ class Bot:
             if not self.lookAround():
                 break
             if not self.updateInventory():
+                break
+            if not self.getObject(Element.FOOD):
                 break
 
 
@@ -56,13 +91,18 @@ class Bot:
         s = [self.level, self.level]
 
         for i in range(4):
+            if i == 0:
+                self.setDirection(Direction.NORTH)
+            elif i == 1:
+                self.setDirection(Direction.EAST)
+            elif i == 2:
+                self.setDirection(Direction.SOUTH)
+            elif i == 3:
+                self.setDirection(Direction.WEST)
             if self.comm.stop_listening:
                 return False
             self.comm.sendCommand("Look")
             all_list.append(self.comm.data)
-            if self.comm.stop_listening:
-                return False
-            self.comm.sendCommand("Right")
 
         for i, list in enumerate(all_list):
             elements = list.strip()[1:-1].strip().split(',')
@@ -105,29 +145,18 @@ class Bot:
 
     def goTo(self, y, x):
         if y < 0:
-            self.uTurn()
-            for i in range(abs(y)):
-                if self.comm.stop_listening:
-                    return False
-                self.comm.sendCommand("Forward")
+            self.setDirection(Direction.NORTH)
+            self.forward(abs(y))
         elif y > 0:
-            for i in range(y):
-                if self.comm.stop_listening:
-                    return False
-                self.comm.sendCommand("Forward")
+            self.setDirection(Direction.SOUTH)
+            self.forward(y)
 
         if x < 0:
-            self.left()
-            for i in range(abs(x)):
-                if self.comm.stop_listening:
-                    return False
-                self.comm.sendCommand("Forward")
+            self.setDirection(Direction.WEST)
+            self.forward(abs(x))
         elif x > 0:
-            self.right()
-            for i in range(x):
-                if self.comm.stop_listening:
-                    return False
-                self.comm.sendCommand("Forward")
+            self.setDirection(Direction.EAST)
+            self.forward(x)
 
         return True
 
@@ -162,8 +191,27 @@ class Bot:
         self.comm.sendCommand("Inventory")
         self.inventory = {}
 
+        if self.comm.data == "dead\n":
+            return False
         for item in self.comm.data.strip()[1:-1].split(','):
             key, value = item.strip().split(' ')
             self.inventory[Element[key.upper()]] = int(value)
+
+        return True
+
+
+    def getObject(self, object):
+        nearest = self.findNearest(object)
+        if nearest is None:
+            if self.comm.stop_listening:
+                return False
+            self.forward()
+            return True
+
+        if not self.goTo(nearest[0] - self.level, nearest[1] - self.level):
+            return False
+
+        self.takeObject(object)
+        print(self.comm.data)
 
         return True

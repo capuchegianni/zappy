@@ -19,3 +19,4 @@ class Element(Enum):
     PHIRAS = 5
     THYSTAME = 6
     PLAYER = 7
+    EGG = 8
