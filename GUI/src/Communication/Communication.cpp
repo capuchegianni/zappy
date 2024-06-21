@@ -13,6 +13,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include "../Display/EventLogger.hpp"
 
 zappy::Communication::Communication(int port, std::string host) : _port(port), _host(std::move(host)) {}
@@ -73,7 +74,10 @@ void zappy::Communication::run() {
 }
 
 void zappy::Communication::TODODELETE() {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy", sf::Style::Close);
+    int winwidth = 1920;
+    int winheight = 1080;
+
+    sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy", sf::Style::Close);
 
     sf::Vector2f loggerPos(1090, 10);
     sf::Vector2f loggerSize(820, 512);
@@ -83,16 +87,91 @@ void zappy::Communication::TODODELETE() {
     window.setFramerateLimit(60);
 
     sf::Vector2f position(0, 0);
-    sf::Vector2f size(1080, 1080);
+    sf::Vector2f size(720, 1080);
     (*map).setDisplayPosition(position);
     (*map).setDisplaySize(size);
-    while (true) {
-        window.clear(sf::Color::Blue);
-        (*map).updateDisplay();
+        window.setFramerateLimit(60);
 
-        window.draw((*map));
-        window.draw(eventLogger);
+    sf::Event event;
+    sf::Clock frameClock;
+    int lastFrameTime = 0;
+
+    frameClock.restart();
+
+    sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
+
+    sf::Vector2f rawr = {-300, -300};
+    sf::Vector2f rawr2 = {600, 600};
+
+    while (window.isOpen())
+    {
+        if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
+            continue;
+        }
+
+        math::Vector3D movForward = map->sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
+        math::Vector3D movRight = map->sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        {
+            map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
+            map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        {
+            map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
+            map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        {
+            map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
+            map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
+            map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
+        {
+            map->sceneDate.sceneData.camera.unitaryPixelsSize += 1;
+            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && map->sceneDate.sceneData.camera.unitaryPixelsSize > 10)
+        {
+            map->sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
+            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
+        }
+
+        while (window.pollEvent(event)) {
+
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+
+            if (event.type == sf::Event::Resized)
+            {
+                view = sf::View(sf::FloatRect(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
+                window.setView(view);
+            }
+        }
+
+        map->updateDisplay();
+        window.clear(sf::Color::Blue);
+        window.draw(*map);
         window.display();
+        lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
+        frameClock.restart();
     }
 }
 
