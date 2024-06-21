@@ -82,6 +82,7 @@ static void handle_new_connection(server_t *server, client_t *client)
         client->player->team_name = strdup("GRAPHIC");
         command_msz(server, client);
         command_sgt(server, client);
+        command_tna(server, client);
         return;
     }
     if (!team_exists(server->game, client->input->args[0])) {
