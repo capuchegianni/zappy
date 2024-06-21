@@ -54,3 +54,9 @@ cmake-build-release/
 out
 gen
 zappy_gui
+
+__pycache__
+*.pdf
+zappy_ai
+zappy_server
+font.ttf
