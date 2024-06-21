@@ -11,7 +11,7 @@
 
 void eject_north(server_t *server, client_t *client, size_t pos[2])
 {
-    size_t y = pos[0] == 0 ? server->game->y : pos[0] - 1;
+    size_t y = pos[0] == 0 ? server->game->y - 1 : pos[0] - 1;
     game_t *game = server->game;
 
     if (!game->map[pos[0]][pos[1]].player_here &&
@@ -33,7 +33,7 @@ void eject_north(server_t *server, client_t *client, size_t pos[2])
 
 void eject_east(server_t *server, client_t *client, size_t pos[2])
 {
-    size_t x = pos[1] == server->game->x ? 0 : pos[0] + 1;
+    size_t x = pos[1] == server->game->x - 1 ? 0 : pos[0] + 1;
     game_t *game = server->game;
 
     if (!game->map[pos[0]][pos[1]].player_here &&
@@ -55,7 +55,7 @@ void eject_east(server_t *server, client_t *client, size_t pos[2])
 
 void eject_south(server_t *server, client_t *client, size_t pos[2])
 {
-    size_t y = pos[0] == server->game->y ? 0 : pos[0] + 1;
+    size_t y = pos[0] == server->game->y - 1 ? 0 : pos[0] + 1;
     game_t *game = server->game;
 
     if (!game->map[pos[0]][pos[1]].player_here &&
@@ -77,7 +77,7 @@ void eject_south(server_t *server, client_t *client, size_t pos[2])
 
 void eject_west(server_t *server, client_t *client, size_t pos[2])
 {
-    size_t x = pos[1] == 0 ? server->game->x : pos[0] - 1;
+    size_t x = pos[1] == 0 ? server->game->x - 1 : pos[0] - 1;
     game_t *game = server->game;
 
     if (!game->map[pos[0]][pos[1]].player_here &&

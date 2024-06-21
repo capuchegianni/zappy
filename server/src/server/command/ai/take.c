@@ -69,10 +69,12 @@ static void pick_item(server_t *server, client_t *client, const char *item)
     size_t y = client->player->y;
     int val = 0;
 
-    if (server->game->map[y][x].items.food && !strcmp(item, "food")) {
-        server->game->map[y][x].items.food--;
-        client->player->inventory.food++;
-        val = 1;
+    if (server->game->map[y][x].items.food) {
+        if (!strcmp(item, "food")) {
+            server->game->map[y][x].items.food--;
+            client->player->inventory.food++;
+            val = 1;
+        }
     }
     if (server->game->map[y][x].items.linemate && !strcmp(item, "linemate")) {
         server->game->map[y][x].items.linemate--;
@@ -95,7 +97,7 @@ int take_command(server_t *server, client_t *client)
     }
     for (int i = 0; objects[i]; i++) {
         if (!strcmp(objects[i], client->input[0].args[1])) {
-            pick_item(server, client, objects[i]);
+            pick_item(server, client, client->input[0].args[1]);
             return 1;
         }
     }

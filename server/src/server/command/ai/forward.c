@@ -12,14 +12,14 @@
 static void move_up(game_t *game, player_t *player)
 {
     if (player->y == 0)
-        player->y = game->y;
+        player->y = game->y - 1;
     else
         player->y--;
 }
 
 static void move_down(game_t *game, player_t *player)
 {
-    if (player->y == game->y)
+    if (player->y == game->y - 1)
         player->y = 0;
     else
         player->y++;
@@ -28,14 +28,14 @@ static void move_down(game_t *game, player_t *player)
 static void move_left(game_t *game, player_t *player)
 {
     if (player->x == 0)
-        player->x = game->x;
+        player->x = game->x - 1;
     else
         player->x--;
 }
 
 static void move_right(game_t *game, player_t *player)
 {
-    if (player->x == game->x)
+    if (player->x == game->x - 1)
         player->x = 0;
     else
         player->x++;
