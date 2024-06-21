@@ -17,16 +17,19 @@
 #include "Display/EventLogger.hpp"
 
 #include "Communication/Communication.hpp"
+#include "MainProgram/Arguments.hpp"
 
-int main(int ac, char **av) {
+int main(int ac, char **av)
+{
     try {
-        zappy::Communication server(4242, "localhost");
+        zappy::Arguments args({av + 1, av + ac});
+        zappy::Communication server(args.port, args.ip);
         server.connect();
         server.run();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
-        return 42;
+        return 84;
     }
-  
+
     return 0;
 }
