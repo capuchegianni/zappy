@@ -44,6 +44,10 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : sceneDa
             _map[i].push_back(Box(i, j, sceneDate.sceneData, _assets));
         }
     }
+
+    sceneDate.rect.setFillColor(sf::Color(64, 64, 255, 255));
+    sceneDate.rect.setOutlineColor(sf::Color::Black);
+    sceneDate.rect.setOutlineThickness(4);
 }
 
 zappy::Map::~Map() = default;
@@ -137,6 +141,13 @@ void zappy::Map::updateDisplay()
         sceneDate.renderTexture.draw(*player);
     }
 
+    for (auto &team : _teams) {
+        for (auto &egg : team.eggs) {
+            egg->updateDisplay(sceneDate.sceneData.camera);
+            sceneDate.renderTexture.draw(*egg);
+        }
+    }
+
     for (auto &sprite : allSprites) {
         sceneDate.renderTexture.draw(sprite.second);
     }
@@ -186,16 +197,13 @@ void zappy::Map::setDisplaySize(sf::Vector2f &size)
     sceneDate.view = sf::View(sf::FloatRect(-(static_cast<float>(size.x) / 2), -(static_cast<float>(size.y) / 2), static_cast<float>(size.x), static_cast<float>(size.y)));
     sceneDate.renderTexture.create(size.x, size.y);
     sceneDate.renderTexture.setView(sceneDate.view);
+    sceneDate.rect.setSize(size);
 }
 
 void zappy::Map::setDisplayPosition(sf::Vector2f &position)
 {
     sceneDate.sprite.setPosition(position);
-}
-
-void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
-{
-    target.draw(sceneDate.sprite, states);
+    sceneDate.rect.setPosition(position);
 }
 
 std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::render3d::Camera &camera)
@@ -204,11 +212,27 @@ std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::
 
     std::vector<std::pair<double, sf::Sprite>> playersSprites;
 
-    for (auto &player : _players) {
+    for (auto &player : _players)
+    {
         double distance = math::Point3D::distance(cameraPosition, math::Point3D(player->x, player->y, 0));
         player->updateDisplay(sceneDate.sceneData.camera);
         playersSprites.push_back({distance, player->getSprite()});
     }
 
+    for (auto &team : _teams)
+    {
+        for (auto &egg : team.eggs)
+        {
+            egg->updateDisplay(camera);
+            playersSprites.push_back(egg->getSprite(camera));
+        }
+    }
+
     return playersSprites;
+}
+
+void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(sceneDate.rect, states);
+    target.draw(sceneDate.sprite, states);
 }

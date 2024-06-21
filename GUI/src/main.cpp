@@ -93,6 +93,11 @@ int main(int ac, char **av)
 
     map.addPlayer(player4, team4);
 
+    map.addEgg(1, 0, 1, team1);
+    map.addEgg(2, 0, 2, team2);
+    map.addEgg(3, 0, 3, team3);
+    map.addEgg(4, 0, 4, team4);
+
     std::size_t frame = 0;
 
     srand(time(NULL));

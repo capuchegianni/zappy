@@ -36,6 +36,7 @@ namespace zappy
             sf::Texture texture;
             sf::Sprite sprite;
             sf::View view;
+            sf::RectangleShape rect;
     };
 
     class Map : public sf::Drawable

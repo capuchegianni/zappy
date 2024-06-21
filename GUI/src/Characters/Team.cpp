@@ -63,6 +63,7 @@ std::size_t zappy::Team::getPlayerIndexById(std::size_t id)
 
 void zappy::Team::addEgg(const std::shared_ptr<Egg> &egg)
 {
+    egg->setTexture(eggTexture);
     eggs.push_back(egg);
 }
 
