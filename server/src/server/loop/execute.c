@@ -75,14 +75,24 @@ static int find_cmd(server_t *server, client_t *client)
     return 0;
 }
 
+static void init_connection_graphic(server_t *server, client_t *client)
+{
+    client->is_graphic = true;
+    client->player->team_name = strdup("GRAPHIC");
+    command_msz(server, client);
+    command_sgt(server, client);
+    command_tna(server, client);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (server->clients[i].fd > -1 && !server->clients[i].is_graphic) {
+            internal_pnw(&server->clients[i], client->fd);
+        }
+    }
+}
+
 static void handle_new_connection(server_t *server, client_t *client)
 {
     if (!strcmp(client->input->args[0], "GRAPHIC")) {
-        client->is_graphic = true;
-        client->player->team_name = strdup("GRAPHIC");
-        command_msz(server, client);
-        command_sgt(server, client);
-        command_tna(server, client);
+        init_connection_graphic(server, client);
         return;
     }
     if (!team_exists(server->game, client->input->args[0])) {

@@ -65,6 +65,6 @@ void place_player_on_map(game_t *game, client_t *client)
     srand(time(NULL));
     for (size_t i = 0; i < game->y; i++)
         set_player_pos(game, client, i);
-    client->player->direction = rand() % 4;
+    client->player->direction = (rand() % 4) + 1;
     client->player->inventory.food = 10;
 }

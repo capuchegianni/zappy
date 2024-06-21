@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include "command.h"
 
 #include <stdio.h>
 
@@ -41,9 +42,8 @@ static void move_right(game_t *game, player_t *player)
         player->x++;
 }
 
-int forward_command(server_t *server, client_t *client)
+static void select_move(server_t *server, client_t *client)
 {
-    server->game->map[client->player->y][client->player->x].player_here--;
     switch (client->player->direction) {
         case NORTH:
             move_up(server->game, client->player);
@@ -58,7 +58,18 @@ int forward_command(server_t *server, client_t *client)
             move_left(server->game, client->player);
             break;
     }
+}
+
+int forward_command(server_t *server, client_t *client)
+{
+    server->game->map[client->player->y][client->player->x].player_here--;
+    select_move(server, client);
     server->game->map[client->player->y][client->player->x].player_here++;
     dprintf(client->fd, "ok\n");
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (client->fd > -1 && server->clients[i].is_graphic) {
+            internal_ppo(client, server->clients[i].fd);
+        }
+    }
     return 1;
 }
