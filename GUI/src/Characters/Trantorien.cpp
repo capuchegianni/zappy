@@ -74,10 +74,10 @@ zappy::CamDirection zappy::Trantorien::getDirectionForCam(zappy::render3d::Camer
 {
     math::Vector3D cameraDirection = camera.direction;
     std::map<short, sf::Vector2f> directionVectors = {
-        {0, sf::Vector2f(0, -1)},  // Up
-        {1, sf::Vector2f(1, 0)},   // Right
-        {2, sf::Vector2f(0, 1)},   // Down
-        {3, sf::Vector2f(-1, 0)}   // Left
+            {UP, sf::Vector2f(0, -1)},  // Up
+            {LEFT, sf::Vector2f(-1, 0)},   // Left
+            {DOWN, sf::Vector2f(0, 1)},   // Down
+            {RIGHT, sf::Vector2f(1, 0)},   // Right
     };
     cameraDirection.z = 0;
 
