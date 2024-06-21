@@ -50,7 +50,7 @@ int internal_bct(int x, int y, int fd, server_t *server);
 int command_mct(server_t *server, client_t *client);
 
 /**
- * @brief bct command for internal use of zappy
+ * @brief tna command for the GUI
  * @param server
  * @param client
  * @return return the status of the execution, 1 for OK
@@ -71,6 +71,14 @@ int command_not_impl(server_t *server, client_t *client);
  * @param client
  * @return return the status of the execution, 1 for OK
 */
+int internal_pnw(client_t *client, int fd);
+
+/**
+ * @brief pnw command for the GUI
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
 int command_pnw(server_t *server, client_t *client);
 
 /**
@@ -82,7 +90,7 @@ int command_pnw(server_t *server, client_t *client);
 int internal_ppo(client_t *client, int fd);
 
 /**
- * @brief ppo command for internal use of zappy
+ * @brief ppo command for the GUI
  * @param server
  * @param client
  * @return return the status of the execution, 1 for OK
