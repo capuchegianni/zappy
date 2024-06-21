@@ -96,5 +96,4 @@ zappy::CamDirection zappy::Trantorien::getDirectionForCam(zappy::render3d::Camer
 void zappy::Trantorien::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(_drawables.shadow, states);
-    target.draw(_drawables.body, states);
 }

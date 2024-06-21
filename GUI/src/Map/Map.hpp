@@ -70,13 +70,14 @@ namespace zappy
 
             void setDisplaySize(sf::Vector2f &size);
             void setDisplayPosition(sf::Vector2f &position);
+
+            std::vector<std::pair<double, sf::Sprite>> getPlayersSprites(render3d::Camera &camera);
+
         private:
             std::vector<std::vector<Box>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);
 
             std::vector<std::shared_ptr<Trantorien>> _players = {};
-
-            void _sortPlayersByDistance();
 
             Assets &_assets;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

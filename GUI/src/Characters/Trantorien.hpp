@@ -66,6 +66,8 @@ namespace zappy
 
             static CamDirection getDirectionForCam(render3d::Camera &camera, short direction);
 
+            sf::Sprite &getSprite() { return _drawables.body; }
+
             std::size_t food = 0;
             std::size_t linemate = 0;
             std::size_t deraumere = 0;

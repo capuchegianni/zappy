@@ -23,8 +23,8 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
     zappy::Assets assets;
 
-    std::size_t width = 30;
-    std::size_t height = 30;
+    std::size_t width = 5;
+    std::size_t height = 5;
 
     window.setFramerateLimit(60);
 

@@ -105,30 +105,52 @@ zappy::Box::~Box() = default;
 void zappy::Box::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(_drawables.sprite, states);
-
-    if (food > 0)
-        target.draw(_drawables.food, states);
-
-    if (linemate > 0)
-        target.draw(_drawables.linemate, states);
-
-    if (deraumere > 0)
-        target.draw(_drawables.deraumere, states);
-
-    if (sibur > 0)
-        target.draw(_drawables.sibur, states);
-
-    if (mendiane > 0)
-        target.draw(_drawables.mendiane, states);
-
-    if (phiras > 0)
-        target.draw(_drawables.phiras, states);
-
-    if (thystame > 0)
-        target.draw(_drawables.thystame, states);
 }
 
 void zappy::Box::updateSprite()
 {
     _drawables.updateSprite();
+}
+
+std::vector<std::pair<double, sf::Sprite>> zappy::Box::getObjectsSprites(render3d::Camera &camera)
+{
+    std::vector<std::pair<double, sf::Sprite>> objects;
+    math::Point3D CameraPosition = math::Vector3D(camera.centerX - camera.direction.x * 10000, camera.centerY - camera.direction.y * 10000, camera.centerZ - camera.direction.z * 10000);
+
+    if (food > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.foodPosition.x,
+                                                                                                  _drawables.foodPosition.y, 0)), _drawables.food));
+    }
+
+    if (linemate > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.linematePosition.x,
+                                                                                                  _drawables.linematePosition.y, 0)), _drawables.linemate));
+    }
+
+    if (deraumere > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.deraumerePosition.x,
+                                                                                                  _drawables.deraumerePosition.y, 0)), _drawables.deraumere));
+    }
+
+    if (sibur > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.siburPosition.x,
+                                                                                                  _drawables.siburPosition.y, 0)), _drawables.sibur));
+    }
+
+    if (mendiane > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.mendianePosition.x,
+                                                                                                  _drawables.mendianePosition.y, 0)), _drawables.mendiane));
+    }
+
+    if (phiras > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.phirasPosition.x,
+                                                                                                  _drawables.phirasPosition.y, 0)), _drawables.phiras));
+    }
+
+    if (thystame > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.thystamePosition.x,
+                                                                                                  _drawables.thystamePosition.y, 0)), _drawables.thystame));
+    }
+
+    return objects;
 }

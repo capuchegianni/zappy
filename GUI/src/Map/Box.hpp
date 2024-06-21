@@ -98,6 +98,8 @@ namespace zappy
             std::size_t x = 0;
             std::size_t y = 0;
 
+            std::vector<std::pair<double, sf::Sprite>> getObjectsSprites(render3d::Camera &camera);
+
         private:
             BoxDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

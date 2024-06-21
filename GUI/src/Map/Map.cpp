@@ -73,10 +73,10 @@ void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player, std::strin
 {
     Team &storedTeam = getTeam(team);
     player->team = team;
-    storedTeam.addPlayer(player);
 
     player->color = storedTeam.color;
     _players.push_back(player);
+    storedTeam.addPlayer(player);
 }
 
 void zappy::Map::removePlayerById(std::size_t id)
@@ -108,8 +108,6 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
 
 void zappy::Map::updateDisplay()
 {
-    _sortPlayersByDistance();
-
     sceneDate.updateDisplay();
     sceneDate.renderTexture.clear(sf::Color::Transparent);
 
@@ -122,9 +120,25 @@ void zappy::Map::updateDisplay()
         }
     }
 
+    std::vector<std::pair<double, sf::Sprite>> allSprites = getPlayersSprites(sceneDate.sceneData.camera);
+
+    for (auto &tile : _map) {
+        for (auto &box : tile) {
+            std::vector<std::pair<double, sf::Sprite>> tileSprites = box.getObjectsSprites(sceneDate.sceneData.camera);
+            allSprites.insert(allSprites.end(), tileSprites.begin(), tileSprites.end());
+        }
+    }
+
+    std::sort(allSprites.begin(), allSprites.end(), [](const std::pair<double, sf::Sprite> &a, const std::pair<double, sf::Sprite> &b) {
+        return a.first < b.first;
+    });
+
     for (auto &player : _players) {
-        player->updateDisplay(sceneDate.sceneData.camera);
         sceneDate.renderTexture.draw(*player);
+    }
+
+    for (auto &sprite : allSprites) {
+        sceneDate.renderTexture.draw(sprite.second);
     }
 
     sceneDate.renderTexture.display();
@@ -179,19 +193,22 @@ void zappy::Map::setDisplayPosition(sf::Vector2f &position)
     sceneDate.sprite.setPosition(position);
 }
 
-void zappy::Map::_sortPlayersByDistance()
-{
-    math::Point3D cameraPosition = math::Vector3D(sceneDate.sceneData.camera.centerX - sceneDate.sceneData.camera.direction.x * 10000, sceneDate.sceneData.camera.centerY - sceneDate.sceneData.camera.direction.y * 10000, sceneDate.sceneData.camera.centerZ - sceneDate.sceneData.camera.direction.z * 10000);
-
-    if (_players.empty())
-        return;
-
-    std::sort(_players.begin(), _players.end(), [cameraPosition](const std::shared_ptr<Trantorien> &a, const std::shared_ptr<Trantorien> &b) {
-        return math::Point3D::distance(cameraPosition, math::Point3D(a->x, a->y, 0)) < math::Point3D::distance(cameraPosition, math::Point3D(b->x, b->y, 0));
-    });
-}
-
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(sceneDate.sprite, states);
+}
+
+std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::render3d::Camera &camera)
+{
+    math::Point3D cameraPosition = math::Vector3D(camera.centerX - camera.direction.x * 10000, camera.centerY - camera.direction.y * 10000, camera.centerZ - camera.direction.z * 10000);
+
+    std::vector<std::pair<double, sf::Sprite>> playersSprites;
+
+    for (auto &player : _players) {
+        double distance = math::Point3D::distance(cameraPosition, math::Point3D(player->x, player->y, 0));
+        player->updateDisplay(sceneDate.sceneData.camera);
+        playersSprites.push_back({distance, player->getSprite()});
+    }
+
+    return playersSprites;
 }
