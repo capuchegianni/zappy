@@ -16,15 +16,18 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Vector3.hpp>
 
 #include "../Characters/Trantorien.hpp"
+#include "../Display/Renderer/DisplayTile.hpp"
+#include "../Display/SceneData.hpp"
 
 namespace zappy
 {
     class BoxDrawables
     {
         public:
-            BoxDrawables(sf::Font &font);
+            BoxDrawables(render3d::DisplayTile &displayTile, Assets &assets, render3d::Camera &camera, std::size_t x, std::size_t y);
             ~BoxDrawables();
 
             class BoxDrawablesError : public std::exception
@@ -36,24 +39,41 @@ namespace zappy
                     std::string _message;
             };
 
-            sf::RectangleShape background;
+            sf::Vector3f getRandomPosInBox();
 
-            sf::Text food;
-            sf::Text linemate;
-            sf::Text deraumere;
-            sf::Text sibur;
-            sf::Text mendiane;
-            sf::Text phiras;
-            sf::Text thystame;
+            void updateSprite();
+            sf::Sprite sprite;
+
+            sf::Sprite food;
+            sf::Sprite linemate;
+            sf::Sprite deraumere;
+            sf::Sprite sibur;
+            sf::Sprite mendiane;
+            sf::Sprite phiras;
+            sf::Sprite thystame;
+
+            sf::Vector3f foodPosition;
+            sf::Vector3f linematePosition;
+            sf::Vector3f deraumerePosition;
+            sf::Vector3f siburPosition;
+            sf::Vector3f mendianePosition;
+            sf::Vector3f phirasPosition;
+            sf::Vector3f thystamePosition;
+
+            Assets &_assets;
 
         private:
-            sf::Font _font;
+            render3d::DisplayTile &_tile;
+            render3d::Camera &_camera;
+
+            std::size_t _x;
+            std::size_t _y;
     };
 
     class Box : public sf::Drawable
     {
         public:
-            Box(std::size_t x, std::size_t y, sf::Font &font);
+            Box(std::size_t x, std::size_t y, SceneData &data, Assets &assets);
             ~Box() override;
 
             class BoxError : public std::exception
@@ -65,9 +85,7 @@ namespace zappy
                     std::string _message;
             };
 
-            void setDisplaySize(sf::Vector2f &size);
-            void setDisplayPosition(sf::Vector2f &position);
-            void updateText();
+            void updateSprite();
 
             std::size_t food = 0;
             std::size_t linemate = 0;
@@ -80,12 +98,9 @@ namespace zappy
             std::size_t x = 0;
             std::size_t y = 0;
 
-            void addPlayer(const std::shared_ptr<Trantorien>& player);
-            void removePlayerById(std::size_t id);
-        private:
-            std::vector<std::shared_ptr<Trantorien>> _players = {};
-            std::size_t _getPlayerIndexById(std::size_t id);
+            std::vector<std::pair<double, sf::Sprite>> getObjectsSprites(render3d::Camera &camera);
 
+        private:
             BoxDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };

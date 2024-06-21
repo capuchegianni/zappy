@@ -13,7 +13,6 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
-#include "../Map/Map.hpp"
 #include "../Display/EventLogger.hpp"
 
 zappy::Communication::Communication(int port, std::string host) : _port(port), _host(std::move(host)) {}
@@ -24,7 +23,7 @@ std::string zappy::Communication::getLine() {
         char c;
         std::size_t received;
         if (this->_socket.receive(&c, 1, received) != sf::Socket::Done || received == 0) {
-            throw std::runtime_error("Failed to receive data from the server");
+            throw CommunicationError("Failed to receive data from the server");
         }
         line += c;
     }
@@ -34,7 +33,7 @@ std::string zappy::Communication::getLine() {
 void zappy::Communication::sendCommand(std::string command) {
     command += "\n";
     if (this->_socket.send(command.c_str(), command.size()) != sf::Socket::Done) {
-        throw std::runtime_error("Failed to send command to the server");
+        throw CommunicationError("Failed to send command to the server");
     }
 }
 
@@ -45,18 +44,18 @@ zappy::Communication::~Communication() {
 
 void zappy::Communication::connect() {
     if (this->_socket.getRemoteAddress() != sf::IpAddress::None) {
-        throw std::runtime_error("Already connected to the server");
+        throw CommunicationError("Already connected to the server");
     }
     sf::Socket::Status status = this->_socket.connect(this->_host, this->_port);
     if (status != sf::Socket::Done) {
-        throw std::runtime_error("Unable to connect to the server");
+        throw CommunicationError("Unable to connect to the server");
     }
     auto line = this->getLine();
     if (line != "WELCOME\n") {
-        throw std::runtime_error("Failed to connect to the server");
+        throw CommunicationError("Failed to connect to the server");
     }
     if (this->_socket.send("GRAPHIC\n", 8) != sf::Socket::Done) {
-        throw std::runtime_error("Authentication failed");
+        throw CommunicationError("Authentication failed");
     }
 }
 
@@ -75,7 +74,6 @@ void zappy::Communication::run() {
 
 void zappy::Communication::TODODELETE() {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Zappy", sf::Style::Close);
-    zappy::EventLogger eventLogger(20, assets);
 
     sf::Vector2f loggerPos(1090, 10);
     sf::Vector2f loggerSize(820, 512);
@@ -112,9 +110,15 @@ void zappy::Communication::commandReceiver() {
                 }
                 args.push_back(arg);
             }
-            this->_commands[command](args);
+            try {
+                this->_commands[command](args);
+            } catch (std::exception &e) {
+                std::cerr << command << ": " << e.what() << std::endl;
+                if (command != "bct")
+                    std::cout << line;
+            }
         } else {
-            std::cerr << "Unknown command: " << command << std::endl;
+            std::cerr << command << ": Unknown command" << std::endl;
         }
     }
 }
@@ -127,126 +131,307 @@ void zappy::Communication::commandSender() {
             this->sendCommand("pin " + std::to_string(player));
         }
         this->_playersToUpdate.clear();
+        for (auto &block : this->_blockToUpdate) {
+            this->sendCommand("bct " + std::to_string(block.first) + " " + std::to_string(block.second));
+        }
+        this->_blockToUpdate.clear();
         std::string command;
         std::getline(std::cin, command);
         this->sendCommand(command);
     }
 }
 
+zappy::Direction zappy::Communication::getDirection(int direction) {
+    switch (direction) {
+        case 1:
+            return zappy::Direction::UP;
+        case 2:
+            return zappy::Direction::RIGHT;
+        case 3:
+            return zappy::Direction::DOWN;
+        case 4:
+            return zappy::Direction::LEFT;
+        default:
+            return zappy::Direction::UP;
+    }
+}
+
 void zappy::Communication::msz(std::vector<std::string> &args) {
     if (args.size() != 2) {
-        throw std::runtime_error("Invalid number of arguments for msz command");
+        throw CommandError("Invalid number of arguments");
     }
-    this->map = std::make_shared<zappy::Map>(std::stoi(args[0]), std::stoi(args[1]), this->assets);
+    if (this->map == nullptr) {
+        this->map = std::make_shared<zappy::Map>(std::stoi(args[0]), std::stoi(args[1]), this->assets);
+    }
 }
 
 void zappy::Communication::bct(std::vector<std::string> &args) {
     if (args.size() != 9)
-        throw std::runtime_error("Invalid number of arguments for bct command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
-    int x = std::stoi(args[0]);
-    int y = std::stoi(args[1]);
-    int food = std::stoi(args[2]);
-    int linemate = std::stoi(args[3]);
-    int deraumere = std::stoi(args[4]);
-    int sibur = std::stoi(args[5]);
-    int mendiane = std::stoi(args[6]);
-    int phiras = std::stoi(args[7]);
-    int thystame = std::stoi(args[8]);
-    (*this->map)(x, y).food = food;
-    (*this->map)(x, y).linemate = linemate;
-    (*this->map)(x, y).deraumere = deraumere;
-    (*this->map)(x, y).sibur = sibur;
-    (*this->map)(x, y).mendiane = mendiane;
-    (*this->map)(x, y).phiras = phiras;
-    (*this->map)(x, y).thystame = thystame;
+        throw MapUninitialized();
+    try {
+        int x = std::stoi(args[0]);
+        int y = std::stoi(args[1]);
+        int food = std::stoi(args[2]);
+        int linemate = std::stoi(args[3]);
+        int deraumere = std::stoi(args[4]);
+        int sibur = std::stoi(args[5]);
+        int mendiane = std::stoi(args[6]);
+        int phiras = std::stoi(args[7]);
+        int thystame = std::stoi(args[8]);
+        (*this->map)(x, y).food = food;
+        (*this->map)(x, y).linemate = linemate;
+        (*this->map)(x, y).deraumere = deraumere;
+        (*this->map)(x, y).sibur = sibur;
+        (*this->map)(x, y).mendiane = mendiane;
+        (*this->map)(x, y).phiras = phiras;
+        (*this->map)(x, y).thystame = thystame;
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Out of bounds");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
 }
 
 void zappy::Communication::tna(std::vector<std::string> &args) {
     if (args.size() != 1)
-        throw std::runtime_error("Invalid number of arguments for tna command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
+        throw MapUninitialized();
     std::string team = args[0];
     (*this->map).addTeam(team);
 }
 
 void zappy::Communication::pnw(std::vector<std::string> &args) {
     if (args.size() != 6)
-        throw std::runtime_error("Invalid number of arguments for pnw command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
-    int id = std::stoi(args[0]);
-    int x = std::stoi(args[1]);
-    int y = std::stoi(args[2]);
-    short direction = std::stoi(args[3]);
-    int level = std::stoi(args[4]);
-    std::string team = args[5];
-    zappy::Trantorien trantorien(id);
-    trantorien.x = x;
-    trantorien.y = y;
-    trantorien.direction = direction;
-    trantorien.level = level;
-    (*this->map).getTeam(team).addPlayer(std::make_shared<zappy::Trantorien>(trantorien));
-    this->_playersToUpdate.push_back(id);
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        int x = std::stoi(args[1]);
+        int y = std::stoi(args[2]);
+        int direction = std::stoi(args[3]);
+        int level = std::stoi(args[4]);
+        std::string team = args[5];
+        zappy::Trantorien trantorien(id);
+        trantorien.x = x;
+        trantorien.y = y;
+        trantorien.direction = zappy::Communication::getDirection(direction);
+        trantorien.level = level;
+        (*this->map).addPlayer(std::make_shared<zappy::Trantorien>(trantorien), team);
+        this->_playersToUpdate.push_back(id);
+        this->eventLogger.log("Player " + std::to_string(id) + " joined team " + team);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Team not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
 }
 
 void zappy::Communication::ppo(std::vector<std::string> &args) {
     if (args.size() != 4)
-        throw std::runtime_error("Invalid number of arguments for ppo command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
-    int id = std::stoi(args[0]);
-    int x = std::stoi(args[1]);
-    int y = std::stoi(args[2]);
-    short direction = std::stoi(args[3]);
-    (*this->map).getPlayerById(id)->direction = direction;
-    (*this->map).movePlayerById(x, y, id);
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        int x = std::stoi(args[1]);
+        int y = std::stoi(args[2]);
+        int direction = std::stoi(args[3]);
+        auto player = (*this->map).getPlayerById(id);
+        (*this->map).getPlayerById(id)->direction = zappy::Communication::getDirection(direction);
+        (*this->map).movePlayerById(x, y, id);
+        // TODO : Find ERROR HERE ^ (Player not found)
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
 }
 
 void zappy::Communication::plv(std::vector<std::string> &args) {
     if (args.size() != 2)
-        throw std::runtime_error("Invalid number of arguments for plv command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
-    int id = std::stoi(args[0]);
-    int level = std::stoi(args[1]);
-    (*this->map).getPlayerById(id)->level = level;
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        int level = std::stoi(args[1]);
+        (*this->map).getPlayerById(id)->level = level;
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
 }
 
 void zappy::Communication::pin(std::vector<std::string> &args) {
     if (args.size() != 10)
-        throw std::runtime_error("Invalid number of arguments for pin command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
-    int id = std::stoi(args[0]);
-    int x = std::stoi(args[1]);
-    int y = std::stoi(args[2]);
-    int food = std::stoi(args[3]);
-    int linemate = std::stoi(args[4]);
-    int deraumere = std::stoi(args[5]);
-    int sibur = std::stoi(args[6]);
-    int mendiane = std::stoi(args[7]);
-    int phiras = std::stoi(args[8]);
-    int thystame = std::stoi(args[9]);
-    std::shared_ptr<zappy::Trantorien> player = (*this->map).getPlayerById(id);
-    player->x = x;
-    player->y = y;
-    player->food = food;
-    player->linemate = linemate;
-    player->deraumere = deraumere;
-    player->sibur = sibur;
-    player->mendiane = mendiane;
-    player->phiras = phiras;
-    player->thystame = thystame;
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        int x = std::stoi(args[1]);
+        int y = std::stoi(args[2]);
+        int food = std::stoi(args[3]);
+        int linemate = std::stoi(args[4]);
+        int deraumere = std::stoi(args[5]);
+        int sibur = std::stoi(args[6]);
+        int mendiane = std::stoi(args[7]);
+        int phiras = std::stoi(args[8]);
+        int thystame = std::stoi(args[9]);
+        std::shared_ptr<zappy::Trantorien> player = (*this->map).getPlayerById(id);
+        player->x = x;
+        player->y = y;
+        player->food = food;
+        player->linemate = linemate;
+        player->deraumere = deraumere;
+        player->sibur = sibur;
+        player->mendiane = mendiane;
+        player->phiras = phiras;
+        player->thystame = thystame;
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
 }
 
 void zappy::Communication::pex(std::vector<std::string> &args) {
     if (args.size() != 1)
-        throw std::runtime_error("Invalid number of arguments for pex command");
+        throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
-        return;
-    int id = std::stoi(args[0]);
-    this->_playersToUpdate.push_back(id);
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        this->_playersToUpdate.push_back(id);
+        this->eventLogger.log("Player " + std::to_string(id) + " has been expelled");
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments");
+    }
+}
+
+void zappy::Communication::pdr(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        auto player = (*this->map).getPlayerById(id);
+        if (player == nullptr)
+            return;
+        this->_blockToUpdate.emplace_back(player->x, player->y);
+        this->_playersToUpdate.push_back(id);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::pgt(std::vector<std::string> &args) {
+    if (args.size() != 2)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        auto player = (*this->map).getPlayerById(id);
+        if (player == nullptr)
+            return;
+        this->_blockToUpdate.emplace_back(player->x, player->y);
+        this->_playersToUpdate.push_back(id);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::pdi(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        (*this->map).removePlayerById(id);
+        this->eventLogger.log("Player " + std::to_string(id) + " died");
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments");
+    }
+}
+
+void zappy::Communication::enw(std::vector<std::string> &args) {
+    if (args.size() != 4)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        int player_id = std::stoi(args[1]);
+        int x = std::stoi(args[2]);
+        int y = std::stoi(args[3]);
+        std::string team = (*this->map).getPlayerById(player_id)->team;
+        (*this->map).addEgg(x, y, id, team);
+        this->eventLogger.log("Egg " + std::to_string(id) + " has been laid by player " + std::to_string(player_id));
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::ebo(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        (*this->map).removeEggById(id);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Egg not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::edi(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        (*this->map).removeEggById(id);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Egg not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
 }

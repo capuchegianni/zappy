@@ -8,6 +8,7 @@ all:	$(NAME)
 
 clean:
 	rm -rf build
+	rm -rf lib/Maths/build
 
 fclean: clean
 	rm -f $(NAME)

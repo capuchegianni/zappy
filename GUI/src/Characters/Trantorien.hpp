@@ -8,10 +8,18 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
+#include <iostream>
+#include <functional>
+#include <map>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
+#include "../Display/Renderer/Camera.hpp"
 
 namespace zappy
 {
@@ -23,14 +31,27 @@ namespace zappy
         LEFT
     };
 
+    enum CamDirection
+    {
+        TOWARDS,
+        AWAY,
+        LEFTC,
+        RIGHTC
+    };
+
     class TrantorienDrawables
     {
         public:
             TrantorienDrawables();
             ~TrantorienDrawables();
 
-            sf::CircleShape body;
-            sf::CircleShape head;
+            sf::Sprite body;
+            sf::CircleShape shadow;
+
+            std::shared_ptr<sf::Texture> towardsCamera;
+            std::shared_ptr<sf::Texture> awayFromCamera;
+            std::shared_ptr<sf::Texture> left;
+            std::shared_ptr<sf::Texture> right;
     };
 
     class Trantorien : public sf::Drawable
@@ -40,8 +61,12 @@ namespace zappy
 
             ~Trantorien() override;
 
-            void setDisplaySize(sf::Vector2f &size);
-            void setDisplayPosition(sf::Vector2f &position);
+            void updateDisplay(render3d::Camera &camera);
+            void setTextures(std::shared_ptr<sf::Texture> &towardsCamera, std::shared_ptr<sf::Texture> &awayFromCamera, std::shared_ptr<sf::Texture> &left, std::shared_ptr<sf::Texture> &right);
+
+            static CamDirection getDirectionForCam(render3d::Camera &camera, short direction);
+
+            sf::Sprite &getSprite() { return _drawables.body; }
 
             std::size_t food = 0;
             std::size_t linemate = 0;
@@ -52,7 +77,6 @@ namespace zappy
             std::size_t thystame = 0;
 
             std::size_t level = 0;
-
             std::size_t id;
 
             short direction = 0;
@@ -61,6 +85,10 @@ namespace zappy
             std::size_t y = 0;
 
             std::string team;
+            sf::Color color;
+
+            CamDirection directionForCam = TOWARDS;
+
         private:
             TrantorienDrawables _drawables;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

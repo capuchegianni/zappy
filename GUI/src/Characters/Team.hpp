@@ -9,8 +9,10 @@
 
 #include <memory>
 #include <vector>
+#include <random>
 #include <string>
 
+#include "../Display/Assets.hpp"
 #include "Trantorien.hpp"
 #include "Egg.hpp"
 
@@ -19,7 +21,7 @@ namespace zappy
     class Team
     {
         public:
-            Team(std::string &name);
+            Team(std::string &name, Assets &assets);
             ~Team();
 
             class TeamError : public std::exception
@@ -39,9 +41,19 @@ namespace zappy
             void addEgg(const std::shared_ptr<Egg>& egg);
             void removeEggById(std::size_t id);
 
+            static sf::Color generateColor(const std::string &name);
+
+            static std::shared_ptr<sf::Texture> recolorTexture(const sf::Texture &texture, const sf::Color &color);
+
             std::string name;
             std::vector<std::shared_ptr<Trantorien>> players = {};
             std::vector<std::shared_ptr<Egg>> eggs = {};
-        private:
+            sf::Color color;
+
+            std::shared_ptr<sf::Texture> towardsCameraTexture;
+            std::shared_ptr<sf::Texture> towardsLeftTexture;
+            std::shared_ptr<sf::Texture> towardsRightTexture;
+            std::shared_ptr<sf::Texture> towardsBackTexture;
+            std::shared_ptr<sf::Texture> eggTexture;
     };
 }

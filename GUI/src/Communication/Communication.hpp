@@ -15,6 +15,7 @@
 #include <functional>
 #include <thread>
 #include "../Map/Map.hpp"
+#include "../Display/EventLogger.hpp"
 
 namespace zappy {
     class Communication {
@@ -25,8 +26,11 @@ namespace zappy {
         sf::TcpSocket _socket {};
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
+        zappy::EventLogger eventLogger {10, assets};
         std::vector<int> _playersToUpdate {};
+        std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
         std::string getLine();
+        static zappy::Direction getDirection(int direction);
         void sendCommand(std::string command);
         void commandSender();
         void commandReceiver();
@@ -38,6 +42,25 @@ namespace zappy {
         void connect();
 
         void run();
+
+        class CommunicationError : public std::exception {
+        public:
+            explicit CommunicationError(std::string message) : _message(std::move(message)) {}
+            const char *what() const noexcept override { return _message.c_str(); }
+        private:
+            std::string _message;
+        };
+        class CommandError : public std::exception {
+        public:
+            explicit CommandError(std::string message) : _message(std::move(message)) {}
+            const char *what() const noexcept override { return _message.c_str(); }
+        private:
+            std::string _message;
+        };
+        class MapUninitialized : public std::exception {
+        public:
+            const char *what() const noexcept override { return "Map uninitialized"; }
+        };
     private:
         // Commands
         std::unordered_map<std::string, std::function<void(std::vector<std::string> &args)>> _commands {
@@ -53,12 +76,12 @@ namespace zappy {
             //{"pic", [this](std::vector<std::string> &args) { zappy::Communication::pic(args); }},
             //{"pie", [this](std::vector<std::string> &args) { zappy::Communication::pie(args); }},
             //{"pfk", [this](std::vector<std::string> &args) { zappy::Communication::pfk(args); }},
-            //{"pdr", [this](std::vector<std::string> &args) { zappy::Communication::pdr(args); }},
-            //{"pgt", [this](std::vector<std::string> &args) { zappy::Communication::pgt(args); }},
-            //{"pdi", [this](std::vector<std::string> &args) { zappy::Communication::pdi(args); }},
-            //{"enw", [this](std::vector<std::string> &args) { zappy::Communication::enw(args); }},
-            //{"ebo", [this](std::vector<std::string> &args) { zappy::Communication::ebo(args); }},
-            //{"edi", [this](std::vector<std::string> &args) { zappy::Communication::edi(args); }},
+            {"pdr", [this](std::vector<std::string> &args) { zappy::Communication::pdr(args); }},
+            {"pgt", [this](std::vector<std::string> &args) { zappy::Communication::pgt(args); }},
+            {"pdi", [this](std::vector<std::string> &args) { zappy::Communication::pdi(args); }},
+            {"enw", [this](std::vector<std::string> &args) { zappy::Communication::enw(args); }},
+            {"ebo", [this](std::vector<std::string> &args) { zappy::Communication::ebo(args); }},
+            {"edi", [this](std::vector<std::string> &args) { zappy::Communication::edi(args); }},
             //{"sgt", [this](std::vector<std::string> &args) { zappy::Communication::sgt(args); }},
             //{"sst", [this](std::vector<std::string> &args) { zappy::Communication::sst(args); }},
             //{"seg", [this](std::vector<std::string> &args) { zappy::Communication::seg(args); }},
@@ -78,12 +101,12 @@ namespace zappy {
         //void pic(std::vector<std::string> &args);
         //void pie(std::vector<std::string> &args);
         //void pfk(std::vector<std::string> &args);
-        //void pdr(std::vector<std::string> &args);
-        //void pgt(std::vector<std::string> &args);
-        //void pdi(std::vector<std::string> &args);
-        //void enw(std::vector<std::string> &args);
-        //void ebo(std::vector<std::string> &args);
-        //void edi(std::vector<std::string> &args);
+        void pdr(std::vector<std::string> &args);
+        void pgt(std::vector<std::string> &args);
+        void pdi(std::vector<std::string> &args);
+        void enw(std::vector<std::string> &args);
+        void ebo(std::vector<std::string> &args);
+        void edi(std::vector<std::string> &args);
         //void sgt(std::vector<std::string> &args);
         //void sst(std::vector<std::string> &args);
         //void seg(std::vector<std::string> &args);

@@ -7,106 +7,150 @@
 
 #include "Box.hpp"
 
-zappy::BoxDrawables::BoxDrawables(sf::Font &font) : _font(font)
+zappy::BoxDrawables::BoxDrawables(zappy::render3d::DisplayTile &displayTile, Assets &assets, zappy::render3d::Camera &camera, std::size_t x, std::size_t y) : _assets(assets), _tile(displayTile), _camera(camera), _x(x), _y(y)
 {
-    background.setFillColor(sf::Color::Transparent);
-    background.setOutlineColor(sf::Color::Black);
-    background.setOutlineThickness(1);
+    foodPosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+    linematePosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+    deraumerePosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+    siburPosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+    mendianePosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+    phirasPosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+    thystamePosition = getRandomPosInBox() + sf::Vector3f(x, y, 0);
+}
 
-    food = sf::Text("0", _font, 30);
-    linemate = sf::Text("0", _font, 30);
-    deraumere = sf::Text("0", _font, 30);
-    sibur = sf::Text("0", _font, 30);
-    mendiane = sf::Text("0", _font, 30);
-    phiras = sf::Text("0", _font, 30);
-    thystame = sf::Text("0", _font, 30);
+void zappy::BoxDrawables::updateSprite()
+{
+    float crystalScale = 0.4;
+    float scale;
 
-    food.setFillColor(sf::Color::Black);
-    linemate.setFillColor(sf::Color::Black);
-    deraumere.setFillColor(sf::Color::Black);
-    sibur.setFillColor(sf::Color::Black);
-    mendiane.setFillColor(sf::Color::Black);
-    phiras.setFillColor(sf::Color::Black);
-    thystame.setFillColor(sf::Color::Black);
+    sprite = sf::Sprite(_tile.getTexture());
+    sprite.setOrigin(sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().height / 2);
+    sprite.setPosition(_camera.displayUnitaryX.x * _x + _camera.displayUnitaryY.x * _y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * _x + _camera.displayUnitaryY.y * _y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    food.setTexture(*_assets.foodTextures[0]);
+    scale = food.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    food.setScale(1/scale, 1/scale);
+    food.setOrigin(food.getTexture()->getSize().x / 2, food.getTexture()->getSize().y);
+    food.setPosition(_camera.displayUnitaryX.x * foodPosition.x + _camera.displayUnitaryY.x * foodPosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                     _camera.displayUnitaryX.y * foodPosition.x + _camera.displayUnitaryY.y * foodPosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    linemate.setTexture(*_assets.linemateTextures[0]);
+    scale = linemate.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    linemate.setScale(1/scale, 1/scale);
+    linemate.setOrigin(linemate.getTexture()->getSize().x / 2, linemate.getTexture()->getSize().y);
+    linemate.setPosition(_camera.displayUnitaryX.x * linematePosition.x + _camera.displayUnitaryY.x * linematePosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * linematePosition.x + _camera.displayUnitaryY.y * linematePosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    deraumere.setTexture(*_assets.deraumereTextures[0]);
+    scale = deraumere.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    deraumere.setScale(1/scale, 1/scale);
+    deraumere.setOrigin(deraumere.getTexture()->getSize().x / 2, deraumere.getTexture()->getSize().y);
+    deraumere.setPosition(_camera.displayUnitaryX.x * deraumerePosition.x + _camera.displayUnitaryY.x * deraumerePosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * deraumerePosition.x + _camera.displayUnitaryY.y * deraumerePosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    sibur.setTexture(*_assets.siburTextures[0]);
+    scale = sibur.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    sibur.setScale(1/scale, 1/scale);
+    sibur.setOrigin(sibur.getTexture()->getSize().x / 2, sibur.getTexture()->getSize().y);
+    sibur.setPosition(_camera.displayUnitaryX.x * siburPosition.x + _camera.displayUnitaryY.x * siburPosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * siburPosition.x + _camera.displayUnitaryY.y * siburPosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    mendiane.setTexture(*_assets.mendianeTextures[0]);
+    scale = mendiane.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    mendiane.setScale(1/scale, 1/scale);
+    mendiane.setOrigin(mendiane.getTexture()->getSize().x / 2, mendiane.getTexture()->getSize().y);
+    mendiane.setPosition(_camera.displayUnitaryX.x * mendianePosition.x + _camera.displayUnitaryY.x * mendianePosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * mendianePosition.x + _camera.displayUnitaryY.y * mendianePosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    phiras.setTexture(*_assets.phirasTextures[0]);
+    scale = phiras.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    phiras.setScale(1/scale, 1/scale);
+    phiras.setOrigin(phiras.getTexture()->getSize().x / 2, phiras.getTexture()->getSize().y);
+    phiras.setPosition(_camera.displayUnitaryX.x * phirasPosition.x + _camera.displayUnitaryY.x * phirasPosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * phirasPosition.x + _camera.displayUnitaryY.y * phirasPosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+
+    thystame.setTexture(*_assets.thystameTextures[0]);
+    scale = thystame.getTexture()->getSize().x / (_camera.unitaryPixelsSize * crystalScale);
+    thystame.setScale(1/scale, 1/scale);
+    thystame.setOrigin(thystame.getTexture()->getSize().x / 2, thystame.getTexture()->getSize().y);
+    thystame.setPosition(_camera.displayUnitaryX.x * thystamePosition.x + _camera.displayUnitaryY.x * thystamePosition.y + _camera.centerX * _camera.displayUnitaryX.x + _camera.displayUnitaryY.x * _camera.centerY + _camera.displayUnitaryZ.x * _camera.centerZ,
+                        _camera.displayUnitaryX.y * thystamePosition.x + _camera.displayUnitaryY.y * thystamePosition.y + _camera.centerX * _camera.displayUnitaryX.y + _camera.displayUnitaryY.y * _camera.centerY + _camera.displayUnitaryZ.y * _camera.centerZ);
+}
+
+sf::Vector3f zappy::BoxDrawables::getRandomPosInBox()
+{
+    std::seed_seq seed{std::random_device{}()};
+    std::mt19937 gen(seed);
+    std::uniform_real_distribution<float> dis(-0.35, 0.35);
+
+    return sf::Vector3f(dis(gen), dis(gen), 0);
 }
 
 zappy::BoxDrawables::~BoxDrawables() = default;
 
-zappy::Box::Box(std::size_t x, std::size_t y, sf::Font &font) : x(x), y(y), _drawables(font) {}
+zappy::Box::Box(std::size_t x, std::size_t y, zappy::SceneData &data, Assets &assets) : x(x), y(y), _drawables(*data.getRandomTile(), assets, data.camera, x, y)
+{
+    food = 0;
+    linemate = 0;
+    deraumere = 0;
+    sibur = 0;
+    mendiane = 0;
+    phiras = 0;
+    thystame = 0;
+}
 
 zappy::Box::~Box() = default;
 
-void zappy::Box::setDisplaySize(sf::Vector2f &size)
-{
-    _drawables.background.setSize(size);
-
-    _drawables.food.setCharacterSize(size.y / 10);
-    _drawables.linemate.setCharacterSize(size.y / 10);
-    _drawables.deraumere.setCharacterSize(size.y / 10);
-    _drawables.sibur.setCharacterSize(size.y / 10);
-    _drawables.mendiane.setCharacterSize(size.y / 10);
-    _drawables.phiras.setCharacterSize(size.y / 10);
-    _drawables.thystame.setCharacterSize(size.y / 10);
-}
-
-void zappy::Box::setDisplayPosition(sf::Vector2f &position)
-{
-    _drawables.background.setPosition(position);
-
-    _drawables.food.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10);
-    _drawables.linemate.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 2);
-    _drawables.deraumere.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 3);
-    _drawables.sibur.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 4);
-    _drawables.mendiane.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 5);
-    _drawables.phiras.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 6);
-    _drawables.thystame.setPosition(position.x + 10, position.y + _drawables.background.getSize().y / 10 * 7);
-}
-
-void zappy::Box::updateText()
-{
-    _drawables.food.setString(std::to_string(food));
-    _drawables.linemate.setString(std::to_string(linemate));
-    _drawables.deraumere.setString(std::to_string(deraumere));
-    _drawables.sibur.setString(std::to_string(sibur));
-    _drawables.mendiane.setString(std::to_string(mendiane));
-    _drawables.phiras.setString(std::to_string(phiras));
-    _drawables.thystame.setString(std::to_string(thystame));
-}
-
-void zappy::Box::addPlayer(const std::shared_ptr<Trantorien>& player)
-{
-    _players.push_back(player);
-}
-
-void zappy::Box::removePlayerById(std::size_t id)
-{
-    std::size_t index = _getPlayerIndexById(id);
-
-    _players.erase(_players.begin() + index);
-
-    if (_players.empty())
-        throw Box::BoxError("No more players in this box");
-}
-
-std::size_t zappy::Box::_getPlayerIndexById(std::size_t id)
-{
-    for (std::size_t i = 0; i < _players.size(); i++) {
-        if (_players[i]->id == id)
-            return i;
-    }
-
-    throw Box::BoxError("Player not found");
-}
-
 void zappy::Box::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    target.draw(_drawables.background, states);
+    target.draw(_drawables.sprite, states);
+}
 
-    target.draw(_drawables.food, states);
-    target.draw(_drawables.linemate, states);
-    target.draw(_drawables.deraumere, states);
-    target.draw(_drawables.sibur, states);
-    target.draw(_drawables.mendiane, states);
-    target.draw(_drawables.phiras, states);
-    target.draw(_drawables.thystame, states);
+void zappy::Box::updateSprite()
+{
+    _drawables.updateSprite();
+}
+
+std::vector<std::pair<double, sf::Sprite>> zappy::Box::getObjectsSprites(render3d::Camera &camera)
+{
+    std::vector<std::pair<double, sf::Sprite>> objects;
+    math::Point3D CameraPosition = math::Vector3D(camera.centerX - camera.direction.x * 10000, camera.centerY - camera.direction.y * 10000, camera.centerZ - camera.direction.z * 10000);
+
+    if (food > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.foodPosition.x,
+                                                                                                  _drawables.foodPosition.y, 0)), _drawables.food));
+    }
+
+    if (linemate > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.linematePosition.x,
+                                                                                                  _drawables.linematePosition.y, 0)), _drawables.linemate));
+    }
+
+    if (deraumere > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.deraumerePosition.x,
+                                                                                                  _drawables.deraumerePosition.y, 0)), _drawables.deraumere));
+    }
+
+    if (sibur > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.siburPosition.x,
+                                                                                                  _drawables.siburPosition.y, 0)), _drawables.sibur));
+    }
+
+    if (mendiane > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.mendianePosition.x,
+                                                                                                  _drawables.mendianePosition.y, 0)), _drawables.mendiane));
+    }
+
+    if (phiras > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.phirasPosition.x,
+                                                                                                  _drawables.phirasPosition.y, 0)), _drawables.phiras));
+    }
+
+    if (thystame > 0) {
+        objects.emplace_back(std::make_pair(math::Point3D::distance(CameraPosition, math::Point3D(_drawables.thystamePosition.x,
+                                                                                                  _drawables.thystamePosition.y, 0)), _drawables.thystame));
+    }
+
+    return objects;
 }
