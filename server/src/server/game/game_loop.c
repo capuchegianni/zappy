@@ -76,7 +76,6 @@ void spawn_ressource(server_t *server, float ressouce_density,
     }
 }
 
-//TODO: Add tick base update
 int update_game(server_t *server)
 {
     long lastUpdate = (server->now.tv_sec - server->start.tv_sec) * 1000 +
