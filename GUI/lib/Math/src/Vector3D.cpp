@@ -104,3 +104,25 @@ math::Vector3D math::Vector3D::normalize()
 
     return Vector3D(x / len, y / len, z / len);
 }
+
+double math::Vector3D::angle(const math::Vector3D &A, const math::Vector3D &B)
+{
+    double dotProduct = A.x * B.x + A.y * B.y;
+    double magnitudeA = std::sqrt(A.x * A.x + A.y * A.y);
+    double magnitudeB = std::sqrt(B.x * B.x + B.y * B.y);
+
+    double angleInRadians = std::acos(dotProduct / (magnitudeA * magnitudeB));
+
+    // Convert to degrees
+    double angleInDegrees = angleInRadians * 180 / M_PI;
+
+    // Calculate cross product
+    double crossProduct = A.x * B.y - A.y * B.x;
+
+    // Adjust angle based on cross product
+    if (crossProduct < 0) {
+        angleInDegrees = 360 - angleInDegrees;
+    }
+
+    return angleInDegrees;
+}

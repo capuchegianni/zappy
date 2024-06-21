@@ -26,7 +26,7 @@ void zappy::Team::addPlayer(const std::shared_ptr<Trantorien> &player)
 {
     players.push_back(player);
 
-    player->setTextures(towardsCameraTexture, towardsLeftTexture, towardsRightTexture, towardsBackTexture);
+    player->setTextures(towardsCameraTexture, towardsBackTexture, towardsLeftTexture, towardsRightTexture);
 }
 
 void zappy::Team::removePlayerById(std::size_t id)

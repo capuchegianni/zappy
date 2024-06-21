@@ -9,6 +9,9 @@
 
 #include <cstddef>
 #include <memory>
+#include <iostream>
+#include <functional>
+#include <map>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -60,6 +63,8 @@ namespace zappy
 
             void updateDisplay(render3d::Camera &camera);
             void setTextures(std::shared_ptr<sf::Texture> &towardsCamera, std::shared_ptr<sf::Texture> &awayFromCamera, std::shared_ptr<sf::Texture> &left, std::shared_ptr<sf::Texture> &right);
+
+            static CamDirection getDirectionForCam(render3d::Camera &camera, short direction);
 
             std::size_t food = 0;
             std::size_t linemate = 0;

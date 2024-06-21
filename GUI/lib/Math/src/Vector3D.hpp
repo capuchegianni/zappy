@@ -45,6 +45,8 @@ namespace math
             double y = 0;
             double z = 0;
 
+            static double angle(const math::Vector3D &A, const math::Vector3D &B);
+
             friend std::ostream& operator<<(std::ostream& os, const Vector3D& v) { os << "Vector3D(" << v.x << ", " << v.y << ", " << v.z << ")"; return os;}
     };
 }

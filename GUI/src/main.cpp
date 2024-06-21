@@ -23,8 +23,8 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
     zappy::Assets assets;
 
-    std::size_t width = 10;
-    std::size_t height = 10;
+    std::size_t width = 30;
+    std::size_t height = 30;
 
     window.setFramerateLimit(60);
 
@@ -59,6 +59,7 @@ int main(int ac, char **av)
     player1->level = 1;
     player1->x = 0;
     player1->y = 0;
+    player1->direction = zappy::Direction::UP;
 
     map.addPlayer(player1, team1);
 
@@ -68,6 +69,7 @@ int main(int ac, char **av)
     player2->level = 1;
     player2->x = 1;
     player2->y = 1;
+    player2->direction = zappy::Direction::RIGHT;
 
     map.addPlayer(player2, team2);
 
@@ -77,6 +79,7 @@ int main(int ac, char **av)
     player3->level = 1;
     player3->x = 2;
     player3->y = 2;
+    player3->direction = zappy::Direction::DOWN;
 
     map.addPlayer(player3, team3);
 
@@ -86,6 +89,7 @@ int main(int ac, char **av)
     player4->level = 1;
     player4->x = 3;
     player4->y = 3;
+    player4->direction = zappy::Direction::LEFT;
 
     map.addPlayer(player4, team4);
 
@@ -110,17 +114,6 @@ int main(int ac, char **av)
     {
         if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
             continue;
-        }
-
-        if (frame % 10 == 0)
-        {
-            zappy::Trantorien &player = *map.getPlayerById(1);
-            player.x = (player.x + 1) % width;
-            player.y = (player.y + 1) % height;
-
-            zappy::Trantorien &player2 = *map.getPlayerById(2);
-            player2.x = (player2.x - 1) % width;
-            player2.y = (player2.y + 1) % height;
         }
 
         math::Vector3D movForward = map.sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
