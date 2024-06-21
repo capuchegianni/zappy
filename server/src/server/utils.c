@@ -33,6 +33,15 @@ void reset_client(client_t *client)
         free(client->player->team_name);
         client->player->team_name = NULL;
     }
+    client->player->id = 0;
+    client->player->level = 1;
+    for (int i = 0; i < 10; i++) {
+        client->input[i].args = NULL;
+        client->input[i].nb_args = 0;
+        client->input[i].body = NULL;
+        client->input[i].body_len = 0;
+        client->input[i].exec_time = 0;
+    }
 }
 
 void free_clients(server_t *server)

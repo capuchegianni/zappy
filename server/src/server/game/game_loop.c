@@ -80,5 +80,6 @@ int update_game(server_t *server)
     spawn_ressource(server, MENDIANE, 4);
     spawn_ressource(server, PHIRAS, 5);
     spawn_ressource(server, THYSTAME, 6);
+    update_life_units(server);
     return 0;
 }

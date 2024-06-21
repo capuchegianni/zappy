@@ -43,6 +43,7 @@ void set_player_team(char *team_name, game_t *game, client_t *client)
     }
     team->total_players_connected++;
     client->player->team_name = strdup(team_name);
+    client->is_playing = true;
     send_response(client, team, game);
 }
 

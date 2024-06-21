@@ -42,6 +42,7 @@ SRC = 	src/server/main.c						\
 		src/server/game/levels.c				\
 		src/server/game/map.c					\
 		src/server/game/teams.c					\
+		src/server/game/life_units.c 			\
 		src/server/command/ai/forward.c			\
 		src/server/command/ai/right.c 			\
 		src/server/command/ai/left.c 			\

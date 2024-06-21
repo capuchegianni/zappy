@@ -31,7 +31,7 @@ enum DIRECTION {
 };
 
 typedef struct items_s {
-    size_t food;
+    long food;
     size_t linemate;
     size_t deraumere;
     size_t sibur;
@@ -79,9 +79,11 @@ typedef struct game_s {
     size_t teams_number;
     level_t levels[8];
     tile_t **map;
+    time_t life_unit_update;
 } game_t;
 
 typedef struct client_s client_t;
+typedef struct server_s server_t;
 
 /**
  * @brief Initialize all levels related data
@@ -113,3 +115,7 @@ bool team_exists(game_t *game, char *name);
 void set_player_team(char *team_name, game_t *game, client_t *client);
 
 void place_player_on_map(game_t *game, client_t *client);
+
+void update_life_units(server_t *server);
+
+bool death_event(client_t *client);
