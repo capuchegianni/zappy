@@ -87,7 +87,7 @@ void zappy::Communication::TODODELETE() {
     window.setFramerateLimit(60);
 
     sf::Vector2f position(0, 0);
-    sf::Vector2f size(720, 1080);
+    sf::Vector2f size(1080, 1080);
     (*map).setDisplayPosition(position);
     (*map).setDisplaySize(size);
         window.setFramerateLimit(60);
@@ -98,10 +98,7 @@ void zappy::Communication::TODODELETE() {
 
     frameClock.restart();
 
-    sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
-
-    sf::Vector2f rawr = {-300, -300};
-    sf::Vector2f rawr2 = {600, 600};
+    sf::View view(sf::FloatRect(0, 0, static_cast<float>(winwidth), static_cast<float>(winheight)));
 
     while (window.isOpen())
     {
@@ -169,6 +166,7 @@ void zappy::Communication::TODODELETE() {
         map->updateDisplay();
         window.clear(sf::Color::Blue);
         window.draw(*map);
+        window.draw(eventLogger);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
