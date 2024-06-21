@@ -15,7 +15,9 @@ int command_pnw(server_t *server, client_t *client)
 {
     char *str;
 
-    asprintf(&str, "pnw %li %li %li %li %li %s\n", 1, 0, 0, 1, 1, "test");
+    asprintf(&str, "pnw %li %li %li %u %zu %s\n", client->player->id,
+    client->player->x, client->player->y, client->player->direction,
+    client->player->level, client->player->team_name);
     write(client->fd, str, strlen(str));
     free(str);
     return 1;
