@@ -123,3 +123,19 @@ int fork_command(server_t *server, client_t *client);
  * @return 1 if the command has been successfully executed
 */
 int eject_command(server_t *server, client_t *client);
+
+/**
+ * @brief Take command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int take_command(server_t *server, client_t *client);
+
+/**
+ * @brief Set command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int set_command(server_t *server, client_t *client);

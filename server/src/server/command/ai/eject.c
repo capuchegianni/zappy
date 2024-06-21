@@ -22,7 +22,8 @@ void eject_north(server_t *server, client_t *client, size_t pos[2])
     game->map[pos[0]][pos[1]].egg_here = 0;
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (server->clients[i].player->x == pos[1] &&
-        server->clients[i].player->y == pos[0]) {
+        server->clients[i].player->y == pos[0] &&
+        server->clients[i].player->id != client->player->id) {
             server->clients[i].player->y = y;
             dprintf(server->clients[i].fd, "eject: %d\n", SOUTH);
         }
@@ -43,7 +44,8 @@ void eject_east(server_t *server, client_t *client, size_t pos[2])
     game->map[pos[0]][pos[1]].egg_here = 0;
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (server->clients[i].player->x == pos[1] &&
-        server->clients[i].player->y == pos[0]) {
+        server->clients[i].player->y == pos[0] &&
+        server->clients[i].player->id != client->player->id) {
             server->clients[i].player->x = x;
             dprintf(server->clients[i].fd, "eject: %d\n", WEST);
         }
@@ -64,7 +66,8 @@ void eject_south(server_t *server, client_t *client, size_t pos[2])
     game->map[pos[0]][pos[1]].egg_here = 0;
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (server->clients[i].player->x == pos[1] &&
-        server->clients[i].player->y == pos[0]) {
+        server->clients[i].player->y == pos[0] &&
+        server->clients[i].player->id != client->player->id) {
             server->clients[i].player->y = y;
             dprintf(server->clients[i].fd, "eject: %d\n", NORTH);
         }
@@ -85,7 +88,8 @@ void eject_west(server_t *server, client_t *client, size_t pos[2])
     game->map[pos[0]][pos[1]].egg_here = 0;
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (server->clients[i].player->x == pos[1] &&
-        server->clients[i].player->y == pos[0]) {
+        server->clients[i].player->y == pos[0] &&
+        server->clients[i].player->id != client->player->id) {
             server->clients[i].player->x = x;
             dprintf(server->clients[i].fd, "eject: %d\n", EAST);
         }

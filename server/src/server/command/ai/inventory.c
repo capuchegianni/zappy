@@ -30,6 +30,6 @@ int inventory_command(server_t *server, client_t *client)
 
     (void)server;
     get_items(&client->player->inventory, &str);
-    dprintf(client->fd, "[ %s ]", str);
+    dprintf(client->fd, "[ %s ]\n", str);
     return 1;
 }
