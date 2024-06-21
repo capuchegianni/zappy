@@ -47,20 +47,29 @@ static int find_cmd(server_t *server, client_t *client)
     return 0;
 }
 
+static void handle_new_connection(server_t *server, client_t *client)
+{
+    if (!strcmp(client->input->args[0], "GRAPHIC")) {
+        client->is_graphic = true;
+        client->player->team_name = strdup("GRAPHIC");
+        command_msz(server, client);
+        command_sgt(server, client);
+        return;
+    }
+    if (!team_exists(server->game, client->input->args[0]))
+        write(client->fd, "ko\n", 4);
+    set_player_team(client->input->args[0], server->game, client);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (server->clients[i].fd > -1 && server->clients[i].is_graphic) {
+            command_pnw(server, &server->clients[i]);
+        }
+    }
+}
+
 static void execute_cmd(server_t *server, client_t *client)
 {
     if (client->player->team_name == NULL) {
-        if (!strcmp(client->input->args[0], "GRAPHIC")) {
-            client->is_graphic = true;
-            client->player->team_name = strdup("GRAPHIC");
-            command_msz(server, client);
-            command_sgt(server, client);
-            return;
-        }
-        if (team_exists(server->game, client->input->args[0]))
-            set_player_team(client->input->args[0], server->game, client);
-        else
-            write(client->fd, "ko\n", 4);
+        handle_new_connection(server, client);
         return;
     }
     if (!find_cmd(server, client)) {

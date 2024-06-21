@@ -28,6 +28,7 @@ static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
 
 static void set_mcts(server_t *server, client_t *client, fd_set *writefds)
 {
+    return;
     if (!client->player->team_name || !client->is_graphic) {
         return;
     }
