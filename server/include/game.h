@@ -9,6 +9,8 @@
 
 #define TIME_UNITS 126
 
+#include <time.h>
+
 typedef unsigned long size_t;
 
 enum ITEMS_DENSITY {
@@ -29,7 +31,7 @@ enum DIRECTION {
 };
 
 typedef struct items_s {
-    size_t food;
+    long food;
     size_t linemate;
     size_t deraumere;
     size_t sibur;
@@ -41,16 +43,19 @@ typedef struct items_s {
 typedef struct level_s {
     size_t level;
     size_t required_players;
+    size_t vision[2];
     items_t required_items;
 } level_t;
 
 typedef struct player_s {
+    size_t id;
     char *team_name;
     items_t inventory;
     size_t level;
     size_t x;
     size_t y;
     enum DIRECTION direction;
+    time_t last_command_time;
 } player_t;
 
 typedef struct team_s {
@@ -60,6 +65,8 @@ typedef struct team_s {
 } team_t;
 
 typedef struct tile_s {
+    size_t player_here;
+    size_t egg_here;
     items_t items;
 } tile_t;
 
@@ -70,11 +77,13 @@ typedef struct game_s {
     size_t y;
     team_t *teams;
     size_t teams_number;
-    level_t levels[7];
+    level_t levels[8];
     tile_t **map;
+    time_t life_unit_update;
 } game_t;
 
 typedef struct client_s client_t;
+typedef struct server_s server_t;
 
 /**
  * @brief Initialize all levels related data
@@ -104,3 +113,9 @@ void init_items(items_t *items);
 bool team_exists(game_t *game, char *name);
 
 void set_player_team(char *team_name, game_t *game, client_t *client);
+
+void place_player_on_map(game_t *game, client_t *client);
+
+void update_life_units(server_t *server);
+
+bool death_event(client_t *client);

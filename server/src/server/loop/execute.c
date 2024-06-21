@@ -7,65 +7,109 @@
 
 #include "server.h"
 #include "command.h"
+#include "misc.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 commands_t commands[] = {
-    {"msz", 1, command_msz},
-    {"bct", 1, command_bct},
-    {"mct", 1, command_mct},
-    {"tna", 1, command_tna},
-    {"ppo", 1, NULL},
-    {"plv", 1, NULL},
-    {"pin", 1, NULL},
-    {"sgt", 1, command_sgt},
-    {"sst", 1, NULL},
-    {NULL, 0, NULL}
+    {"msz", 1, 0, command_msz},
+    {"bct", 1, 0, command_bct},
+    {"mct", 1, 0, command_mct},
+    {"tna", 1, 0, command_tna},
+    {"ppo", 1, 0, command_not_impl},
+    {"plv", 1, 0, command_not_impl},
+    {"pin", 1, 0, command_not_impl},
+    {"sgt", 1, 0, command_sgt},
+    {"sst", 1, 0, command_not_impl},
+    {"msz", 1, 0, command_msz},
+    {"bct", 1, 0, command_bct},
+    {"mct", 1, 0, command_mct},
+    {"tna", 1, 0, command_tna},
+    {"ppo", 1, 0, command_not_impl},
+    {"plv", 1, 0, command_not_impl},
+    {"pin", 1, 0, command_not_impl},
+    {"sgt", 1, 0, command_sgt},
+    {"sst", 1, 0, command_not_impl},
+    {"Forward", 0, 7, forward_command},
+    {"Right", 0, 7, right_command},
+    {"Left", 0, 7, left_command},
+    {"Look", 0, 7, look_command},
+    {"Inventory", 0, 1, inventory_command},
+    {"Broadcast", 0, 7, command_not_impl},
+    {"Connect_nbr", 0, 0, connect_nbr_command},
+    {"Fork", 0, 42, fork_command},
+    {"Eject", 0, 7, eject_command},
+    {"Take", 0, 7, take_command},
+    {"Set", 0, 7, set_command},
+    {"Incantation", 0, 300, command_not_impl},
+    {NULL, 0, 0, NULL}
 };
 
-static void free_client_args(client_t *client)
+static void move_inputs(input_t input[10])
 {
-    for (int i = 0; client->input->args[i]; i++)
-        free(client->input->args[i]);
-    free(client->input->args);
-    free(client->input->body);
-    client->input->body = NULL;
-    client->input->args = calloc(1, sizeof(char *));
+    free(input[0].body);
+    input[0].body_len = 0;
+    for (size_t i = 0; i < input[0].nb_args; i++)
+        free(input[0].args[i]);
+    free(input[0].args);
+    input[0].nb_args = 0;
+    for (int i = 0; i < 9; i++)
+        input[i] = input[i + 1];
+    input[9].body = NULL;
+    input[9].body_len = 0;
+    input[9].args = NULL;
+    input[9].nb_args = 0;
+    input[9].exec_time = 0;
 }
 
 static int find_cmd(server_t *server, client_t *client)
 {
-    for (int j = 0; commands[j].name; j++) {
-        if (!client->input->args || !client->input->args[0])
+    for (int i = 0; commands[i].name; i++) {
+        if (!client->input[0].args || !client->input[0].args[0])
             continue;
-        if (strcmp(client->input->args[0], commands[j].name) == 0
-            && client->is_graphic == commands[j].isGuiOnly)
-            return commands[j].function(server, client);
+        if (strcmp(client->input[0].args[0], commands[i].name) == 0
+        && client->is_graphic == commands[i].isGuiOnly) {
+            client->player->last_command_time = time(NULL);
+            client->input[1].exec_time = commands[i].timeout;
+            return commands[i].function(server, client);
+        }
     }
     return 0;
+}
+
+static void handle_new_connection(server_t *server, client_t *client)
+{
+    if (!strcmp(client->input->args[0], "GRAPHIC")) {
+        client->is_graphic = true;
+        client->player->team_name = strdup("GRAPHIC");
+        command_msz(server, client);
+        command_sgt(server, client);
+        return;
+    }
+    if (!team_exists(server->game, client->input->args[0]))
+        write(client->fd, "ko\n", 4);
+    set_player_team(client->input->args[0], server->game, client);
+    place_player_on_map(server->game, client);
+    set_player_id(client->player);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (server->clients[i].fd > -1 && server->clients[i].is_graphic) {
+            command_pnw(server, &server->clients[i]);
+        }
+    }
 }
 
 static void execute_cmd(server_t *server, client_t *client)
 {
     if (client->player->team_name == NULL) {
-        if (!strcmp(client->input->args[0], "GRAPHIC")) {
-            client->is_graphic = true;
-            command_msz(server, client);
-            command_sgt(server, client);
-            return;
-        }
-        if (team_exists(server->game, client->input->args[0]))
-            set_player_team(client->input->args[0], server->game, client);
-        else
-            write(client->fd, "ko\n", 4);
+        handle_new_connection(server, client);
         return;
     }
     if (!find_cmd(server, client)) {
-        if (client->input->args && client->input->args[0]) {
-            dprintf(client->fd, "ko\n");
-        }
+        if (client->input->args && client->input->args[0])
+            dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");
     }
 }
 
@@ -74,14 +118,14 @@ static void store_args(server_t *server, client_t *client, char *token,
 {
     cmd = strtok(token, " ");
     for (int i = 0; cmd; i++) {
-        client->input->args = realloc(client->input->args, sizeof(char *) *
+        client->input[0].args = realloc(client->input[0].args, sizeof(char *) *
         (i + 2));
-        if (!client->input->args)
+        if (!client->input[0].args)
             return;
-        client->input->args[i] = strdup(cmd);
-        if (!client->input->args[i])
+        client->input[0].args[i] = strdup(cmd);
+        if (!client->input[0].args[i])
             return;
-        client->input->args[i + 1] = NULL;
+        client->input[0].args[i + 1] = NULL;
         cmd = strtok(NULL, " ");
     }
     execute_cmd(server, client);
@@ -111,16 +155,21 @@ static bool check_spaces(char *buffer)
 
 int execute_command(server_t *server, client_t *client)
 {
-    if (!client->input->body)
+    time_t now = time(NULL);
+
+    if (!client->input[0].body)
         return 0;
-    if (!check_spaces(client->input->body)) {
-        dprintf(client->fd, "ko\n");
-        free_client_args(client);
+    if (difftime(now, client->player->last_command_time) <
+    client->input[0].exec_time / server->game->frequence)
+        return 0;
+    if (!check_spaces(client->input[0].body)) {
+        dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");
+        move_inputs(client->input);
         return 0;
     }
     printf("[%s] %s\n", client->player->team_name ?
-    client->player->team_name : "Anonymous", client->input->body);
-    parse_buffer(server, client->input->body, client);
-    free_client_args(client);
+    client->player->team_name : "Anonymous", client->input[0].body);
+    parse_buffer(server, client->input[0].body, client);
+    move_inputs(client->input);
     return 0;
 }

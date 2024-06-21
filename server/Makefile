@@ -33,6 +33,8 @@ SRC = 	src/server/main.c						\
 		src/server/command/bct.c 				\
 		src/server/command/mct.c 				\
 		src/server/command/tna.c 				\
+		src/server/command/pnw.c 				\
+		src/server/command/not_implemented.c	\
 		src/server/parser/flags/clients.c 		\
 		src/server/game/game_loop.c 			\
 		src/server/parser/flags/frequency.c 	\
@@ -41,7 +43,18 @@ SRC = 	src/server/main.c						\
 		src/server/parser/flags/teams.c			\
 		src/server/game/levels.c				\
 		src/server/game/map.c					\
-		src/server/game/teams.c
+		src/server/game/teams.c					\
+		src/server/game/life_units.c 			\
+		src/server/command/ai/forward.c			\
+		src/server/command/ai/right.c 			\
+		src/server/command/ai/left.c 			\
+		src/server/command/ai/look.c 			\
+		src/server/command/ai/inventory.c		\
+		src/server/command/ai/connect_nbr.c		\
+		src/server/command/ai/fork.c			\
+		src/server/command/ai/eject.c			\
+		src/server/command/ai/take.c			\
+		src/server/command/ai/set.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))

@@ -6,18 +6,20 @@
 */
 
 #include "server.h"
+#include "misc.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/select.h>
 #include <unistd.h>
 #include <string.h>
 
-char **s_to_t(char *str)
+void set_player_id(player_t *player)
 {
-    char **tab = calloc(2, sizeof(char *));
+    static size_t id = 0;
 
-    tab[0] = strdup(str);
-    return tab;
+    player->id = id;
+    id++;
 }
 
 void reset_client(client_t *client)
@@ -27,24 +29,28 @@ void reset_client(client_t *client)
     close(client->fd);
     client->fd = -1;
     init_items(&client->player->inventory);
-    free(client->input->args);
-    client->input->args = calloc(1, sizeof(char *));
-    client->input->body = NULL;
     if (client->player->team_name) {
         free(client->player->team_name);
         client->player->team_name = NULL;
+    }
+    client->player->id = 0;
+    client->player->level = 1;
+    for (int i = 0; i < 10; i++) {
+        client->input[i].args = NULL;
+        client->input[i].nb_args = 0;
+        client->input[i].body = NULL;
+        client->input[i].body_len = 0;
+        client->input[i].exec_time = 0;
     }
 }
 
 void free_clients(server_t *server)
 {
     for (int i = 0; i < FD_SETSIZE; i++) {
-        free(server->clients[i].input->args);
-        if (server->clients[i].input->body)
-            free(server->clients[i].input->body);
-        free(server->clients[i].input);
         if (server->clients[i].fd > -1)
             close(server->clients[i].fd);
+        if (server->clients[i].player->team_name)
+            free(server->clients[i].player->team_name);
         free(server->clients[i].player);
     }
     free(server->clients);
@@ -54,13 +60,4 @@ void free_clients(server_t *server)
     free_map(server->game);
     free(server->game);
     free(server);
-}
-
-int error_management(int port)
-{
-    if (port < 1024 || port > 65535) {
-        printf("Invalid specified port\n");
-        return 84;
-    }
-    return 0;
 }
