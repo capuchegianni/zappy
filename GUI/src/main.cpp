@@ -6,186 +6,27 @@
 */
 
 #include <iostream>
+#include <unordered_map>
+#include <functional>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include "Map/Map.hpp"
 #include "Display/EventLogger.hpp"
-#include "Display/Renderer/Camera.hpp"
-#include "Display/Renderer/DisplayTile.hpp"
 
-int main(int ac, char **av)
-{
-    int winwidth = 1920;
-    int winheight = 1080;
+#include "Communication/Communication.hpp"
 
-    sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
-    zappy::Assets assets;
-
-    std::size_t width = 5;
-    std::size_t height = 5;
-
-    window.setFramerateLimit(60);
-
-    zappy::Map map(width, height, assets);
-
-    sf::Event event;
-    sf::Clock frameClock;
-    int lastFrameTime = 0;
-
-    frameClock.restart();
-
-    sf::View view(sf::FloatRect(-(static_cast<float>(winwidth) / 2) + 250, -(static_cast<float>(winheight) / 2) + 250, static_cast<float>(winwidth), static_cast<float>(winheight)));
-
-    sf::Vector2f rawr = {-300, -300};
-    sf::Vector2f rawr2 = {600, 600};
-    map.setDisplayPosition(rawr);
-    map.setDisplaySize(rawr2);
-
-    std::string team1 = "team1";
-    std::string team2 = "team2";
-    std::string team3 = "team3";
-    std::string team4 = "team4";
-
-    map.addTeam(team1);
-    map.addTeam(team2);
-    map.addTeam(team3);
-    map.addTeam(team4);
-
-    std::shared_ptr<zappy::Trantorien> player1 = std::make_shared<zappy::Trantorien>();
-
-    player1->id = 1;
-    player1->level = 1;
-    player1->x = 0;
-    player1->y = 0;
-    player1->direction = zappy::Direction::UP;
-
-    map.addPlayer(player1, team1);
-
-    std::shared_ptr<zappy::Trantorien> player2 = std::make_shared<zappy::Trantorien>();
-
-    player2->id = 2;
-    player2->level = 1;
-    player2->x = 1;
-    player2->y = 1;
-    player2->direction = zappy::Direction::RIGHT;
-
-    map.addPlayer(player2, team2);
-
-    std::shared_ptr<zappy::Trantorien> player3 = std::make_shared<zappy::Trantorien>();
-
-    player3->id = 3;
-    player3->level = 1;
-    player3->x = 2;
-    player3->y = 2;
-    player3->direction = zappy::Direction::DOWN;
-
-    map.addPlayer(player3, team3);
-
-    std::shared_ptr<zappy::Trantorien> player4 = std::make_shared<zappy::Trantorien>();
-
-    player4->id = 4;
-    player4->level = 1;
-    player4->x = 3;
-    player4->y = 3;
-    player4->direction = zappy::Direction::LEFT;
-
-    map.addPlayer(player4, team4);
-
-    map.addEgg(1, 0, 1, team1);
-    map.addEgg(2, 0, 2, team2);
-    map.addEgg(3, 0, 3, team3);
-    map.addEgg(4, 0, 4, team4);
-
-    std::size_t frame = 0;
-
-    srand(time(NULL));
-    for (std::size_t i = 0; i < width; i++)
-    {
-        for (std::size_t j = 0; j < height; j++)
-        {
-            map(i, j).thystame = rand() % 2;
-            map(i, j).linemate = rand() % 2;
-            map(i, j).food = rand() % 2;
-            map(i, j).deraumere = rand() % 2;
-            map(i, j).sibur = rand() % 2;
-            map(i, j).mendiane = rand() % 2;
-            map(i, j).phiras = rand() % 2;
-        }
+int main(int ac, char **av) {
+    try {
+        zappy::Communication server(4242, "localhost");
+        server.connect();
+        server.run();
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 42;
     }
-
-    while (window.isOpen())
-    {
-        if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
-            continue;
-        }
-
-        math::Vector3D movForward = map.sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
-        math::Vector3D movRight = map.sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-        {
-            map.sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
-            map.sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
-            map.sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
-            map.sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-        {
-            map.sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
-            map.sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            map.sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
-            map.sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map.sceneDate.sceneData.camera.unitaryPixelsSize < 200)
-        {
-            map.sceneDate.sceneData.camera.unitaryPixelsSize += 1;
-            map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && map.sceneDate.sceneData.camera.unitaryPixelsSize > 10)
-        {
-            map.sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
-            map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            map.sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
-        }
-
-        while (window.pollEvent(event)) {
-
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-
-            if (event.type == sf::Event::Resized)
-            {
-                view = sf::View(sf::FloatRect(-(static_cast<float>(event.size.width) / 2), -(static_cast<float>(event.size.height) / 2), static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
-                window.setView(view);
-            }
-        }
-
-        map.updateDisplay();
-        window.clear(sf::Color::Blue);
-        window.draw(map);
-        window.display();
-        lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
-        frameClock.restart();
-        frame++;
-    }
-
+  
     return 0;
 }

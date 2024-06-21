@@ -41,7 +41,7 @@ zappy::EventLogger::EventLogger(std::size_t max_logs, Assets &assets) : _drawabl
 
 zappy::EventLogger::~EventLogger() = default;
 
-void zappy::EventLogger::log(std::string &log)
+void zappy::EventLogger::log(std::string log)
 {
     _drawables.log(log);
 }

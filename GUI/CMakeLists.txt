@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -pedantic -g3 
 
 add_subdirectory(lib/Math)
 
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+find_package(SFML 2.5 COMPONENTS graphics window system network REQUIRED)
 
 add_executable(zappy_gui
         src/main.cpp
@@ -21,6 +21,8 @@ add_executable(zappy_gui
         src/Display/Assets.cpp
         src/Display/EventLogger.hpp
         src/Display/EventLogger.cpp
+        src/Communication/Communication.cpp
+        src/Communication/Communication.hpp
         src/Characters/Team.hpp
         src/Characters/Team.cpp
         src/Characters/Egg.hpp
@@ -36,4 +38,4 @@ add_executable(zappy_gui
 )
 
 target_link_libraries(zappy_gui Math)
-target_link_libraries(zappy_gui sfml-graphics sfml-window sfml-system)
+target_link_libraries(zappy_gui sfml-graphics sfml-window sfml-system sfml-network)

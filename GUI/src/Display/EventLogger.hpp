@@ -52,7 +52,7 @@ namespace zappy
             EventLogger(std::size_t max_logs, Assets &assets);
             ~EventLogger() override;
 
-            void log(std::string &log);
+            void log(std::string log);
             void clearLogs();
 
             void setDisplaySize(sf::Vector2f &size);
