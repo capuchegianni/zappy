@@ -53,6 +53,8 @@ static void set_player_pos(game_t *game, client_t *client, size_t i)
         if (game->map[i][j].egg_here) {
             client->player->x = j;
             client->player->y = i;
+            game->map[i][j].egg_here--;
+            game->map[i][j].player_here++;
             break;
         }
     }

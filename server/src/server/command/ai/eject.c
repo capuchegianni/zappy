@@ -83,7 +83,7 @@ void eject_west(server_t *server, client_t *client, size_t y, size_t x)
     size_t xx = x == 0 ? server->game->x - 1 : x - 1;
     game_t *game = server->game;
 
-    if (!game->map[y][x].player_here && !game->map[y][x].egg_here) {
+    if (game->map[y][x].player_here < 2 && !game->map[y][x].egg_here) {
         dprintf(client->fd, "ko\n");
         return;
     }
