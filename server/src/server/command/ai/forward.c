@@ -43,6 +43,7 @@ static void move_right(game_t *game, player_t *player)
 
 int forward_command(server_t *server, client_t *client)
 {
+    server->game->map[client->player->y][client->player->x].player_here--;
     switch (client->player->direction) {
         case NORTH:
             move_up(server->game, client->player);
@@ -57,6 +58,7 @@ int forward_command(server_t *server, client_t *client)
             move_left(server->game, client->player);
             break;
     }
+    server->game->map[client->player->y][client->player->x].player_here++;
     dprintf(client->fd, "ok\n");
     return 1;
 }
