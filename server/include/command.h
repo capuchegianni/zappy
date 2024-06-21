@@ -75,11 +75,11 @@ int command_pnw(server_t *server, client_t *client);
 
 /**
  * @brief ppo command for internal use of zappy
- * @param server
  * @param client
+ * @param fd
  * @return return the status of the execution, 1 for OK
 */
-int internal_ppo(client_t *client);
+int internal_ppo(client_t *client, int fd);
 
 /**
  * @brief ppo command for internal use of zappy

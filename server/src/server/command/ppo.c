@@ -12,13 +12,13 @@
 #include <string.h>
 #include "command.h"
 
-int internal_ppo(client_t *client)
+int internal_ppo(client_t *client, int fd)
 {
     char *str;
 
     asprintf(&str, "ppo %li %li %li %u\n", client->player->id,
     client->player->x, client->player->y, client->player->direction);
-    write(client->fd, str, strlen(str));
+    write(fd, str, strlen(str));
     free(str);
     return 1;
 }
@@ -32,7 +32,7 @@ int command_ppo(server_t *server, client_t *client)
         if (server->clients[i].fd > -1 && server->clients[i].player->id
         == (size_t) atoi(client->input->args[1])
         && !server->clients[i].is_graphic) {
-            internal_ppo(&server->clients[i]);
+            internal_ppo(&server->clients[i], client->fd);
             return 1;
         }
     }

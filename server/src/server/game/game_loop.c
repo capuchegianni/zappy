@@ -33,7 +33,12 @@ static void send_infos(server_t *server, client_t *client, fd_set *writefds)
     }
     if (client->fd > -1 && FD_ISSET(client->fd, writefds)) {
         command_mct(server, client);
-        internal_ppo(client);
+    }
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (client->fd > -1 && client->is_playing &&
+        !server->clients[i].is_graphic) {
+            internal_ppo(&server->clients[i], client->fd);
+        }
     }
 }
 
