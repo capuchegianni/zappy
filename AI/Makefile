@@ -6,13 +6,13 @@
 ##
 
 all:
-	cp Main.py ./zappy_ai
-	chmod 755 ./zappy_ai
+	cp Main.py zappy_ai
+	chmod 755 zappy_ai
 
 clean:
 	#
 
 fclean:
-	rm -f ./zappy_ai
+	rm -f zappy_ai
 
 re: fclean all
