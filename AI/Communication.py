@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import socket
+import queue
 from time import sleep
 import threading
 from AI.Color import Color
@@ -8,12 +9,14 @@ from AI.Color import Color
 
 class Communication:
     def __init__(self, port, name, host):
+        self.team_name = name
+        self.data_queue = queue.Queue()
         self.client_socket = self.openConnection(port, name, host)
         self.stop_listening = False
         self.listen_thread = threading.Thread(target=self.listenServer, daemon=True)
         self.listen_thread.start()
-        self.response_event = threading.Event()
         self.data = None
+        self.data_from_master = None
 
 
     def openConnection(self, port, name, host):
@@ -54,29 +57,54 @@ class Communication:
     def sendCommand(self, command):
         if self.stop_listening:
             return
-        self.response_event.clear()
         try:
             self.client_socket.sendall((command + "\n").encode())
+            print(f"{Color.BLUE}Sent command: {command}{Color.RESET}")
         except socket.error as e:
             print(f"{Color.RED}Error sending data: {e}{Color.RESET}")
             return
-        if not self.stop_listening:
-            self.response_event.wait(timeout=5)
+        while self.data is None:
+            continue
 
 
     def listenServer(self):
         while not self.stop_listening:
             try:
-                received_data = self.client_socket.recv(1024).decode()
-                if not received_data:
+                data_received = self.client_socket.recv(1024).decode()
+                if not data_received:
                     print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
                     break
-                if received_data == "dead\n":
+                if data_received == "dead\n":
                     print(f"{Color.BLUE}You died.{Color.RESET}")
                     break
             except socket.error as e:
                 print(f"{Color.RED}Error receiving data: {e}{Color.RESET}")
                 break
-            self.data = received_data
-            self.response_event.set()
+            self.data_queue.put(data_received)
+            self.processQueue()
         self.closeConnection(join=False)
+
+
+    def processQueue(self):
+        if self.data_queue.empty():
+            return False
+        data_received = self.data_queue.get()
+        data_split = data_received.split(' ')
+        print(f"{Color.PURPLE}Received data: {data_received}{Color.RESET}")
+        if "teamtomaster" in data_received:
+            self.data_from_master = data_split[2].split('+')[1]
+        else:
+            self.data = data_received
+        return True
+
+
+    def getData(self):
+        data = self.data
+        self.data = None
+        return data
+
+
+    def getDataFromMaster(self):
+        data = self.data_from_master
+        self.data_from_master = None
+        return data
