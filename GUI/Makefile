@@ -2,7 +2,7 @@ NAME=zappy_gui
 
 $(NAME):
 	mkdir -p build
-	cd build && cmake .. && make && mv $(NAME) ..
+	cd build && cmake .. && make
 
 all:	$(NAME)
 

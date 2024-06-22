@@ -81,7 +81,9 @@ class Bot:
                 break
             if not self.updateInventory():
                 break
-            if not self.getObject(Element.FOOD):
+            if not self.refillFood():
+                break
+            if not self.getObject([Element.LINEMATE, Element.DERAUMERE, Element.SIBUR, Element.MENDIANE, Element.PHIRAS, Element.THYSTAME]):
                 break
 
 
@@ -128,19 +130,23 @@ class Bot:
         return True
 
 
-    def findNearest(self, element):
+    def findNearest(self, elements):
         min_distance = float('inf')
         nearest_coords = None
+        nearest_element = None
 
         for i in range(self.vision.shape[0]):
             for j in range(self.vision.shape[1]):
-                if element in self.vision[i, j]:
-                    distance = sqrt((self.level - i) ** 2 + (self.level - j) ** 2)
-                    if distance < min_distance:
-                        min_distance = distance
-                        nearest_coords = (i, j)
+                for element in elements:
+                    if element in self.vision[i, j]:
+                        distance = sqrt((self.level - i) ** 2 + (self.level - j) ** 2)
+                        if distance < min_distance:
+                            min_distance = distance
+                            nearest_coords = (i, j)
+                            nearest_element = element
+                            break
 
-        return nearest_coords
+        return nearest_coords, nearest_element
 
 
     def goTo(self, y, x):
@@ -161,30 +167,6 @@ class Bot:
         return True
 
 
-    def hasEnoughFoodForAction(self, action):
-        food_required = self.getFoodRequiredForAction(action)
-        return self.inventory.get('Element.FOOD', 0) >= food_required
-
-
-    def getFoodRequiredForAction(self, action):
-        food_requirements = {
-            'Forward' : 3,
-            'Right' : 3,
-            'Left' : 3,
-            'Look' : 3,
-            'Inventory' : 3,
-            'Broadcast text' : 3,
-            'Connect_nbr' : 3,
-            'Fork' : 10,
-            'Eject' : 3,
-            'Take object' : 3,
-            'Set object' : 3,
-            'Incantation' : 10,
-        }
-        # faut changer les valeurs
-        return food_requirements.get(action, 0)
-
-
     def updateInventory(self):
         if self.comm.stop_listening:
             return False
@@ -201,7 +183,7 @@ class Bot:
 
 
     def getObject(self, object):
-        nearest = self.findNearest(object)
+        nearest, nearest_type = self.findNearest(object)
         if nearest is None:
             if self.comm.stop_listening:
                 return False
@@ -211,7 +193,19 @@ class Bot:
         if not self.goTo(nearest[0] - self.level, nearest[1] - self.level):
             return False
 
-        self.takeObject(object)
-        print(self.comm.data)
+        self.takeObject(nearest_type)
+
+        return True
+
+
+    def refillFood(self):
+        if self.inventory[Element.FOOD] < 10:
+            while self.inventory[Element.FOOD] < 20:
+                if not self.getObject([Element.FOOD]):
+                    break
+                if not self.lookAround():
+                    break
+                if not self.updateInventory():
+                    break
 
         return True

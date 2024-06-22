@@ -79,6 +79,8 @@ namespace zappy
 
             std::vector<std::pair<double, sf::Sprite>> getPlayersSprites(render3d::Camera &camera);
 
+            void setTimeUnit(int timeUnit);
+            int getTimeUnit() const;
         private:
             std::vector<std::vector<Box>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);
@@ -90,5 +92,6 @@ namespace zappy
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
             std::vector<Team> _teams = {};
+            int _timeUnit = 0;
     };
 }

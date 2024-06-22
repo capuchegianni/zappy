@@ -269,6 +269,14 @@ std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::
     return playersSprites;
 }
 
+void zappy::Map::setTimeUnit(int timeUnit) {
+    this->_timeUnit = timeUnit;
+}
+
+int zappy::Map::getTimeUnit() const {
+    return this->_timeUnit;
+}
+
 void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(sceneDate.rect, states);
