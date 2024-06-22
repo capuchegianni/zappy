@@ -14,9 +14,15 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
-#include "../Display/EventLogger.hpp"
 
 zappy::Communication::Communication(int port, std::string host) : _port(port), _host(std::move(host)) {}
+
+void zappy::Communication::updateTimeUnit(int timeUnit) {
+    if (timeUnit < 0) {
+        throw CommandError("Invalid time unit");
+    }
+    this->sendCommand("sst " + std::to_string(timeUnit));
+}
 
 std::string zappy::Communication::getLine() {
     std::string line;
@@ -51,7 +57,12 @@ void zappy::Communication::connect() {
     if (status != sf::Socket::Done) {
         throw CommunicationError("Unable to connect to the server");
     }
-    auto line = this->getLine();
+    std::string line;
+    try {
+        line = this->getLine();
+    } catch (CommunicationError &e) {
+        throw CommunicationError("Failed to connect to the server");
+    }
     if (line != "WELCOME\n") {
         throw CommunicationError("Failed to connect to the server");
     }
@@ -65,7 +76,7 @@ void zappy::Communication::run() {
         this->connect();
     }
     std::vector<std::thread> threads;
-    threads.emplace_back(&zappy::Communication::commandSender, this);
+    threads.emplace_back(&zappy::Communication::automaticCommandSender, this);
     threads.emplace_back(&zappy::Communication::commandReceiver, this);
     threads.emplace_back(&zappy::Communication::TODODELETE, this);
     for (auto &thread : threads) {
@@ -76,6 +87,7 @@ void zappy::Communication::run() {
 void zappy::Communication::TODODELETE() {
     int winwidth = 1920;
     int winheight = 1080;
+    bool map_created = false;
 
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
@@ -88,9 +100,7 @@ void zappy::Communication::TODODELETE() {
 
     sf::Vector2f position(0, 0);
     sf::Vector2f size(1080, 1080);
-    (*map).setDisplayPosition(position);
-    (*map).setDisplaySize(size);
-        window.setFramerateLimit(60);
+    window.setFramerateLimit(60);
 
     sf::Event event;
     sf::Clock frameClock;
@@ -104,6 +114,13 @@ void zappy::Communication::TODODELETE() {
     {
         if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
             continue;
+        }
+        if (map == nullptr) {
+            continue;
+        } else if (!map_created) {
+            map->setDisplaySize(size);
+            map->setDisplayPosition(position);
+            map_created = true;
         }
 
         math::Vector3D movForward = map->sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
@@ -172,13 +189,20 @@ void zappy::Communication::TODODELETE() {
         frameClock.restart();
     }
 
-    this->_run = false;
-
+    this->_running = false;
 }
 
 void zappy::Communication::commandReceiver() {
-    while (this->_run) {
-        auto line = this->getLine();
+    std::cout << "Starting Command Receiver\n";
+    while (this->_running) {
+        std::string line;
+        try {
+            line = this->getLine();
+        } catch (CommunicationError &e) {
+            std::cerr << e.what() << std::endl;
+            this->_running = false;
+            break;
+        }
         std::string command = line.substr(0, line.find(' '));
         if (this->_commands.find(command) != this->_commands.end()) {
             std::vector<std::string> args;
@@ -194,17 +218,19 @@ void zappy::Communication::commandReceiver() {
                 this->_commands[command](args);
             } catch (std::exception &e) {
                 std::cerr << command << ": " << e.what() << std::endl;
-                if (command != "bct")
-                    std::cout << line;
             }
         } else {
             std::cerr << command << ": Unknown command" << std::endl;
         }
     }
+    std::cout << "Command Receiver Stopped\n";
 }
 
-void zappy::Communication::commandSender() {
-    while (this->_run) {
+void zappy::Communication::automaticCommandSender() {
+    std::cout << "Starting Automatic Sender\n";
+    this->sendCommand("msz");
+    this->sendCommand("tna");
+    while (this->_running) {
         for (auto &player : this->_playersToUpdate) {
             this->sendCommand("ppo " + std::to_string(player));
             this->sendCommand("plv " + std::to_string(player));
@@ -215,10 +241,8 @@ void zappy::Communication::commandSender() {
             this->sendCommand("bct " + std::to_string(block.first) + " " + std::to_string(block.second));
         }
         this->_blockToUpdate.clear();
-        std::string command;
-        std::getline(std::cin, command);
-        this->sendCommand(command);
     }
+    std::cout << "Automatic Sender Stopped\n";
 }
 
 void zappy::Communication::msz(std::vector<std::string> &args) {
@@ -495,6 +519,36 @@ void zappy::Communication::edi(std::vector<std::string> &args) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
         throw CommandError("Egg not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::sgt(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int timeUnit = std::stoi(args[0]);
+        (*this->map).setTimeUnit(timeUnit);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::sst(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int timeUnit = std::stoi(args[0]);
+        this->updateTimeUnit(timeUnit);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
     } catch (std::exception &e) {
         throw CommandError("Unknown error");
     }
