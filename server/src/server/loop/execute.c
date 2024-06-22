@@ -141,17 +141,19 @@ int execute_command(server_t *server, client_t *client)
 
     if (!client->input[0].body)
         return 0;
-    if (difftime(now, client->player->last_command_time) <
+    if (client->input[0].exec_time / server->game->frequence > 0.5 &&
+    (difftime(now, client->player->last_command_time) <
     client->input[0].exec_time / server->game->frequence ||
-    client->player->in_incantation)
+    client->player->in_incantation))
         return 0;
     if (!check_spaces(client->input[0].body)) {
         dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");
         move_inputs(client->input);
         return 0;
     }
-    printf("[%s] %s\n", client->player->team_name ?
-    client->player->team_name : "Anonymous", client->input[0].body);
+    printf("[%s][%ld] %s\n", client->player->team_name ?
+    client->player->team_name : "Anonymous", client->player->id,
+    client->input[0].body);
     parse_buffer(server, client->input[0].body, client);
     move_inputs(client->input);
     return 0;
