@@ -95,6 +95,13 @@ void zappy::Map::removePlayerById(std::size_t id)
     zappy::Team &team = getTeam(player->team);
 
     team.removePlayerById(id);
+    for (auto it = _players.begin(); it != _players.end(); it++) {
+        if ((*it)->id == id) {
+            _players.erase(it);
+            std::cout << "Player " << id << " removed from list" << std::endl;
+            return;
+        }
+    }
 }
 
 std::size_t zappy::Map::_getPlayerIndexById(std::size_t id)
