@@ -45,7 +45,7 @@ static int accept_clients(server_t *server)
 
 static int isset_read(client_t *client, fd_set *readfds)
 {
-    if (client->fd > -1 && FD_ISSET(client->fd, readfds)) {
+    if (FD_ISSET(client->fd, readfds)) {
         if (init_read_buffer(client))
             return 84;
     }
@@ -54,7 +54,7 @@ static int isset_read(client_t *client, fd_set *readfds)
 
 static int isset_write(server_t *server, client_t *client, fd_set *writefds)
 {
-    if (client->fd > -1 && FD_ISSET(client->fd, writefds)) {
+    if (FD_ISSET(client->fd, writefds)) {
         if (execute_command(server, client) < 0)
             return 84;
     }
@@ -69,6 +69,8 @@ static int isset_client_and_server(server_t *server, fd_set *readfds,
             return 84;
     }
     for (int i = 0; i < FD_SETSIZE; i++) {
+        if (server->clients[i].fd < 0)
+            continue;
         if (isset_read(&server->clients[i], readfds))
             return 84;
         if (isset_write(server, &server->clients[i], writefds))
@@ -138,6 +140,7 @@ static void client_init(server_t *server, int i)
     server->clients[i].player->x = 0;
     server->clients[i].player->y = 0;
     server->clients[i].player->last_command_time = 0;
+    server->clients[i].player->in_incantation = false;
     for (int j = 0; j < 10; j++) {
         server->clients[i].input[j].args = NULL;
         server->clients[i].input[j].nb_args = 0;

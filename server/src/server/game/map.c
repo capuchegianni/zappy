@@ -20,6 +20,13 @@ void init_items(items_t *items)
     items->thystame = 0;
 }
 
+static void init_incantation(incantation_t *inc)
+{
+    inc->level = 0;
+    inc->occuring = false;
+    inc->start = 0;
+}
+
 static void add_eggs(game_t *game)
 {
     srand(time(NULL));
@@ -39,6 +46,7 @@ bool init_map(game_t *game)
             return false;
         for (size_t j = 0; j < game->x; j++) {
             init_items(&game->map[i][j].items);
+            init_incantation(&game->map[i][j].incantation);
             game->map[i][j].player_here = false;
             game->map[i][j].egg_here = false;
         }

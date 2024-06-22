@@ -25,5 +25,6 @@ int internal_pnw(client_t *client, int fd)
 
 int command_pnw(server_t *server, client_t *client)
 {
+    (void)server;
     return internal_pnw(client, client->fd);
 }

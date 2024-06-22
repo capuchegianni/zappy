@@ -8,6 +8,8 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+
 #include "server.h"
 #include "command.h"
 #include "game.h"
@@ -88,5 +90,6 @@ int update_game(server_t *server)
         set_mct(server);
         server->lastSecond = server->now;
     }
+    check_for_incantation(server->game, server->clients);
     return 0;
 }
