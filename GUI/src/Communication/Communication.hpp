@@ -20,7 +20,7 @@
 namespace zappy {
     class Communication {
     private:
-        bool _running {true};
+        std::atomic<bool> _running{true};
         int _port {};
         std::string _host {};
         sf::TcpSocket _socket {};

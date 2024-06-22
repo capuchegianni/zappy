@@ -27,21 +27,38 @@ void zappy::Communication::updateTimeUnit(int timeUnit) {
 
 std::string zappy::Communication::getLine() {
     std::string line;
-    while (line[line.size() - 1] != '\n') {
-        char c;
-        std::size_t received;
-        if (this->_socket.receive(&c, 1, received) != sf::Socket::Done || received == 0) {
+    char c;
+    std::size_t received;
+    sf::Socket::Status status;
+    while (this->_running) {
+        status = this->_socket.receive(&c, 1, received);
+        if (status == sf::Socket::Done && received > 0) {
+            line += c;
+            if (c == '\n') {
+                break;
+            }
+        } else if (status == sf::Socket::NotReady) {
+            continue;
+        } else {
             throw CommunicationError("Failed to receive data from the server");
         }
-        line += c;
+    }
+    if (!this->_running) {
+        throw CommunicationError("Connection closed");
     }
     return line;
 }
 
 void zappy::Communication::sendCommand(std::string command) {
     command += "\n";
-    if (this->_socket.send(command.c_str(), command.size()) != sf::Socket::Done) {
-        throw CommunicationError("Failed to send command to the server");
+    std::size_t totalSent = 0;
+    while (totalSent < command.size()) {
+        std::size_t sent;
+        sf::Socket::Status status = this->_socket.send(command.c_str() + totalSent, command.size() - totalSent, sent);
+        if (status != sf::Socket::Done) {
+            throw CommunicationError("Failed to send command to the server");
+        }
+        totalSent += sent;
     }
 }
 
@@ -55,6 +72,7 @@ void zappy::Communication::connect() {
         throw CommunicationError("Already connected to the server");
     }
     sf::Socket::Status status = this->_socket.connect(this->_host, this->_port);
+    this->_socket.setBlocking(false);
     if (status != sf::Socket::Done) {
         throw CommunicationError("Unable to connect to the server");
     }
@@ -67,9 +85,7 @@ void zappy::Communication::connect() {
     if (line != "WELCOME\n") {
         throw CommunicationError("Failed to connect to the server");
     }
-    if (this->_socket.send("GRAPHIC\n", 8) != sf::Socket::Done) {
-        throw CommunicationError("Authentication failed");
-    }
+    this->sendCommand("GRAPHIC");
 }
 
 void zappy::Communication::run() {
