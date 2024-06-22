@@ -81,6 +81,7 @@ void zappy::Communication::run() {
 void zappy::Communication::TODODELETE() {
     int winwidth = 1920;
     int winheight = 1080;
+    bool map_created = false;
 
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
@@ -93,8 +94,6 @@ void zappy::Communication::TODODELETE() {
 
     sf::Vector2f position(0, 0);
     sf::Vector2f size(1080, 1080);
-    (*map).setDisplayPosition(position);
-    (*map).setDisplaySize(size);
     window.setFramerateLimit(60);
 
     sf::Event event;
@@ -109,6 +108,13 @@ void zappy::Communication::TODODELETE() {
     {
         if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
             continue;
+        }
+        if (map == nullptr) {
+            continue;
+        } else if (!map_created) {
+            map->setDisplaySize(size);
+            map->setDisplayPosition(position);
+            map_created = true;
         }
 
         math::Vector3D movForward = map->sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
@@ -178,7 +184,6 @@ void zappy::Communication::TODODELETE() {
     }
 
     this->_running = false;
-
 }
 
 void zappy::Communication::commandReceiver() {
