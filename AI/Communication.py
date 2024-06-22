@@ -16,7 +16,7 @@ class Communication:
         self.listen_thread = threading.Thread(target=self.listenServer, daemon=True)
         self.listen_thread.start()
         self.data = None
-        self.data_from_master = None
+        self.message = None
 
 
     def openConnection(self, port, name, host):
@@ -91,11 +91,12 @@ class Communication:
             return False
         data_received = self.data_queue.get()
         data_split = data_received.split(' ')
-        if "teamtomaster" in data_received:
-            self.data_from_master = data_split[2].split('+')[1]
+        if data_split[0] == "message":
+            self.message = [int(data_split[1].strip(',')), data_split[2].strip('\n')]
+            print(f"{Color.YELLOW}Message received: {self.message}{Color.RESET}")
         else:
-            print(f"{Color.PURPLE}Data received: {data_received}{Color.RESET}")
             self.data = data_received
+            print(f"{Color.PURPLE}Data received: {self.data}{Color.RESET}")
         return True
 
 
@@ -105,7 +106,7 @@ class Communication:
         return data
 
 
-    def getDataFromMaster(self):
-        data = self.data_from_master
-        self.data_from_master = None
-        return data
+    def getMessage(self):
+        message = self.message
+        self.message = None
+        return message
