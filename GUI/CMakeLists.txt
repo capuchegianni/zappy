@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.27)
 project(zappy_gui)
 
 set(CMAKE_CXX_STANDARD 20)

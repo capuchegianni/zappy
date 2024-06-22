@@ -129,6 +129,14 @@ int internal_pin(client_t *client, int fd);
  * @return 1 if the command has been successfully executed
 */
 int command_pin(server_t *server, client_t *client);
+
+/**
+ * @brief sst command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int command_sst(server_t *server, client_t *client);
 // Commands for AI/server communication
 
 /**

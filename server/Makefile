@@ -30,6 +30,7 @@ SRC = 	src/server/main.c						\
 		src/server/parser/flags.c 				\
 		src/server/command/msz.c 				\
 		src/server/command/sgt.c 				\
+		src/server/command/sst.c 				\
 		src/server/command/bct.c 				\
 		src/server/command/mct.c 				\
 		src/server/command/tna.c 				\
