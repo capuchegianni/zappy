@@ -47,7 +47,7 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : sceneDa
 
         for (std::size_t j = 0; j < height; j++)
         {
-            _map[i].push_back(Box(i, j, sceneDate.sceneData, _assets));
+            _map[i].push_back(std::make_shared<Box>(i, j, sceneDate.sceneData, _assets));
         }
     }
 
@@ -63,7 +63,7 @@ zappy::Box &zappy::Map::operator()(std::size_t x, std::size_t y)
     if (x >= _map.size() || y >= _map[0].size())
         throw Map::MapError("Out of bounds");
 
-    return _map[x][y];
+    return *_map[x][y];
 }
 
 std::shared_ptr<zappy::Trantorien> zappy::Map::getPlayerById(std::size_t id)
@@ -129,7 +129,7 @@ void zappy::Map::updateEntities()
 
     for (auto &tile : _map) {
         for (auto &box : tile) {
-            std::vector<std::pair<double, sf::Sprite>> tileSprites = box.getObjectsSprites(sceneDate.sceneData.camera);
+            std::vector<std::pair<double, sf::Sprite>> tileSprites = box->getObjectsSprites(sceneDate.sceneData.camera);
             allSprites.insert(allSprites.end(), tileSprites.begin(), tileSprites.end());
         }
     }
@@ -158,10 +158,10 @@ void zappy::Map::updateTiles()
 {
     for (auto &row : _map) {
         for (auto &box : row) {
-            box.updateSprite();
+            box->updateSprite();
             sceneDate.sceneData.camera.directionBackup = sceneDate.sceneData.camera.direction;
             sceneDate.sceneData.camera.unitaryPixelsSizeBackup = sceneDate.sceneData.camera.unitaryPixelsSize;
-            sceneDate.renderTexture.draw(box);
+            sceneDate.renderTexture.draw(*box);
         }
     }
 }

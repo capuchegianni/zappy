@@ -11,6 +11,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include "Assets.hpp"
+#include "../Map/Box.hpp"
 
 namespace zappy
 {
@@ -20,7 +21,7 @@ namespace zappy
             BoxInfoDrawables();
             ~BoxInfoDrawables();
 
-            void updateDisplay();
+            void updateDisplay(std::shared_ptr<Box> &box);
 
             sf::RectangleShape background;
             sf::RenderTexture renderTexture;
@@ -34,6 +35,16 @@ namespace zappy
             sf::Sprite mendiane;
             sf::Sprite phiras;
             sf::Sprite thystame;
+
+            sf::Text foodText;
+            sf::Text linemateText;
+            sf::Text deraumereText;
+            sf::Text siburText;
+            sf::Text mendianeText;
+            sf::Text phirasText;
+            sf::Text thystameText;
+
+            sf::Text title;
     };
 
     class BoxInfo : public sf::Drawable
@@ -46,8 +57,12 @@ namespace zappy
             void setDisplayPosition(sf::Vector2f &position);
             void updateDisplay();
 
+            void setBox(std::shared_ptr<Box> box);
+
         private:
             BoxInfoDrawables _drawables;
+
+            std::shared_ptr<Box> _box;
 
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     };

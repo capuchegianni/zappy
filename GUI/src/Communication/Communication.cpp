@@ -187,7 +187,7 @@ void zappy::Communication::graphicalUserInterface() {
                 view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
 
                 sf::Vector2f boxPos(event.size.width / 2 + 5, event.size.height / 2);
-                sf::Vector2f boxSize(event.size.width / 4 - 5, event.size.height / 2);
+                sf::Vector2f boxSize(event.size.width / 8 - 5, event.size.height / 2);
 
                 sf::Vector2f loggerPos(event.size.width / 2 + 5 + event.size.width / 4, 0);
                 sf::Vector2f loggerSize(event.size.width / 4 - 5, event.size.height);
@@ -197,7 +197,7 @@ void zappy::Communication::graphicalUserInterface() {
                 eventLogger.setDisplayPosition(loggerPos);
                 eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
-
+                boxInfo.setBox(std::make_shared<zappy::Box>((*map)(0, 0)));
                 window.setView(view);
             }
         }
