@@ -24,6 +24,11 @@ void zappy::MapDrawables::updateDisplay()
     for (auto &tile : sceneData.tiles) {
         tile->computeTileImage(sceneData.camera);
     }
+
+    render3d::Camera compassCamera = sceneData.camera;
+    compassCamera.unitaryPixelsSize = 130;
+
+    sceneData.compassTile.computeTileImage(compassCamera);
 }
 
 zappy::MapDrawables::~MapDrawables() = default;
@@ -152,6 +157,11 @@ void zappy::Map::updateDisplay()
     for (auto &sprite : allSprites) {
         sceneDate.renderTexture.draw(sprite.second);
     }
+
+    sceneDate.compass.setTexture(sceneDate.sceneData.compassTile.getTexture(), true);
+    sceneDate.compass.setOrigin(sceneDate.compass.getTexture()->getSize().x / 2, sceneDate.compass.getTexture()->getSize().y / 2);
+    sceneDate.compass.setPosition(80-sceneDate.rect.getSize().x / 2, 80-sceneDate.rect.getSize().y / 2);
+    sceneDate.renderTexture.draw(sceneDate.compass);
 
     sceneDate.renderTexture.display();
     sceneDate.texture = sceneDate.renderTexture.getTexture();

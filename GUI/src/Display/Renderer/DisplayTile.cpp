@@ -9,13 +9,22 @@
 
 zappy::render3d::DisplayTile::DisplayTile(sf::Image &tile) : _baseImage(tile) {}
 
-zappy::render3d::DisplayTile::DisplayTile(const zappy::render3d::DisplayTile &other) : _baseImage(other._baseImage)
-{
-}
+zappy::render3d::DisplayTile::DisplayTile(const zappy::render3d::DisplayTile &other) : _baseImage(other._baseImage) {}
 
 zappy::render3d::DisplayTile::~DisplayTile() = default;
 
 void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &camera)
+{
+    resizeImage(camera);
+    projectTile(camera);
+}
+
+sf::Texture &zappy::render3d::DisplayTile::getTexture()
+{
+    return _displayTexture;
+}
+
+void zappy::render3d::DisplayTile::resizeImage(zappy::render3d::Camera &camera)
 {
     if (camera.unitaryPixelsSize != camera.unitaryPixelsSizeBackup)
     {
@@ -43,7 +52,7 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
         );
 
         // Draw the sprite onto the RenderTexture
-        renderTexture.clear();
+        renderTexture.clear(sf::Color::Transparent);
         renderTexture.draw(sprite);
         renderTexture.display();
 
@@ -52,7 +61,10 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
 
         _scaledImage = newTexture.copyToImage();
     }
+}
 
+void zappy::render3d::DisplayTile::projectTile(zappy::render3d::Camera &camera)
+{
     if (camera.unitaryPixelsSize != camera.unitaryPixelsSizeBackup || camera.direction != camera.directionBackup)
     {
         // Project tile corners to screen
@@ -103,9 +115,4 @@ void zappy::render3d::DisplayTile::computeTileImage(zappy::render3d::Camera &cam
             std::cerr << "Error loading _baseImage from image" << std::endl;
         }
     }
-}
-
-sf::Texture &zappy::render3d::DisplayTile::getTexture()
-{
-    return _displayTexture;
 }

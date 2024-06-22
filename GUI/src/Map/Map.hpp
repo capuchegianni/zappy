@@ -37,6 +37,7 @@ namespace zappy
             sf::Sprite sprite;
             sf::View view;
             sf::RectangleShape rect;
+            sf::Sprite compass;
     };
 
     class Map : public sf::Drawable

@@ -15,6 +15,9 @@ zappy::Assets::Assets()
     if (!placeholderImage.loadFromFile("assets/textures/placeholder.png"))
         throw Assets::AssetsError("Could not load placeholder _baseImage");
 
+    if (!compassTexture.loadFromFile("assets/textures/compass.png"))
+        throw Assets::AssetsError("Could not load compass texture");
+
     // load all png and jpg files in assets/textures/tiles
     for (const auto &entry : std::filesystem::directory_iterator("assets/textures/tiles")) {
         if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg")

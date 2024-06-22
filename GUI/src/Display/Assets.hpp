@@ -36,6 +36,7 @@ namespace zappy
             sf::Font font;
             sf::Image placeholderImage;
             std::vector<std::unique_ptr<sf::Image>> tilesTextures;
+            sf::Image compassTexture;
             render3d::Camera camera;
 
             std::vector<std::shared_ptr<sf::Texture>> foodTextures;

@@ -37,6 +37,8 @@ namespace zappy
                 };
 
                 void computeTileImage(Camera &camera);
+                void resizeImage(Camera &camera);
+                void projectTile(Camera &camera);
                 sf::Texture &getTexture();
 
             private:

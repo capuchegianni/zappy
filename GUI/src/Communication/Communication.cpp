@@ -81,8 +81,9 @@ void zappy::Communication::graphicalUserInterface() {
 
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
-    sf::Vector2f loggerPos(1090, 10);
+    sf::Vector2f loggerPos(1090, 20);
     sf::Vector2f loggerSize(820, 512);
+
     eventLogger.setDisplayPosition(loggerPos);
     eventLogger.setDisplaySize(loggerSize);
 
@@ -104,10 +105,9 @@ void zappy::Communication::graphicalUserInterface() {
 
     while (window.isOpen())
     {
-        if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
+        if (frameClock.getElapsedTime().asMilliseconds() <= 1000 / 60) {
             continue;
         }
-
         math::Vector3D movForward = map->sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
         math::Vector3D movRight = map->sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;
 
@@ -318,8 +318,22 @@ void zappy::Communication::ppo(std::vector<std::string> &args) {
         int y = std::stoi(args[2]);
         int direction = std::stoi(args[3]);
         (*this->map).getPlayerById(id)->direction = direction;
+        switch (direction)
+        {
+            case UP:
+                std::cout << "UP" << std::endl;
+                break;
+            case DOWN:
+                std::cout << "DOWN" << std::endl;
+                break;
+            case LEFT:
+                std::cout << "LEFT" << std::endl;
+                break;
+            case RIGHT:
+                std::cout << "RIGHT" << std::endl;
+                break;
+        }
         (*this->map).movePlayerById(x, y, id);
-        // TODO : Find ERROR HERE ^ (Player not found)
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
