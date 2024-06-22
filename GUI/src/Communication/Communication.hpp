@@ -20,7 +20,7 @@
 namespace zappy {
     class Communication {
     private:
-        bool _run {true};
+        bool _running {true};
         int _port {};
         std::string _host {};
         sf::TcpSocket _socket {};
@@ -29,10 +29,10 @@ namespace zappy {
         zappy::EventLogger eventLogger {10, assets};
         std::vector<int> _playersToUpdate {};
         std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
-        std::string getLine();
         static zappy::Direction getDirection(int direction);
+        std::string getLine();
         void sendCommand(std::string command);
-        void commandSender();
+        void automaticCommandSender();
         void commandReceiver();
         void TODODELETE();
     public:
@@ -46,20 +46,20 @@ namespace zappy {
         class CommunicationError : public std::exception {
         public:
             explicit CommunicationError(std::string message) : _message(std::move(message)) {}
-            const char *what() const noexcept override { return _message.c_str(); }
+            [[nodiscard]] const char *what() const noexcept override { return _message.c_str(); }
         private:
             std::string _message;
         };
         class CommandError : public std::exception {
         public:
             explicit CommandError(std::string message) : _message(std::move(message)) {}
-            const char *what() const noexcept override { return _message.c_str(); }
+            [[nodiscard]] const char *what() const noexcept override { return _message.c_str(); }
         private:
             std::string _message;
         };
         class MapUninitialized : public std::exception {
         public:
-            const char *what() const noexcept override { return "Map uninitialized"; }
+            [[nodiscard]] const char *what() const noexcept override { return "Map uninitialized"; }
         };
     private:
         // Commands
