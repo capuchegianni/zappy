@@ -111,44 +111,48 @@ void zappy::Communication::graphicalUserInterface() {
         math::Vector3D movForward = map->sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
         math::Vector3D movRight = map->sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        if (window.hasFocus())
         {
-            map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
-            map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-        {
-            map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
-        }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+            {
+                map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            {
+                map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            {
+                map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            {
+                map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
+            }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
-        {
-            map->sceneDate.sceneData.camera.unitaryPixelsSize += 1;
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && map->sceneDate.sceneData.camera.unitaryPixelsSize > 10)
-        {
-            map->sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
+            {
+                map->sceneDate.sceneData.camera.unitaryPixelsSize += 1;
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+                map->sceneDate.sceneData.camera.unitaryPixelsSize > 10)
+            {
+                map->sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            {
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            {
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
+            }
         }
 
         while (window.pollEvent(event)) {
