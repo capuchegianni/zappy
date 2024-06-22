@@ -58,12 +58,12 @@ zappy::Map::Map(std::size_t width, std::size_t height, Assets &assets) : sceneDa
 
 zappy::Map::~Map() = default;
 
-zappy::Box &zappy::Map::operator()(std::size_t x, std::size_t y)
+std::shared_ptr<zappy::Box> &zappy::Map::operator()(std::size_t x, std::size_t y)
 {
     if (x >= _map.size() || y >= _map[0].size())
         throw Map::MapError("Out of bounds");
 
-    return *_map[x][y];
+    return _map[x][y];
 }
 
 std::shared_ptr<zappy::Trantorien> zappy::Map::getPlayerById(std::size_t id)
@@ -170,8 +170,8 @@ void zappy::Map::updateDirectionUI()
 {
     sceneDate.selection.setTexture(sceneDate.sceneData.selectionTile.getTexture(), true);
     sceneDate.selection.setOrigin(sceneDate.selection.getTexture()->getSize().x / 2, sceneDate.selection.getTexture()->getSize().y / 2);
-    sceneDate.selection.setPosition(sceneDate.sceneData.camera.displayUnitaryX.x * _selected.x + sceneDate.sceneData.camera.displayUnitaryY.x * _selected.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.x + sceneDate.sceneData.camera.displayUnitaryY.x * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.x * sceneDate.sceneData.camera.centerZ,
-                       sceneDate.sceneData.camera.displayUnitaryX.y * _selected.x + sceneDate.sceneData.camera.displayUnitaryY.y * _selected.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.y + sceneDate.sceneData.camera.displayUnitaryY.y * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.y * sceneDate.sceneData.camera.centerZ);
+    sceneDate.selection.setPosition(sceneDate.sceneData.camera.displayUnitaryX.x * selectedBox.x + sceneDate.sceneData.camera.displayUnitaryY.x * selectedBox.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.x + sceneDate.sceneData.camera.displayUnitaryY.x * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.x * sceneDate.sceneData.camera.centerZ,
+                                    sceneDate.sceneData.camera.displayUnitaryX.y * selectedBox.x + sceneDate.sceneData.camera.displayUnitaryY.y * selectedBox.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.y + sceneDate.sceneData.camera.displayUnitaryY.y * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.y * sceneDate.sceneData.camera.centerZ);
     sceneDate.renderTexture.draw(sceneDate.selection);
     
     sceneDate.compass.setTexture(sceneDate.sceneData.compassTile.getTexture(), true);

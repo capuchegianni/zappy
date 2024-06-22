@@ -57,7 +57,7 @@ namespace zappy
                     std::string _message;
             };
 
-            Box &operator()(std::size_t x, std::size_t y);
+            std::shared_ptr<Box> &operator()(std::size_t x, std::size_t y);
             std::shared_ptr<Trantorien> getPlayerById(std::size_t id);
             void addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team);
             void removePlayerById(std::size_t id);
@@ -81,10 +81,11 @@ namespace zappy
 
             void setTimeUnit(int timeUnit);
             int getTimeUnit() const;
+
+            math::Point3D selectedBox = {0, 0, 0};
         private:
             std::vector<std::vector<std::shared_ptr<Box>>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);
-            math::Point3D _selected = {0, 0, 0};
 
             std::vector<std::shared_ptr<Trantorien>> _players = {};
 

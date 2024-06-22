@@ -213,7 +213,8 @@ void zappy::Communication::graphicalUserInterface() {
                 eventLogger.setDisplayPosition(loggerPos);
                 eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
-                boxInfo.setBox(std::make_shared<zappy::Box>((*map)(0, 0)));
+                boxInfo.setBox((*map)(5, 5));
+                map->selectedBox = {5, 5, 0};
                 window.setView(view);
             }
         }
@@ -304,13 +305,13 @@ void zappy::Communication::bct(std::vector<std::string> &args) {
         int mendiane = std::stoi(args[6]);
         int phiras = std::stoi(args[7]);
         int thystame = std::stoi(args[8]);
-        (*this->map)(x, y).food = food;
-        (*this->map)(x, y).linemate = linemate;
-        (*this->map)(x, y).deraumere = deraumere;
-        (*this->map)(x, y).sibur = sibur;
-        (*this->map)(x, y).mendiane = mendiane;
-        (*this->map)(x, y).phiras = phiras;
-        (*this->map)(x, y).thystame = thystame;
+        (*this->map)(x, y)->food = food;
+        (*this->map)(x, y)->linemate = linemate;
+        (*this->map)(x, y)->deraumere = deraumere;
+        (*this->map)(x, y)->sibur = sibur;
+        (*this->map)(x, y)->mendiane = mendiane;
+        (*this->map)(x, y)->phiras = phiras;
+        (*this->map)(x, y)->thystame = thystame;
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
