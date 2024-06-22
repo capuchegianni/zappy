@@ -76,8 +76,8 @@ void zappy::Communication::run() {
         this->connect();
     }
     std::vector<std::thread> threads;
-    threads.emplace_back(&zappy::Communication::automaticCommandSender, this);
     threads.emplace_back(&zappy::Communication::commandReceiver, this);
+    threads.emplace_back(&zappy::Communication::automaticCommandSender, this);
     threads.emplace_back(&zappy::Communication::graphicalUserInterface, this);
     for (auto &thread : threads) {
         thread.join();
@@ -239,17 +239,10 @@ void zappy::Communication::automaticCommandSender() {
     std::cout << "Starting Automatic Sender\n";
     this->sendCommand("msz");
     this->sendCommand("tna");
+    this->sendCommand("mct");
     while (this->_running) {
-        for (auto &player : this->_playersToUpdate) {
-            this->sendCommand("ppo " + std::to_string(player));
-            this->sendCommand("plv " + std::to_string(player));
-            this->sendCommand("pin " + std::to_string(player));
-        }
-        this->_playersToUpdate.clear();
-        for (auto &block : this->_blockToUpdate) {
-            this->sendCommand("bct " + std::to_string(block.first) + " " + std::to_string(block.second));
-        }
-        this->_blockToUpdate.clear();
+        this->sendCommand("mct");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     std::cout << "Automatic Sender Stopped\n";
 }
@@ -321,7 +314,7 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
         trantorien.direction = direction;
         trantorien.level = level;
         (*this->map).addPlayer(std::make_shared<zappy::Trantorien>(trantorien), team);
-        this->_playersToUpdate.push_back(id);
+        this->sendCommand("pin " + std::to_string(id));
         this->eventLogger.log("Player " + std::to_string(id) + " joined team " + team);
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
@@ -413,7 +406,7 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
         throw MapUninitialized();
     try {
         int id = std::stoi(args[0]);
-        this->_playersToUpdate.push_back(id);
+        this->sendCommand("ppo " + std::to_string(id));
         this->eventLogger.log("Player " + std::to_string(id) + " has been expelled");
     } catch (std::exception &e) {
         throw CommandError("Invalid arguments");
@@ -430,8 +423,8 @@ void zappy::Communication::pdr(std::vector<std::string> &args) {
         auto player = (*this->map).getPlayerById(id);
         if (player == nullptr)
             return;
-        this->_blockToUpdate.emplace_back(player->x, player->y);
-        this->_playersToUpdate.push_back(id);
+        this->sendCommand("pin " + std::to_string(id));
+        this->sendCommand("bct " + std::to_string(player->x) + " " + std::to_string(player->y));
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
@@ -451,8 +444,8 @@ void zappy::Communication::pgt(std::vector<std::string> &args) {
         auto player = (*this->map).getPlayerById(id);
         if (player == nullptr)
             return;
-        this->_blockToUpdate.emplace_back(player->x, player->y);
-        this->_playersToUpdate.push_back(id);
+        this->sendCommand("pin " + std::to_string(id));
+        this->sendCommand("bct " + std::to_string(player->x) + " " + std::to_string(player->y));
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {

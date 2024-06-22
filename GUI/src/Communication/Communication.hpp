@@ -27,8 +27,6 @@ namespace zappy {
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
         zappy::EventLogger eventLogger {10, assets};
-        std::vector<int> _playersToUpdate {};
-        std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
         void updateTimeUnit(int timeUnit);
         std::string getLine();
         void sendCommand(std::string command);
