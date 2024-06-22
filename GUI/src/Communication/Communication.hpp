@@ -26,7 +26,7 @@ namespace zappy {
         sf::TcpSocket _socket {};
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
-        zappy::EventLogger eventLogger {10, assets};
+        zappy::EventLogger eventLogger {40, assets};
         void updateTimeUnit(int timeUnit);
         std::string getLine();
         void sendCommand(std::string command);

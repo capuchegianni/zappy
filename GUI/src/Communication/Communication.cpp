@@ -7,6 +7,7 @@
 
 #include "Communication.hpp"
 #include "../Display/BoxInfo.hpp"
+#include "../Display/PlayerInfo.hpp"
 
 #include <iostream>
 #include <unordered_map>
@@ -129,6 +130,7 @@ void zappy::Communication::graphicalUserInterface() {
     sf::View view(sf::FloatRect(0, 0, static_cast<float>(winwidth), static_cast<float>(winheight)));
 
     zappy::BoxInfo boxInfo(assets);
+    zappy::PlayerInfo playerInfo(assets);
 
     while (window.isOpen())
     {
@@ -208,8 +210,13 @@ void zappy::Communication::graphicalUserInterface() {
                 sf::Vector2f loggerPos(event.size.width / 2 + 5 + event.size.width / 4, 0);
                 sf::Vector2f loggerSize(event.size.width / 4 - 5, event.size.height);
 
+                sf::Vector2f playerInfoPos(event.size.width / 2 + event.size.width / 8 + 5, event.size.height / 2);
+                sf::Vector2f playerInfoSize(event.size.width / 8 - 5, event.size.height / 2);
+
                 boxInfo.setDisplaySize(boxSize);
                 boxInfo.setDisplayPosition(boxPos);
+                playerInfo.setDisplaySize(playerInfoSize);
+                playerInfo.setDisplayPosition(playerInfoPos);
                 eventLogger.setDisplayPosition(loggerPos);
                 eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
@@ -221,10 +228,12 @@ void zappy::Communication::graphicalUserInterface() {
 
         map->updateDisplay();
         boxInfo.updateDisplay();
+        playerInfo.updateDisplay();
         window.clear(sf::Color::Blue);
         window.draw(*map);
         window.draw(eventLogger);
         window.draw(boxInfo);
+        window.draw(playerInfo);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
