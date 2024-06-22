@@ -37,6 +37,8 @@ add_executable(zappy_gui
         src/Characters/Team.cpp
         src/MainProgram/Arguments.cpp
         src/MainProgram/Arguments.hpp
+        src/Display/BoxInfo.cpp
+        src/Display/BoxInfo.hpp
 )
 
 target_link_libraries(zappy_gui Math)

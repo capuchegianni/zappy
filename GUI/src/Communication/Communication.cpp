@@ -77,8 +77,6 @@ void zappy::Communication::graphicalUserInterface() {
     int winwidth = 1920;
     int winheight = 1080;
 
-    double mapWindowWidth = 0.5;
-
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
     sf::Vector2f loggerPos(1090, 20);
