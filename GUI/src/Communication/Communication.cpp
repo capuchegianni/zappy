@@ -78,21 +78,24 @@ void zappy::Communication::run() {
     std::vector<std::thread> threads;
     threads.emplace_back(&zappy::Communication::automaticCommandSender, this);
     threads.emplace_back(&zappy::Communication::commandReceiver, this);
-    threads.emplace_back(&zappy::Communication::TODODELETE, this);
+    threads.emplace_back(&zappy::Communication::graphicalUserInterface, this);
     for (auto &thread : threads) {
         thread.join();
     }
 }
 
-void zappy::Communication::TODODELETE() {
+void zappy::Communication::graphicalUserInterface() {
     int winwidth = 1920;
     int winheight = 1080;
     bool map_created = false;
 
+    double mapWindowWidth = 0.5;
+
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
-    sf::Vector2f loggerPos(1090, 10);
+    sf::Vector2f loggerPos(1090, 20);
     sf::Vector2f loggerSize(820, 512);
+
     eventLogger.setDisplayPosition(loggerPos);
     eventLogger.setDisplaySize(loggerSize);
 
@@ -101,6 +104,9 @@ void zappy::Communication::TODODELETE() {
     sf::Vector2f position(0, 0);
     sf::Vector2f size(1080, 1080);
     window.setFramerateLimit(60);
+
+    (*map).setDisplayPosition(position);
+    (*map).setDisplaySize(size);
 
     sf::Event event;
     sf::Clock frameClock;
@@ -112,7 +118,7 @@ void zappy::Communication::TODODELETE() {
 
     while (window.isOpen())
     {
-        if (!(frameClock.getElapsedTime().asMilliseconds() > 1000 / 60)) {
+        if (frameClock.getElapsedTime().asMilliseconds() <= 1000 / 60) {
             continue;
         }
         if (map == nullptr) {
@@ -126,44 +132,48 @@ void zappy::Communication::TODODELETE() {
         math::Vector3D movForward = map->sceneDate.sceneData.camera.direction * 0.01 * lastFrameTime;
         math::Vector3D movRight = map->sceneDate.sceneData.camera.right * 0.01 * lastFrameTime;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        if (window.hasFocus())
         {
-            map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
-            map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-        {
-            map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
-            map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
-        }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+            {
+                map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            {
+                map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            {
+                map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            {
+                map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
+            }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
-        {
-            map->sceneDate.sceneData.camera.unitaryPixelsSize += 1;
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && map->sceneDate.sceneData.camera.unitaryPixelsSize > 10)
-        {
-            map->sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
+            {
+                map->sceneDate.sceneData.camera.unitaryPixelsSize += 1;
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+                map->sceneDate.sceneData.camera.unitaryPixelsSize > 10)
+            {
+                map->sceneDate.sceneData.camera.unitaryPixelsSize -= 1;
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 0));
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            {
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, 1 * lastFrameTime) * 0.1);
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            {
+                map->sceneDate.sceneData.camera.rotate(math::Vector3D(0, 0, -1 * lastFrameTime * 0.1));
+            }
         }
 
         while (window.pollEvent(event)) {
@@ -175,7 +185,9 @@ void zappy::Communication::TODODELETE() {
 
             if (event.type == sf::Event::Resized)
             {
-                view = sf::View(sf::FloatRect(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
+                size = sf::Vector2f(event.size.width / 2, event.size.height);
+                view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+                (*map).setDisplaySize(size);
                 window.setView(view);
             }
         }

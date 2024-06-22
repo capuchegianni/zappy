@@ -7,7 +7,7 @@
 
 #include "SceneData.hpp"
 
-zappy::SceneData::SceneData(zappy::Assets &assets)
+zappy::SceneData::SceneData(zappy::Assets &assets) : compassTile(assets.compassTexture), selectionTile(assets.selectionTexture)
 {
     for (auto &tile : assets.tilesTextures) {
         tiles.push_back(std::make_shared<render3d::DisplayTile>(*tile));

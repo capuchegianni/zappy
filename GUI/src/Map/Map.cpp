@@ -24,6 +24,12 @@ void zappy::MapDrawables::updateDisplay()
     for (auto &tile : sceneData.tiles) {
         tile->computeTileImage(sceneData.camera);
     }
+
+    render3d::Camera compassCamera = sceneData.camera;
+    compassCamera.unitaryPixelsSize = 130;
+
+    sceneData.compassTile.computeTileImage(compassCamera);
+    sceneData.selectionTile.computeTileImage(sceneData.camera);
 }
 
 zappy::MapDrawables::~MapDrawables() = default;
@@ -75,7 +81,6 @@ std::shared_ptr<zappy::Trantorien> zappy::Map::getPlayerById(std::size_t id)
 
 void zappy::Map::addPlayer(const std::shared_ptr<Trantorien>& player, std::string &team)
 {
-    std::cout << "Adding player to team " << team << std::endl;
     Team &storedTeam = getTeam(team);
     player->team = team;
 
@@ -111,20 +116,8 @@ void zappy::Map::movePlayerById(std::size_t x, std::size_t y, std::size_t id)
     player->y = y;
 }
 
-void zappy::Map::updateDisplay()
+void zappy::Map::updateEntities()
 {
-    sceneDate.updateDisplay();
-    sceneDate.renderTexture.clear(sf::Color::Transparent);
-
-    for (auto &row : _map) {
-        for (auto &box : row) {
-            box.updateSprite();
-            sceneDate.sceneData.camera.directionBackup = sceneDate.sceneData.camera.direction;
-            sceneDate.sceneData.camera.unitaryPixelsSizeBackup = sceneDate.sceneData.camera.unitaryPixelsSize;
-            sceneDate.renderTexture.draw(box);
-        }
-    }
-
     std::vector<std::pair<double, sf::Sprite>> allSprites = getPlayersSprites(sceneDate.sceneData.camera);
 
     for (auto &tile : _map) {
@@ -152,10 +145,46 @@ void zappy::Map::updateDisplay()
     for (auto &sprite : allSprites) {
         sceneDate.renderTexture.draw(sprite.second);
     }
+}
+
+void zappy::Map::updateTiles()
+{
+    for (auto &row : _map) {
+        for (auto &box : row) {
+            box.updateSprite();
+            sceneDate.sceneData.camera.directionBackup = sceneDate.sceneData.camera.direction;
+            sceneDate.sceneData.camera.unitaryPixelsSizeBackup = sceneDate.sceneData.camera.unitaryPixelsSize;
+            sceneDate.renderTexture.draw(box);
+        }
+    }
+}
+
+void zappy::Map::updateDirectionUI()
+{
+    sceneDate.selection.setTexture(sceneDate.sceneData.selectionTile.getTexture(), true);
+    sceneDate.selection.setOrigin(sceneDate.selection.getTexture()->getSize().x / 2, sceneDate.selection.getTexture()->getSize().y / 2);
+    sceneDate.selection.setPosition(sceneDate.sceneData.camera.displayUnitaryX.x * _selected.x + sceneDate.sceneData.camera.displayUnitaryY.x * _selected.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.x + sceneDate.sceneData.camera.displayUnitaryY.x * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.x * sceneDate.sceneData.camera.centerZ,
+                       sceneDate.sceneData.camera.displayUnitaryX.y * _selected.x + sceneDate.sceneData.camera.displayUnitaryY.y * _selected.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.y + sceneDate.sceneData.camera.displayUnitaryY.y * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.y * sceneDate.sceneData.camera.centerZ);
+    sceneDate.renderTexture.draw(sceneDate.selection);
+    
+    sceneDate.compass.setTexture(sceneDate.sceneData.compassTile.getTexture(), true);
+    sceneDate.compass.setOrigin(sceneDate.compass.getTexture()->getSize().x / 2, sceneDate.compass.getTexture()->getSize().y / 2);
+    sceneDate.compass.setPosition(80-sceneDate.rect.getSize().x / 2, 80-sceneDate.rect.getSize().y / 2);
+    sceneDate.renderTexture.draw(sceneDate.compass);
+}
+
+void zappy::Map::updateDisplay()
+{
+    sceneDate.updateDisplay();
+    sceneDate.renderTexture.clear(sf::Color::Transparent);
+
+    updateTiles();
+    updateEntities();
+    updateDirectionUI();
 
     sceneDate.renderTexture.display();
     sceneDate.texture = sceneDate.renderTexture.getTexture();
-    sceneDate.sprite.setTexture(sceneDate.texture);
+    sceneDate.sprite.setTexture(sceneDate.texture, true);
 }
 
 zappy::Team &zappy::Map::getTeam(std::string &name)
@@ -195,7 +224,8 @@ void zappy::Map::removeEggById(std::size_t id)
 
 void zappy::Map::setDisplaySize(sf::Vector2f &size)
 {
-    sceneDate.view = sf::View(sf::FloatRect(-(static_cast<float>(size.x) / 2), -(static_cast<float>(size.y) / 2), static_cast<float>(size.x), static_cast<float>(size.y)));
+    sceneDate.view = sf::View(sf::FloatRect(-(static_cast<float>(size.x) / 2), -(static_cast<float>(size.y) / 2),
+                                            static_cast<float>(size.x), static_cast<float>(size.y)));
     sceneDate.renderTexture.create(size.x, size.y);
     sceneDate.renderTexture.setView(sceneDate.view);
     sceneDate.rect.setSize(size);
@@ -209,7 +239,8 @@ void zappy::Map::setDisplayPosition(sf::Vector2f &position)
 
 std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::render3d::Camera &camera)
 {
-    math::Point3D cameraPosition = math::Vector3D(camera.centerX - camera.direction.x * 10000, camera.centerY - camera.direction.y * 10000, camera.centerZ - camera.direction.z * 10000);
+    math::Point3D cameraPosition = math::Vector3D(camera.centerX - camera.direction.x * 10000, camera.centerY - camera.direction.y * 10000,
+                                                  camera.centerZ - camera.direction.z * 10000);
 
     std::vector<std::pair<double, sf::Sprite>> playersSprites;
 
