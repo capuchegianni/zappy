@@ -14,9 +14,15 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
-#include "../Display/EventLogger.hpp"
 
 zappy::Communication::Communication(int port, std::string host) : _port(port), _host(std::move(host)) {}
+
+void zappy::Communication::updateTimeUnit(int timeUnit) {
+    if (timeUnit < 0) {
+        throw CommandError("Invalid time unit");
+    }
+    this->sendCommand("sst " + std::to_string(timeUnit));
+}
 
 std::string zappy::Communication::getLine() {
     std::string line;
@@ -513,6 +519,36 @@ void zappy::Communication::edi(std::vector<std::string> &args) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
         throw CommandError("Egg not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::sgt(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int timeUnit = std::stoi(args[0]);
+        (*this->map).setTimeUnit(timeUnit);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::sst(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int timeUnit = std::stoi(args[0]);
+        this->updateTimeUnit(timeUnit);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
     } catch (std::exception &e) {
         throw CommandError("Unknown error");
     }

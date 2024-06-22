@@ -29,6 +29,7 @@ namespace zappy {
         zappy::EventLogger eventLogger {10, assets};
         std::vector<int> _playersToUpdate {};
         std::vector<std::pair<std::size_t, std::size_t>> _blockToUpdate {};
+        void updateTimeUnit(int timeUnit);
         std::string getLine();
         void sendCommand(std::string command);
         void automaticCommandSender();
@@ -81,8 +82,8 @@ namespace zappy {
             {"enw", [this](std::vector<std::string> &args) { zappy::Communication::enw(args); }},
             {"ebo", [this](std::vector<std::string> &args) { zappy::Communication::ebo(args); }},
             {"edi", [this](std::vector<std::string> &args) { zappy::Communication::edi(args); }},
-            //{"sgt", [this](std::vector<std::string> &args) { zappy::Communication::sgt(args); }},
-            //{"sst", [this](std::vector<std::string> &args) { zappy::Communication::sst(args); }},
+            {"sgt", [this](std::vector<std::string> &args) { zappy::Communication::sgt(args); }},
+            {"sst", [this](std::vector<std::string> &args) { zappy::Communication::sst(args); }},
             //{"seg", [this](std::vector<std::string> &args) { zappy::Communication::seg(args); }},
             //{"smg", [this](std::vector<std::string> &args) { zappy::Communication::smg(args); }},
             //{"suc", [this](std::vector<std::string> &args) { zappy::Communication::suc(args); }},
@@ -106,8 +107,8 @@ namespace zappy {
         void enw(std::vector<std::string> &args);
         void ebo(std::vector<std::string> &args);
         void edi(std::vector<std::string> &args);
-        //void sgt(std::vector<std::string> &args);
-        //void sst(std::vector<std::string> &args);
+        void sgt(std::vector<std::string> &args);
+        void sst(std::vector<std::string> &args);
         //void seg(std::vector<std::string> &args);
         //void smg(std::vector<std::string> &args);
         //void suc(std::vector<std::string> &args);
