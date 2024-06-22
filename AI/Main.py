@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-from AI.Bot import Bot
+import time
+from AI.Master import Master
+from AI.Servant import Servant
 from AI.Communication import Communication
 from AI.Color import Color
 
@@ -24,9 +26,37 @@ def parse_args():
     return args.port, args.name, args.host
 
 
+def imMaster(comm):
+    start_time = time.time()
+
+    while True:
+        time.sleep(0.1)
+        current_time = time.time()
+        if current_time - start_time > 3:
+            break
+
+        comm.sendCommand("Broadcast " + "I'mMaster?-" + comm.team_name)
+        if comm.getData() == "ko\n":
+            return False
+
+        message = comm.getMessage()
+        if not message:
+            continue
+        print(message)
+        if message[1] == ("You'reNotMaster!-" + comm.team_name):
+            return False
+
+    return True
+
+
 def main():
-    bot = Bot(Communication(*parse_args()))
-    bot.run()
+    comm = Communication(*parse_args())
+
+    if imMaster(comm):
+        bot = Master(comm)
+    else:
+        bot = Servant(comm)
+
     return bot
 
 

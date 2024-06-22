@@ -2,7 +2,7 @@
 
 import socket
 import queue
-from time import sleep
+import select
 import threading
 from AI.Color import Color
 
@@ -22,24 +22,25 @@ class Communication:
     def openConnection(self, port, name, host):
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        while True:
-            try:
-                client_socket.connect((host, port))
-                break
-            except socket.error:
-                print(f"{Color.YELLOW}Failed to connect to server '{host}:{port}'. Retrying...{Color.RESET}")
-                sleep(1)
+        try:
+            client_socket.connect((host, port))
+        except socket.error:
+            print(f"{Color.RED}Failed to connect to server '{host}:{port}'.{Color.RESET}")
+            exit(1)
 
         if (client_socket.recv(1024).decode() != "WELCOME\n"):
             exit("Server did not send welcome message")
 
         while True:
             client_socket.sendall(f"{name}\n".encode())
-            data = client_socket.recv(1024).decode()
-            if not data == "ko\n":
-                break
-            print(f"{Color.YELLOW}No slots available for team '{name}'{Color.RESET}")
-            sleep(0.5)
+            ready = select.select([client_socket], [], [], 0.5)
+            if ready[0]:
+                data = client_socket.recv(1024).decode()
+                if not data == "ko\n":
+                    break
+            else:
+                print(f"{Color.YELLOW}No slots available for team '{name}'.{Color.RESET}")
+                continue
 
         print(f"{Color.GREEN}Connected to server.{Color.RESET}")
         self.size_map = client_socket.recv(1024).decode()
