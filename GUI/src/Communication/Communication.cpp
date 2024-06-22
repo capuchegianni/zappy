@@ -229,7 +229,6 @@ void zappy::Communication::graphicalUserInterface() {
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
     }
-
     this->_running = false;
 }
 
@@ -591,4 +590,47 @@ void zappy::Communication::sst(std::vector<std::string> &args) {
     } catch (std::exception &e) {
         throw CommandError("Unknown error");
     }
+}
+
+void zappy::Communication::seg(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        std::string team = args[0];
+        this->eventLogger.log("Team " + team + " has won");
+        this->_running = false;
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments");
+    }
+}
+
+void zappy::Communication::smg(std::vector<std::string> &args) {
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        std::string message = args[0];
+        this->eventLogger.log(message);
+    } catch (std::exception &e) {
+        throw CommandError("Invalid arguments");
+    }
+}
+
+void zappy::Communication::suc(std::vector<std::string> &args) {
+    if (!args.empty())
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    this->eventLogger.log("Command failed");
+}
+
+void zappy::Communication::sbp(std::vector<std::string> &args) {
+    if (!args.empty())
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    this->eventLogger.log("Command failed");
 }
