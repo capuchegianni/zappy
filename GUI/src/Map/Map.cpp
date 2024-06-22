@@ -270,6 +270,19 @@ std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::
     return playersSprites;
 }
 
+void zappy::Map::updateSelection()
+{
+    // round camera position to nearest integer
+    math::Point3D cameraPosition = math::Point3D(-sceneDate.sceneData.camera.centerX, -sceneDate.sceneData.camera.centerY, 0);
+    math::Point3D roundedCameraPosition = math::Point3D(round(cameraPosition.x), round(cameraPosition.y), 0);
+
+    if (roundedCameraPosition.x < 0 || roundedCameraPosition.y < 0 || roundedCameraPosition.x >= _map.size() || roundedCameraPosition.y >= _map[0].size())
+        return;
+
+    selectedBox.x = roundedCameraPosition.x;
+    selectedBox.y = roundedCameraPosition.y;
+}
+
 void zappy::Map::setTimeUnit(int timeUnit) {
     this->_timeUnit = timeUnit;
 }

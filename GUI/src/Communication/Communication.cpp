@@ -152,23 +152,23 @@ void zappy::Communication::graphicalUserInterface() {
         {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
             {
-                map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.05;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             {
-                map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.05;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
             {
-                map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.05;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
             {
-                map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.05;
             }
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
@@ -220,12 +220,12 @@ void zappy::Communication::graphicalUserInterface() {
                 eventLogger.setDisplayPosition(loggerPos);
                 eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
-                boxInfo.setBox((*map)(5, 5));
-                map->selectedBox = {5, 5, 0};
                 window.setView(view);
             }
         }
 
+        map->updateSelection();
+        boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
         map->updateDisplay();
         boxInfo.updateDisplay();
         playerInfo.updateDisplay();
