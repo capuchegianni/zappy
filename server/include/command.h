@@ -50,13 +50,52 @@ int internal_bct(int x, int y, int fd, server_t *server);
 int command_mct(server_t *server, client_t *client);
 
 /**
- * @brief bct command for internal use of zappy
+ * @brief tna command for the GUI
  * @param server
  * @param client
  * @return return the status of the execution, 1 for OK
 */
 int command_tna(server_t *server, client_t *client);
 
+/**
+ * @brief default command
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_not_impl(server_t *server, client_t *client);
+
+/**
+ * @brief pnw command for internal use of zappy
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int internal_pnw(client_t *client, int fd);
+
+/**
+ * @brief pnw command for the GUI
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_pnw(server_t *server, client_t *client);
+
+/**
+ * @brief ppo command for internal use of zappy
+ * @param client
+ * @param fd
+ * @return return the status of the execution, 1 for OK
+*/
+int internal_ppo(client_t *client, int fd);
+
+/**
+ * @brief ppo command for the GUI
+ * @param server
+ * @param client
+ * @return return the status of the execution, 1 for OK
+*/
+int command_ppo(server_t *server, client_t *client);
 
 // Commands for AI/server communication
 

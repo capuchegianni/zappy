@@ -37,6 +37,7 @@ typedef struct client_s {
 typedef struct server_s {
     int fd;
     int port;
+    struct timeval start, now, lastSecond;
     struct sockaddr_in addr;
     socklen_t addrlen;
     game_t *game;

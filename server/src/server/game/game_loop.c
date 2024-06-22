@@ -13,6 +13,7 @@
 #include "server.h"
 #include "command.h"
 #include "game.h"
+#include <sys/time.h>
 
 static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
 {
@@ -28,7 +29,7 @@ static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
     }
 }
 
-static void set_mcts(server_t *server, client_t *client, fd_set *writefds)
+static void send_infos(server_t *server, client_t *client, fd_set *writefds)
 {
     if (!client->player->team_name || !client->is_graphic) {
         return;
@@ -47,7 +48,7 @@ static void set_mct(server_t *server)
     set_fds(&readfds, &writefds, server);
     if (select(FD_SETSIZE, &readfds, &writefds, NULL, &tv) > 0) {
         for (int i = 0; i < FD_SETSIZE; ++i) {
-            set_mcts(server, &server->clients[i], &writefds);
+            send_infos(server, &server->clients[i], &writefds);
         }
     }
 }
@@ -73,7 +74,11 @@ void spawn_ressource(server_t *server, float ressouce_density,
 
 int update_game(server_t *server)
 {
-    set_mct(server);
+    long lastUpdate = (server->now.tv_sec - server->start.tv_sec) * 1000 +
+        (server->now.tv_usec - server->start.tv_usec) / 1000;
+
+    gettimeofday(&server->now, NULL);
+    update_life_units(server);
     spawn_ressource(server, FOOD, 0);
     spawn_ressource(server, LINEMATE, 1);
     spawn_ressource(server, DERAUMERE, 2);
@@ -81,7 +86,10 @@ int update_game(server_t *server)
     spawn_ressource(server, MENDIANE, 4);
     spawn_ressource(server, PHIRAS, 5);
     spawn_ressource(server, THYSTAME, 6);
-    update_life_units(server);
+    if (lastUpdate > 100) {
+        set_mct(server);
+        server->lastSecond = server->now;
+    }
     check_for_incantation(server->game, server->clients);
     return 0;
 }

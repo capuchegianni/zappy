@@ -19,17 +19,21 @@ commands_t commands[] = {
     {"bct", 1, 0, command_bct},
     {"mct", 1, 0, command_mct},
     {"tna", 1, 0, command_tna},
-    {"ppo", 1, 0, NULL},
-    {"plv", 1, 0, NULL},
-    {"pin", 1, 0, NULL},
+    {"ppo", 1, 0, command_ppo},
+    {"plv", 1, 0, command_not_impl},
+    {"pin", 1, 0, command_not_impl},
     {"sgt", 1, 0, command_sgt},
-    {"sst", 1, 0, NULL},
+    {"sst", 1, 0, command_not_impl},
+    {"msz", 1, 0, command_msz},
+    {"bct", 1, 0, command_bct},
+    {"mct", 1, 0, command_mct},
+    {"tna", 1, 0, command_tna},
     {"Forward", 0, 7, forward_command},
     {"Right", 0, 7, right_command},
     {"Left", 0, 7, left_command},
     {"Look", 0, 7, look_command},
     {"Inventory", 0, 1, inventory_command},
-    {"Broadcast", 0, 7, NULL},
+    {"Broadcast", 0, 7, command_not_impl},
     {"Connect_nbr", 0, 0, connect_nbr_command},
     {"Fork", 0, 42, fork_command},
     {"Eject", 0, 7, eject_command},
@@ -71,22 +75,44 @@ static int find_cmd(server_t *server, client_t *client)
     return 0;
 }
 
+static void init_connection_graphic(server_t *server, client_t *client)
+{
+    client->is_graphic = true;
+    client->player->team_name = strdup("GRAPHIC");
+    command_msz(server, client);
+    command_sgt(server, client);
+    command_tna(server, client);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (server->clients[i].fd > -1 && !server->clients[i].is_graphic) {
+            internal_pnw(&server->clients[i], client->fd);
+        }
+    }
+}
+
+static void handle_new_connection(server_t *server, client_t *client)
+{
+    if (!strcmp(client->input->args[0], "GRAPHIC")) {
+        init_connection_graphic(server, client);
+        return;
+    }
+    if (!team_exists(server->game, client->input->args[0])) {
+        write(client->fd, "ko\n", 4);
+        return;
+    }
+    set_player_team(client->input->args[0], server->game, client);
+    place_player_on_map(server->game, client);
+    set_player_id(client->player);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (server->clients[i].fd > -1 && server->clients[i].is_graphic) {
+            internal_pnw(client, server->clients[i].fd);
+        }
+    }
+}
+
 static void execute_cmd(server_t *server, client_t *client)
 {
     if (client->player->team_name == NULL) {
-        if (!strcmp(client->input[0].args[0], "GRAPHIC")) {
-            client->is_graphic = true;
-            client->player->team_name = strdup("GRAPHIC");
-            command_msz(server, client);
-            command_sgt(server, client);
-            return;
-        }
-        if (team_exists(server->game, client->input[0].args[0])) {
-            set_player_team(client->input[0].args[0], server->game, client);
-            place_player_on_map(server->game, client);
-            set_player_id(client->player);
-        } else
-            write(client->fd, "ko\n", 4);
+        handle_new_connection(server, client);
         return;
     }
     if (!find_cmd(server, client)) {
