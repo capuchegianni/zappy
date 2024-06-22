@@ -241,7 +241,9 @@ void zappy::Communication::commandReceiver() {
             try {
                 this->_commands[command](args);
             } catch (std::exception &e) {
-                std::cerr << command << ": " << e.what() << std::endl;
+                std::string commandCopy = line;
+                commandCopy.erase(std::remove(commandCopy.begin(), commandCopy.end(), '\n'), commandCopy.end());
+                std::cerr << command << ": " << e.what() << " (" << commandCopy << ")" << std::endl;
             }
         } else {
             std::cerr << command << ": Unknown command" << std::endl;
@@ -253,8 +255,6 @@ void zappy::Communication::commandReceiver() {
 void zappy::Communication::automaticCommandSender() {
     std::cout << "Starting Automatic Sender\n";
     this->sendCommand("msz");
-    this->sendCommand("tna");
-    this->sendCommand("mct");
     while (this->_running) {
         this->sendCommand("mct");
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -268,6 +268,8 @@ void zappy::Communication::msz(std::vector<std::string> &args) {
     }
     if (this->map == nullptr) {
         this->map = std::make_shared<zappy::Map>(std::stoi(args[0]), std::stoi(args[1]), this->assets);
+        this->sendCommand("tna");
+        this->sendCommand("mct");
     }
 }
 
@@ -479,8 +481,12 @@ void zappy::Communication::pdi(std::vector<std::string> &args) {
         int id = std::stoi(args[0]);
         (*this->map).removePlayerById(id);
         this->eventLogger.log("Player " + std::to_string(id) + " died");
+    } catch (Team::TeamError &e) {
+        throw CommandError("Player not found");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
     } catch (std::exception &e) {
-        throw CommandError("Invalid arguments");
+        throw CommandError("Unknown error");
     }
 }
 
