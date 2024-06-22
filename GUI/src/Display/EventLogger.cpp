@@ -10,6 +10,8 @@
 zappy::EventLoggerDrawables::EventLoggerDrawables(sf::Font &font) : _font(font)
 {
     background.setFillColor(sf::Color::White);
+    background.setOutlineColor(sf::Color::Black);
+    background.setOutlineThickness(4);
 }
 
 zappy::EventLoggerDrawables::~EventLoggerDrawables() = default;

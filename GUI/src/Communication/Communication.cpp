@@ -6,6 +6,7 @@
 */
 
 #include "Communication.hpp"
+#include "../Display/BoxInfo.hpp"
 
 #include <iostream>
 #include <unordered_map>
@@ -14,7 +15,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
-#include "../Display/EventLogger.hpp"
 
 zappy::Communication::Communication(int port, std::string host) : _port(port), _host(std::move(host)) {}
 
@@ -101,6 +101,8 @@ void zappy::Communication::graphicalUserInterface() {
 
     sf::View view(sf::FloatRect(0, 0, static_cast<float>(winwidth), static_cast<float>(winheight)));
 
+    zappy::BoxInfo boxInfo;
+
     while (window.isOpen())
     {
         if (frameClock.getElapsedTime().asMilliseconds() <= 1000 / 60) {
@@ -153,8 +155,8 @@ void zappy::Communication::graphicalUserInterface() {
             }
         }
 
-        while (window.pollEvent(event)) {
-
+        while (window.pollEvent(event))
+        {
             if (event.type == sf::Event::Closed)
             {
                 window.close();
@@ -164,7 +166,19 @@ void zappy::Communication::graphicalUserInterface() {
             {
                 size = sf::Vector2f(event.size.width / 2, event.size.height);
                 view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+
+                sf::Vector2f boxPos(event.size.width / 2 + 5, event.size.height / 2);
+                sf::Vector2f boxSize(event.size.width / 4 - 5, event.size.height / 2);
+
+                sf::Vector2f loggerPos(event.size.width / 2 + 5 + event.size.width / 4, 0);
+                sf::Vector2f loggerSize(event.size.width / 4 - 5, event.size.height);
+
+                boxInfo.setDisplaySize(boxSize);
+                boxInfo.setDisplayPosition(boxPos);
+                eventLogger.setDisplayPosition(loggerPos);
+                eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
+
                 window.setView(view);
             }
         }
@@ -173,6 +187,7 @@ void zappy::Communication::graphicalUserInterface() {
         window.clear(sf::Color::Blue);
         window.draw(*map);
         window.draw(eventLogger);
+        window.draw(boxInfo);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
