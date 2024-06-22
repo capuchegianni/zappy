@@ -62,6 +62,9 @@ namespace zappy
             void removePlayerById(std::size_t id);
             void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 
+            void updateEntities();
+            void updateTiles();
+            void updateDirectionUI();
             void updateDisplay();
             Team &getTeam(std::string &name);
             void addTeam(std::string &name);

@@ -318,21 +318,6 @@ void zappy::Communication::ppo(std::vector<std::string> &args) {
         int y = std::stoi(args[2]);
         int direction = std::stoi(args[3]);
         (*this->map).getPlayerById(id)->direction = direction;
-        switch (direction)
-        {
-            case UP:
-                std::cout << "UP" << std::endl;
-                break;
-            case DOWN:
-                std::cout << "DOWN" << std::endl;
-                break;
-            case LEFT:
-                std::cout << "LEFT" << std::endl;
-                break;
-            case RIGHT:
-                std::cout << "RIGHT" << std::endl;
-                break;
-        }
         (*this->map).movePlayerById(x, y, id);
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
