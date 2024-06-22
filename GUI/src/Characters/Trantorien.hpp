@@ -26,9 +26,9 @@ namespace zappy
     enum Direction
     {
         UP = 1,
-        LEFT,
-        DOWN,
         RIGHT,
+        DOWN,
+        LEFT,
     };
 
     enum CamDirection
