@@ -29,26 +29,11 @@ static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
     }
 }
 
-static void send_infos(server_t *server, client_t *client, fd_set *writefds)
+void send_update_cell(int x, int y, server_t *server)
 {
-    if (!client->player->team_name || !client->is_graphic) {
-        return;
-    }
-    if (client->fd > -1 && FD_ISSET(client->fd, writefds)) {
-        command_mct(server, client);
-    }
-}
-
-static void set_mct(server_t *server)
-{
-    fd_set writefds;
-    fd_set readfds;
-    struct timeval tv = {10, 10000};
-
-    set_fds(&readfds, &writefds, server);
-    if (select(FD_SETSIZE, &readfds, &writefds, NULL, &tv) > 0) {
-        for (int i = 0; i < FD_SETSIZE; ++i) {
-            send_infos(server, &server->clients[i], &writefds);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (server->clients[i].fd > -1 && server->clients[i].is_graphic) {
+            internal_bct(x, y, server->clients[i].fd, server);
         }
     }
 }
@@ -59,6 +44,8 @@ void spawn_ressource(server_t *server, float ressouce_density,
     double max_food = (float)server->game->x *
         (float)server->game->y * (ressouce_density / 100.f);
     double current_food = 0;
+    int y = rand() % server->game->y;
+    int x = rand() % server->game->x;
 
     for (size_t i = 0; i < server->game->y; ++i) {
         for (size_t j = 0; j < server->game->x; ++j) {
@@ -67,17 +54,13 @@ void spawn_ressource(server_t *server, float ressouce_density,
         }
     }
     if (current_food < max_food || current_food == 0) {
-        ((&server->game->map[rand() % server->game->y]
-        [rand() % server->game->x].items.food)[ressource_id]) += 1;
+        ((&server->game->map[y][x].items.food)[ressource_id]) += 1;
+        send_update_cell(x, y, server);
     }
 }
 
 int update_game(server_t *server)
 {
-    long lastUpdate = (server->now.tv_sec - server->start.tv_sec) * 1000 +
-        (server->now.tv_usec - server->start.tv_usec) / 1000;
-
-    gettimeofday(&server->now, NULL);
     update_life_units(server);
     spawn_ressource(server, FOOD, 0);
     spawn_ressource(server, LINEMATE, 1);
@@ -86,10 +69,6 @@ int update_game(server_t *server)
     spawn_ressource(server, MENDIANE, 4);
     spawn_ressource(server, PHIRAS, 5);
     spawn_ressource(server, THYSTAME, 6);
-    if (lastUpdate > 100) {
-        set_mct(server);
-        server->lastSecond = server->now;
-    }
     check_for_incantation(server->game, server->clients);
     return 0;
 }

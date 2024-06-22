@@ -97,6 +97,38 @@ int internal_ppo(client_t *client, int fd);
 */
 int command_ppo(server_t *server, client_t *client);
 
+/**
+ * @brief ppo command for internal use of zappy
+ * @param client
+ * @param fd
+ * @return return the status of the execution, 1 for OK
+*/
+int internal_plv(client_t *client, int fd);
+
+/**
+ * @brief Incantation command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int command_plv(server_t *server, client_t *client);
+
+
+/**
+ * @brief pin command for internal use of zappy
+ * @param client
+ * @param fd
+ * @return return the status of the execution, 1 for OK
+*/
+int internal_pin(client_t *client, int fd);
+
+/**
+ * @brief Pin command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int command_pin(server_t *server, client_t *client);
 // Commands for AI/server communication
 
 /**

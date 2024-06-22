@@ -13,5 +13,6 @@ int command_not_impl(server_t *server, client_t *client)
     (void)server;
     (void)client;
     printf("NOT IMPLEMENTED YET\n");
+    dprintf(client->fd, "ko");
     return 1;
 }

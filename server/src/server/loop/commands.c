@@ -37,7 +37,7 @@ static int get_command(client_t *client, char *buffer)
     return 0;
 }
 
-int init_read_buffer(client_t *client)
+int init_read_buffer(server_t *server, client_t *client)
 {
     char buffer[LEN];
     int read_val = 0;
@@ -46,7 +46,7 @@ int init_read_buffer(client_t *client)
     read_val = read(client->fd, buffer, LEN - 1);
     if (read_val <= 0) {
         printf("Client disconnected\n");
-        reset_client(client);
+        reset_client(server, client);
         return 0;
     }
     if (get_command(client, buffer))

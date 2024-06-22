@@ -22,17 +22,8 @@ void set_player_id(player_t *player)
     id++;
 }
 
-void reset_client(client_t *client)
+static void clear_input(client_t *client)
 {
-    client->is_playing = false;
-    client->is_graphic = false;
-    close(client->fd);
-    client->fd = -1;
-    init_items(&client->player->inventory);
-    if (client->player->team_name) {
-        free(client->player->team_name);
-        client->player->team_name = NULL;
-    }
     client->player->id = 0;
     client->player->level = 1;
     for (int i = 0; i < 10; i++) {
@@ -42,6 +33,23 @@ void reset_client(client_t *client)
         client->input[i].body_len = 0;
         client->input[i].exec_time = 0;
     }
+}
+
+void reset_client(server_t *server, client_t *client)
+{
+    client->is_playing = false;
+    client->is_graphic = false;
+    close(client->fd);
+    for (int i = 0; i < FD_SETSIZE; ++i)
+        if (client->fd > -1 && server->clients[i].is_graphic)
+            dprintf(server->clients[i].fd, "pdi %li\n", client->player->id);
+    client->fd = -1;
+    init_items(&client->player->inventory);
+    if (client->player->team_name) {
+        free(client->player->team_name);
+        client->player->team_name = NULL;
+    }
+    clear_input(client);
 }
 
 void free_clients(server_t *server)

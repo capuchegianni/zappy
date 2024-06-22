@@ -96,6 +96,7 @@ int take_command(server_t *server, client_t *client)
     for (int i = 0; objects[i]; i++) {
         if (!strcmp(objects[i], client->input[0].args[1])) {
             pick_item(server, client, client->input[0].args[1]);
+            send_update_cell(client->player->x, client->player->y, server);
             return 1;
         }
     }

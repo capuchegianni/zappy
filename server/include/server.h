@@ -37,7 +37,6 @@ typedef struct client_s {
 typedef struct server_s {
     int fd;
     int port;
-    struct timeval start, now, lastSecond;
     struct sockaddr_in addr;
     socklen_t addrlen;
     game_t *game;
@@ -77,7 +76,7 @@ int fserver(server_t *server);
  * @param client_t* client
  * @return 0 if success, 84 if error
 */
-int init_read_buffer(client_t *client);
+int init_read_buffer(server_t *server, client_t *client);
 
 /**
  * @brief Execute the command
@@ -106,7 +105,7 @@ int check_listen(int fd);
  * @brief Reset the client
  * @param client_t* client
 */
-void reset_client(client_t *client);
+void reset_client(server_t *server, client_t *client);
 
 /**
  * @brief is the server running
@@ -194,3 +193,12 @@ bool store_arguments_in_server(server_t *server, char **av);
  * @return 0 if everything goods
 */
 int update_game(server_t *server);
+
+/**
+ * @brief Update data
+ * @param x
+ * @param y
+ * @param server
+ * @return 0 if everything goods
+*/
+void send_update_cell(int x, int y, server_t *server);

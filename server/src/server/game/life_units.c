@@ -9,11 +9,11 @@
 
 #include <stdio.h>
 
-bool death_event(client_t *client)
+bool death_event(client_t *client, server_t *server)
 {
     if (client->player->inventory.food < 0) {
         dprintf(client->fd, "dead\n");
-        reset_client(client);
+        reset_client(server, client);
         return true;
     }
     return false;
@@ -29,7 +29,7 @@ void update_life_units(server_t *server)
     for (int i = 0; i < FD_SETSIZE; i++) {
         if (server->clients[i].is_playing) {
             server->clients[i].player->inventory.food--;
-            death_event(&server->clients[i]);
+            death_event(&server->clients[i], server);
         }
     }
     server->game->life_unit_update = now;

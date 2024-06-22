@@ -126,6 +126,6 @@ void place_player_on_map(game_t *game, client_t *client);
 
 void update_life_units(server_t *server);
 
-bool death_event(client_t *client);
+bool death_event(client_t *client, server_t *server);
 
 void check_for_incantation(game_t *game, client_t *clients);
