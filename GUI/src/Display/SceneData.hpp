@@ -23,6 +23,8 @@ namespace zappy
 
             render3d::Camera camera;
             std::vector<std::shared_ptr<render3d::DisplayTile>> tiles;
+            render3d::DisplayTile compassTile;
+            render3d::DisplayTile selectionTile;
 
             std::shared_ptr<render3d::DisplayTile> &getRandomTile();
     };

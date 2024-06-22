@@ -37,6 +37,8 @@ namespace zappy
             sf::Sprite sprite;
             sf::View view;
             sf::RectangleShape rect;
+            sf::Sprite compass;
+            sf::Sprite selection;
     };
 
     class Map : public sf::Drawable
@@ -61,6 +63,9 @@ namespace zappy
             void removePlayerById(std::size_t id);
             void movePlayerById(std::size_t x, std::size_t y, std::size_t id);
 
+            void updateEntities();
+            void updateTiles();
+            void updateDirectionUI();
             void updateDisplay();
             Team &getTeam(std::string &name);
             void addTeam(std::string &name);
@@ -79,6 +84,7 @@ namespace zappy
         private:
             std::vector<std::vector<Box>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);
+            math::Point3D _selected = {0, 0, 0};
 
             std::vector<std::shared_ptr<Trantorien>> _players = {};
 

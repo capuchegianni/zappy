@@ -40,6 +40,4 @@ zappy::Arguments::Arguments(std::vector<std::string> args)
     }
 }
 
-zappy::Arguments::~Arguments()
-{
-}
+zappy::Arguments::~Arguments() = default;
