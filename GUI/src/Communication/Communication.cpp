@@ -105,9 +105,6 @@ void zappy::Communication::graphicalUserInterface() {
     sf::Vector2f size(1080, 1080);
     window.setFramerateLimit(60);
 
-    (*map).setDisplayPosition(position);
-    (*map).setDisplaySize(size);
-
     sf::Event event;
     sf::Clock frameClock;
     int lastFrameTime = 0;
@@ -347,7 +344,6 @@ void zappy::Communication::ppo(std::vector<std::string> &args) {
         int direction = std::stoi(args[3]);
         (*this->map).getPlayerById(id)->direction = direction;
         (*this->map).movePlayerById(x, y, id);
-        // TODO : Find ERROR HERE ^ (Player not found)
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
