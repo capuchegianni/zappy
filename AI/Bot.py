@@ -4,6 +4,7 @@ from AI.Enums import Direction
 from AI.Enums import Element
 import numpy as np
 from math import sqrt
+from AI.Color import Color
 
 
 Levels = {}
@@ -28,6 +29,9 @@ class Bot:
     def forward(self, steps=1):
         for i in range(steps):
             self.comm.sendCommand("Forward")
+            if self.comm.getData() == "ko\n":
+                return False
+        return True
 
 
     def right(self):
@@ -40,6 +44,9 @@ class Bot:
             self.direction = Direction.WEST
         elif self.direction == Direction.WEST:
             self.direction = Direction.NORTH
+        if self.comm.getData() == "ko\n":
+            return False
+        return True
 
 
     def left(self):
@@ -52,27 +59,44 @@ class Bot:
             self.direction = Direction.EAST
         elif self.direction == Direction.EAST:
             self.direction = Direction.NORTH
+        if self.comm.getData() == "ko\n":
+            return False
+        return True
 
 
     def setDirection(self, direction):
         while self.direction != direction:
-            self.right()
+            if not self.right():
+                return False
+        return True
 
 
     def takeObject(self, object):
         self.comm.sendCommand("Take " + object.name.lower())
+        if self.comm.getData() == "ko\n":
+            return False
+        return True
 
 
     def setObject(self, object):
         self.comm.sendCommand("Set " + object.name.lower())
+        if self.comm.getData() == "ko\n":
+            return False
+        return True
 
 
     def broadcast(self, text):
         self.comm.sendCommand("Broadcast " + text)
+        if self.comm.getData() == "ko\n":
+            return False
+        return True
 
 
     def startIncantation(self):
         self.comm.sendCommand("Incantation")
+        if self.comm.getData() == "ko\n":
+            return False
+        return True
 
 
     def run(self):
@@ -104,7 +128,7 @@ class Bot:
             if self.comm.stop_listening:
                 return False
             self.comm.sendCommand("Look")
-            all_list.append(self.comm.data)
+            all_list.append(self.comm.getData())
 
         for i, list in enumerate(all_list):
             elements = list.strip()[1:-1].strip().split(',')
@@ -172,10 +196,11 @@ class Bot:
             return False
         self.comm.sendCommand("Inventory")
         self.inventory = {}
+        data = self.comm.getData()
 
-        if self.comm.data == "dead\n":
+        if data == "dead\n":
             return False
-        for item in self.comm.data.strip()[1:-1].split(','):
+        for item in data.strip()[1:-1].split(','):
             key, value = item.strip().split(' ')
             self.inventory[Element[key.upper()]] = int(value)
 
