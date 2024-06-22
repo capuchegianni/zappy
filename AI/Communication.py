@@ -55,8 +55,6 @@ class Communication:
 
 
     def sendCommand(self, command):
-        if self.stop_listening:
-            return
         try:
             self.client_socket.sendall((command + "\n").encode())
             print(f"{Color.BLUE}Sent command: {command}{Color.RESET}")
@@ -64,6 +62,8 @@ class Communication:
             print(f"{Color.RED}Error sending data: {e}{Color.RESET}")
             return
         while self.data is None:
+            if self.stop_listening:
+                return
             continue
 
 
@@ -76,6 +76,7 @@ class Communication:
                     break
                 if data_received == "dead\n":
                     print(f"{Color.BLUE}You died.{Color.RESET}")
+                    self.stop_listening = True
                     break
             except socket.error as e:
                 print(f"{Color.RED}Error receiving data: {e}{Color.RESET}")
@@ -90,10 +91,10 @@ class Communication:
             return False
         data_received = self.data_queue.get()
         data_split = data_received.split(' ')
-        print(f"{Color.PURPLE}Received data: {data_received}{Color.RESET}")
         if "teamtomaster" in data_received:
             self.data_from_master = data_split[2].split('+')[1]
         else:
+            print(f"{Color.PURPLE}Data received: {data_received}{Color.RESET}")
             self.data = data_received
         return True
 

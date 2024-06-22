@@ -224,8 +224,8 @@ class Bot:
 
 
     def refillFood(self):
-        if self.inventory[Element.FOOD] < 10:
-            while self.inventory[Element.FOOD] < 20:
+        if self.inventory[Element.FOOD] < 30:
+            while self.inventory[Element.FOOD] < 50:
                 if not self.getObject([Element.FOOD]):
                     break
                 if not self.lookAround():
