@@ -77,7 +77,7 @@ void zappy::Communication::TODODELETE() {
     int winwidth = 1920;
     int winheight = 1080;
 
-    sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
     sf::Vector2f loggerPos(1090, 10);
     sf::Vector2f loggerSize(820, 512);
@@ -172,7 +172,8 @@ void zappy::Communication::TODODELETE() {
         frameClock.restart();
     }
 
-    _run = false;
+    this->_run = false;
+
 }
 
 void zappy::Communication::commandReceiver() {
