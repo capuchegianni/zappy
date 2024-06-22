@@ -37,6 +37,7 @@ namespace zappy
             sf::Image placeholderImage;
             std::vector<std::unique_ptr<sf::Image>> tilesTextures;
             sf::Image compassTexture;
+            sf::Image selectionTexture;
             render3d::Camera camera;
 
             std::vector<std::shared_ptr<sf::Texture>> foodTextures;

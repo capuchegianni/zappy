@@ -38,6 +38,7 @@ namespace zappy
             sf::View view;
             sf::RectangleShape rect;
             sf::Sprite compass;
+            sf::Sprite selection;
     };
 
     class Map : public sf::Drawable
@@ -81,6 +82,7 @@ namespace zappy
         private:
             std::vector<std::vector<Box>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);
+            math::Point3D _selected = {0, 0, 0};
 
             std::vector<std::shared_ptr<Trantorien>> _players = {};
 

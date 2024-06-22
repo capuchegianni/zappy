@@ -29,6 +29,7 @@ void zappy::MapDrawables::updateDisplay()
     compassCamera.unitaryPixelsSize = 130;
 
     sceneData.compassTile.computeTileImage(compassCamera);
+    sceneData.selectionTile.computeTileImage(sceneData.camera);
 }
 
 zappy::MapDrawables::~MapDrawables() = default;
@@ -160,6 +161,12 @@ void zappy::Map::updateTiles()
 
 void zappy::Map::updateDirectionUI()
 {
+    sceneDate.selection.setTexture(sceneDate.sceneData.selectionTile.getTexture(), true);
+    sceneDate.selection.setOrigin(sceneDate.selection.getTexture()->getSize().x / 2, sceneDate.selection.getTexture()->getSize().y / 2);
+    sceneDate.selection.setPosition(sceneDate.sceneData.camera.displayUnitaryX.x * _selected.x + sceneDate.sceneData.camera.displayUnitaryY.x * _selected.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.x + sceneDate.sceneData.camera.displayUnitaryY.x * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.x * sceneDate.sceneData.camera.centerZ,
+                       sceneDate.sceneData.camera.displayUnitaryX.y * _selected.x + sceneDate.sceneData.camera.displayUnitaryY.y * _selected.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.y + sceneDate.sceneData.camera.displayUnitaryY.y * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.y * sceneDate.sceneData.camera.centerZ);
+    sceneDate.renderTexture.draw(sceneDate.selection);
+    
     sceneDate.compass.setTexture(sceneDate.sceneData.compassTile.getTexture(), true);
     sceneDate.compass.setOrigin(sceneDate.compass.getTexture()->getSize().x / 2, sceneDate.compass.getTexture()->getSize().y / 2);
     sceneDate.compass.setPosition(80-sceneDate.rect.getSize().x / 2, 80-sceneDate.rect.getSize().y / 2);
