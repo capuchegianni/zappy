@@ -112,7 +112,7 @@ void zappy::Communication::graphicalUserInterface() {
 
     sf::View view(sf::FloatRect(0, 0, static_cast<float>(winwidth), static_cast<float>(winheight)));
 
-    zappy::BoxInfo boxInfo;
+    zappy::BoxInfo boxInfo(assets);
 
     while (window.isOpen())
     {
@@ -203,6 +203,7 @@ void zappy::Communication::graphicalUserInterface() {
         }
 
         map->updateDisplay();
+        boxInfo.updateDisplay();
         window.clear(sf::Color::Blue);
         window.draw(*map);
         window.draw(eventLogger);
