@@ -23,7 +23,7 @@ commands_t commands[] = {
     {"plv", 1, 0, command_plv},
     {"pin", 1, 0, command_pin},
     {"sgt", 1, 0, command_sgt},
-    {"sst", 1, 0, command_not_impl},
+    {"sst", 1, 0, command_sst},
     {"msz", 1, 0, command_msz},
     {"bct", 1, 0, command_bct},
     {"mct", 1, 0, command_mct},
@@ -39,7 +39,7 @@ commands_t commands[] = {
     {"Eject", 0, 7, eject_command},
     {"Take", 0, 7, take_command},
     {"Set", 0, 7, set_command},
-    {"Incantation", 0, 0, incantation_command},
+    {"Incantation", 0, 300, incantation_command},
     {NULL, 0, 0, NULL}
 };
 
