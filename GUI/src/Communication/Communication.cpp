@@ -67,15 +67,17 @@ void zappy::Communication::run() {
     std::vector<std::thread> threads;
     threads.emplace_back(&zappy::Communication::commandSender, this);
     threads.emplace_back(&zappy::Communication::commandReceiver, this);
-    threads.emplace_back(&zappy::Communication::TODODELETE, this);
+    threads.emplace_back(&zappy::Communication::graphicalUserInterface, this);
     for (auto &thread : threads) {
         thread.join();
     }
 }
 
-void zappy::Communication::TODODELETE() {
+void zappy::Communication::graphicalUserInterface() {
     int winwidth = 1920;
     int winheight = 1080;
+
+    double mapWindowWidth = 0.5;
 
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
@@ -88,9 +90,9 @@ void zappy::Communication::TODODELETE() {
 
     sf::Vector2f position(0, 0);
     sf::Vector2f size(1080, 1080);
+
     (*map).setDisplayPosition(position);
     (*map).setDisplaySize(size);
-        window.setFramerateLimit(60);
 
     sf::Event event;
     sf::Clock frameClock;
@@ -158,7 +160,9 @@ void zappy::Communication::TODODELETE() {
 
             if (event.type == sf::Event::Resized)
             {
-                view = sf::View(sf::FloatRect(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)));
+                size = sf::Vector2f(event.size.width / 2, event.size.height);
+                view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+                (*map).setDisplaySize(size);
                 window.setView(view);
             }
         }

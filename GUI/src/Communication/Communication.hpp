@@ -33,7 +33,7 @@ namespace zappy {
         void sendCommand(std::string command);
         void commandSender();
         void commandReceiver();
-        void TODODELETE();
+        void graphicalUserInterface();
     public:
         Communication(int port, std::string host);
         ~Communication();

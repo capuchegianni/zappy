@@ -155,7 +155,7 @@ void zappy::Map::updateDisplay()
 
     sceneDate.renderTexture.display();
     sceneDate.texture = sceneDate.renderTexture.getTexture();
-    sceneDate.sprite.setTexture(sceneDate.texture);
+    sceneDate.sprite.setTexture(sceneDate.texture, true);
 }
 
 zappy::Team &zappy::Map::getTeam(std::string &name)
