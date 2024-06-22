@@ -59,13 +59,29 @@ void zappy::BoxInfo::setDisplaySize(sf::Vector2f &size)
     _drawables.renderTexture.create(size.x, size.y);
     _drawables.view = sf::View(sf::FloatRect(0, 0, size.x, size.y));
 
-    _drawables.food.setPosition(size.x / 7, size.y / 7 - size.y / 14);
-    _drawables.linemate.setPosition(size.x / 7, size.y / 7);
-    _drawables.deraumere.setPosition(size.x / 7, size.y / 7 + size.y / 14);
-    _drawables.sibur.setPosition(size.x / 7, size.y / 7 + size.y / 7);
-    _drawables.mendiane.setPosition(size.x / 7, size.y / 7 + size.y / 7 + size.y / 14);
-    _drawables.phiras.setPosition(size.x / 7, size.y / 7 + size.y / 7 + size.y / 7);
-    _drawables.thystame.setPosition(size.x / 7, size.y / 7 + size.y / 7 + size.y / 7 + size.y / 14);
+    _drawables.food.setPosition(size.x / 9, size.y / 9 + size.y / 14);
+    _drawables.linemate.setPosition(size.x / 9, size.y / 9 * 2 + size.y / 14);
+    _drawables.deraumere.setPosition(size.x / 9, size.y / 9 * 3 + size.y / 14);
+    _drawables.sibur.setPosition(size.x / 9, size.y / 9 * 4 + size.y / 14);
+    _drawables.mendiane.setPosition(size.x / 9, size.y / 9 * 5 + size.y / 14);
+    _drawables.phiras.setPosition(size.x / 9, size.y / 9 * 6 + size.y / 14);
+    _drawables.thystame.setPosition(size.x / 9, size.y / 9 * 7 + size.y / 14);
+
+    float foodScale = size.y / 9 / _drawables.food.getTexture()->getSize().y;
+    float linemateScale = size.y / 9 / _drawables.linemate.getTexture()->getSize().y;
+    float deraumereScale = size.y / 9 / _drawables.deraumere.getTexture()->getSize().y;
+    float siburScale = size.y / 9 / _drawables.sibur.getTexture()->getSize().y;
+    float mendianeScale = size.y / 9 / _drawables.mendiane.getTexture()->getSize().y;
+    float phirasScale = size.y / 9 / _drawables.phiras.getTexture()->getSize().y;
+    float thystameScale = size.y / 9 / _drawables.thystame.getTexture()->getSize().y;
+
+    _drawables.food.setScale(foodScale, foodScale);
+    _drawables.linemate.setScale(linemateScale, linemateScale);
+    _drawables.deraumere.setScale(deraumereScale, deraumereScale);
+    _drawables.sibur.setScale(siburScale, siburScale);
+    _drawables.mendiane.setScale(mendianeScale, mendianeScale);
+    _drawables.phiras.setScale(phirasScale, phirasScale);
+    _drawables.thystame.setScale(thystameScale, thystameScale);
 }
 
 void zappy::BoxInfo::setDisplayPosition(sf::Vector2f &position)
