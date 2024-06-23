@@ -37,6 +37,29 @@ void zappy::PlayerInfoDrawables::updateDisplay(std::shared_ptr<Trantorien> &play
         mendianeText.setString("Mendiane:" + std::to_string(player->mendiane));
         phirasText.setString("Phiras:" + std::to_string(player->phiras));
         thystameText.setString("Thystame:" + std::to_string(player->thystame));
+
+        playerID.setString("ID: " + std::to_string(player->id));
+        playerLevel.setString("Level: " + std::to_string(player->level));
+
+        std::string orientation;
+        switch (player->direction)
+        {
+            case UP:
+                orientation = "North";
+                break;
+            case RIGHT:
+                orientation = "East";
+                break;
+            case DOWN:
+                orientation = "South";
+                break;
+            case LEFT:
+                orientation = "West";
+                break;
+        }
+
+        playerOrientation.setString("Orientation: " + orientation);
+        playerPosition.setString("Position: " + std::to_string(player->x) + ", " + std::to_string(player->y));
     }
 
     renderTexture.draw(foodText);
@@ -46,6 +69,11 @@ void zappy::PlayerInfoDrawables::updateDisplay(std::shared_ptr<Trantorien> &play
     renderTexture.draw(mendianeText);
     renderTexture.draw(phirasText);
     renderTexture.draw(thystameText);
+
+    renderTexture.draw(playerPosition);
+    renderTexture.draw(playerOrientation);
+    renderTexture.draw(playerLevel);
+    renderTexture.draw(playerID);
 
     renderTexture.draw(title);
 
@@ -79,6 +107,15 @@ zappy::PlayerInfo::PlayerInfo(Assets &assets)
     _drawables.phirasText.setFont(assets.font);
     _drawables.thystameText.setFont(assets.font);
 
+    _drawables.playerID.setFont(assets.font);
+    _drawables.playerID.setString("ID: ");
+    _drawables.playerLevel.setFont(assets.font);
+    _drawables.playerLevel.setString("Level: ");
+    _drawables.playerOrientation.setFont(assets.font);
+    _drawables.playerOrientation.setString("Orientation: ");
+    _drawables.playerPosition.setFont(assets.font);
+    _drawables.playerPosition.setString("Position: ");
+
     _drawables.title.setFont(assets.font);
     _drawables.title.setString("Selected Player Info");
 }
@@ -91,21 +128,21 @@ void zappy::PlayerInfo::setDisplaySize(sf::Vector2f &size)
     _drawables.renderTexture.create(size.x, size.y);
     _drawables.view = sf::View(sf::FloatRect(0, 0, size.x, size.y));
 
-    _drawables.food.setPosition(size.x / 4.5, size.y / 9 + size.y / 14);
-    _drawables.linemate.setPosition(size.x / 4.5, size.y / 9 * 2 + size.y / 14);
-    _drawables.deraumere.setPosition(size.x / 4.5, size.y / 9 * 3 + size.y / 14);
-    _drawables.sibur.setPosition(size.x / 4.5, size.y / 9 * 4 + size.y / 14);
-    _drawables.mendiane.setPosition(size.x / 4.5, size.y / 9 * 5 + size.y / 14);
-    _drawables.phiras.setPosition(size.x / 4.5, size.y / 9 * 6 + size.y / 14);
-    _drawables.thystame.setPosition(size.x / 4.5, size.y / 9 * 7 + size.y / 14);
+    _drawables.food.setPosition(size.x / 4.5, size.y / 15 + size.y / 17);
+    _drawables.linemate.setPosition(size.x / 4.5, size.y / 15 * 2 + size.y / 17);
+    _drawables.deraumere.setPosition(size.x / 4.5, size.y / 15 * 3 + size.y / 17);
+    _drawables.sibur.setPosition(size.x / 4.5, size.y / 15 * 4 + size.y / 17);
+    _drawables.mendiane.setPosition(size.x / 4.5, size.y / 15 * 5 + size.y / 17);
+    _drawables.phiras.setPosition(size.x / 4.5, size.y / 15 * 6 + size.y / 17);
+    _drawables.thystame.setPosition(size.x / 4.5, size.y / 15 * 7 + size.y / 17);
 
-    float foodScale = size.y / 9 / _drawables.food.getTexture()->getSize().y;
-    float linemateScale = size.y / 9 / _drawables.linemate.getTexture()->getSize().y;
-    float deraumereScale = size.y / 9 / _drawables.deraumere.getTexture()->getSize().y;
-    float siburScale = size.y / 9 / _drawables.sibur.getTexture()->getSize().y;
-    float mendianeScale = size.y / 9 / _drawables.mendiane.getTexture()->getSize().y;
-    float phirasScale = size.y / 9 / _drawables.phiras.getTexture()->getSize().y;
-    float thystameScale = size.y / 9 / _drawables.thystame.getTexture()->getSize().y;
+    float foodScale = size.y / 12 / _drawables.food.getTexture()->getSize().y;
+    float linemateScale = size.y / 12 / _drawables.linemate.getTexture()->getSize().y;
+    float deraumereScale = size.y / 12 / _drawables.deraumere.getTexture()->getSize().y;
+    float siburScale = size.y / 12 / _drawables.sibur.getTexture()->getSize().y;
+    float mendianeScale = size.y / 12 / _drawables.mendiane.getTexture()->getSize().y;
+    float phirasScale = size.y / 12 / _drawables.phiras.getTexture()->getSize().y;
+    float thystameScale = size.y / 12 / _drawables.thystame.getTexture()->getSize().y;
 
     _drawables.food.setScale(foodScale, foodScale);
     _drawables.linemate.setScale(linemateScale, linemateScale);
@@ -123,13 +160,23 @@ void zappy::PlayerInfo::setDisplaySize(sf::Vector2f &size)
     _drawables.phirasText.setCharacterSize(size.y / 9 / 4);
     _drawables.thystameText.setCharacterSize(size.y / 9 / 4);
 
-    _drawables.foodText.setPosition(size.x / 4.5 * 2, size.y / 9 + size.y / 14);
-    _drawables.linemateText.setPosition(size.x / 4.5 * 2, size.y / 9 * 2 + size.y / 14);
-    _drawables.deraumereText.setPosition(size.x / 4.5 * 2, size.y / 9 * 3 + size.y / 14);
-    _drawables.siburText.setPosition(size.x / 4.5 * 2, size.y / 9 * 4 + size.y / 14);
-    _drawables.mendianeText.setPosition(size.x / 4.5 * 2, size.y / 9 * 5 + size.y / 14);
-    _drawables.phirasText.setPosition(size.x / 4.5 * 2, size.y / 9 * 6 + size.y / 14);
-    _drawables.thystameText.setPosition(size.x / 4.5 * 2, size.y / 9 * 7 + size.y / 14);
+    _drawables.foodText.setPosition(size.x / 4.5 * 2, size.y / 15 + size.y / 17);
+    _drawables.linemateText.setPosition(size.x / 4.5 * 2, size.y / 15 * 2 + size.y / 17);
+    _drawables.deraumereText.setPosition(size.x / 4.5 * 2, size.y / 15 * 3 + size.y / 17);
+    _drawables.siburText.setPosition(size.x / 4.5 * 2, size.y / 15 * 4 + size.y / 17);
+    _drawables.mendianeText.setPosition(size.x / 4.5 * 2, size.y / 15 * 5 + size.y / 17);
+    _drawables.phirasText.setPosition(size.x / 4.5 * 2, size.y / 15 * 6 + size.y / 17);
+    _drawables.thystameText.setPosition(size.x / 4.5 * 2, size.y / 15 * 7 + size.y / 17);
+
+    _drawables.playerID.setCharacterSize(size.y / 9 / 4);
+    _drawables.playerLevel.setCharacterSize(size.y / 9 / 4);
+    _drawables.playerOrientation.setCharacterSize(size.y / 9 / 4);
+    _drawables.playerPosition.setCharacterSize(size.y / 9 / 4);
+
+    _drawables.playerID.setPosition(size.x / 4.5, size.y / 15 * 8 + size.y / 17);
+    _drawables.playerLevel.setPosition(size.x / 4.5, size.y / 15 * 9 + size.y / 17);
+    _drawables.playerOrientation.setPosition(size.x / 4.5, size.y / 15 * 10 + size.y / 17);
+    _drawables.playerPosition.setPosition(size.x / 4.5, size.y / 15 * 11 + size.y / 17);
 
     _drawables.title.setCharacterSize(size.x / 6 / 2);
     _drawables.title.setPosition(size.x / 2 - _drawables.title.getGlobalBounds().width / 2, 0);
