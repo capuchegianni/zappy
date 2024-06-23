@@ -335,7 +335,11 @@ void zappy::Communication::tna(std::vector<std::string> &args) {
     if (this->map == nullptr)
         throw MapUninitialized();
     std::string team = args[0];
-    (*this->map).addTeam(team);
+    try {
+        (*this->map).getTeam(team);
+    } catch (Team::TeamError &e) {
+        (*this->map).addTeam(team);
+    }
 }
 
 void zappy::Communication::pnw(std::vector<std::string> &args) {
