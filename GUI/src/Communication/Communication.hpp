@@ -24,6 +24,7 @@ namespace zappy {
         int _port {};
         std::string _host {};
         sf::TcpSocket _socket {};
+        std::size_t _displayPlayerID {0};
         zappy::Assets assets {};
         std::shared_ptr<zappy::Map> map {nullptr};
         zappy::EventLogger eventLogger {40, assets};

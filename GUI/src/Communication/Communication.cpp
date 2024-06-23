@@ -286,11 +286,13 @@ void zappy::Communication::graphicalUserInterface() {
         try
         {
             std::shared_ptr<zappy::Trantorien> selectedPlayer = map->getPlayerById(teamsInfo.getSelectedPlayer());
+            _displayPlayerID = selectedPlayer->id;
             playerInfo.setPlayer(selectedPlayer);
         }
         catch (std::exception &e)
         {
             std::shared_ptr<zappy::Trantorien> selectedPlayer = nullptr;
+            _displayPlayerID = 0;
             playerInfo.setPlayer(selectedPlayer);
         }
 
