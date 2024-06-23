@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include "misc.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -21,6 +22,10 @@ static char **teams_above_six_players(server_t *server)
             continue;
         teams[j] = strdup(server->game->teams[i].name);
         j++;
+    }
+    if (!j) {
+        free(teams);
+        return NULL;
     }
     return teams;
 }
@@ -43,9 +48,9 @@ static size_t increase_player_number(client_t *cli, char *team)
     size_t player = 0;
 
     for (int i = 0; i < FD_SETSIZE; i++) {
-        if (!cli[i].is_playing && cli[i].is_graphic)
+        if (!cli[i].is_playing || cli[i].is_graphic || !team)
             continue;
-        if (strcmp(cli[i].player[i].team_name, team))
+        if (strcmp(cli[i].player->team_name, team))
             continue;
         if (cli[i].player->level == 8)
             player++;
@@ -61,12 +66,13 @@ void is_a_team_winning(server_t *server)
 
     if (!teams)
         return;
-    for (size_t j = 0; teams[j]; j++) {
-        players_at_max_level = increase_player_number(clients, teams[j]);
-        if (has_won(players_at_max_level, clients, teams[j])) {
+    for (size_t i = 0; teams[i]; i++) {
+        players_at_max_level = increase_player_number(clients, teams[i]);
+        if (has_won(players_at_max_level, clients, teams[i])) {
             server->game->frequence = 0;
             server->game->end = true;
             break;
         }
     }
+    free_tab(teams);
 }

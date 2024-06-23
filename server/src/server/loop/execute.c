@@ -99,9 +99,10 @@ static void handle_new_connection(server_t *server, client_t *client)
         write(client->fd, "ko\n", 4);
         return;
     }
-    set_player_team(client->input->args[0], server->game, client);
-    place_player_on_map(server->game, client);
+    if (!set_player_team(client->input->args[0], server->game, client))
+        return;
     set_player_id(client->player);
+    place_player_on_map(server->game, client);
     for (int i = 0; i < FD_SETSIZE; ++i) {
         if (server->clients[i].fd > -1 && server->clients[i].is_graphic) {
             internal_pnw(client, server->clients[i].fd);
@@ -188,9 +189,11 @@ int execute_command(server_t *server, client_t *client)
 {
     if (!check_for_execution(server, client))
         return 0;
-    printf("[%s][%ld] %s\n", client->player->team_name ?
-    client->player->team_name : "Anonymous", client->player->id,
-    client->input[0].body);
+    if (client->player->team_name) {
+        printf("[%s][%ld] %s\n", client->player->team_name ?
+        client->player->team_name : "Anonymous", client->player->id,
+        client->input[0].body);
+    }
     parse_buffer(server, client->input[0].body, client);
     move_inputs(client->input);
     return 0;

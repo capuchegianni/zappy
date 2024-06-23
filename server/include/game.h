@@ -121,7 +121,7 @@ void init_items(items_t *items);
 
 bool team_exists(game_t *game, char *name);
 
-void set_player_team(char *team_name, game_t *game, client_t *client);
+bool set_player_team(char *team_name, game_t *game, client_t *client);
 
 void place_player_on_map(game_t *game, client_t *client);
 

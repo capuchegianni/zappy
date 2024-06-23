@@ -27,7 +27,7 @@ static void send_response(client_t *client, team_t *team, game_t *game)
     dprintf(client->fd, "%ld %ld\n", game->x, game->y);
 }
 
-void set_player_team(char *team_name, game_t *game, client_t *client)
+bool set_player_team(char *team_name, game_t *game, client_t *client)
 {
     team_t *team = malloc(sizeof(team_t));
 
@@ -39,12 +39,13 @@ void set_player_team(char *team_name, game_t *game, client_t *client)
     }
     if (team->available_slots == team->total_players_connected) {
         dprintf(client->fd, "ko\n");
-        return;
+        return false;
     }
     team->total_players_connected++;
     client->player->team_name = strdup(team_name);
     client->is_playing = true;
     send_response(client, team, game);
+    return true;
 }
 
 static void set_player_pos(game_t *game, client_t *client, size_t i)

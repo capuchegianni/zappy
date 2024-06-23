@@ -16,7 +16,7 @@
 
 void set_player_id(player_t *player)
 {
-    static size_t id = 0;
+    static size_t id = 1;
 
     player->id = id;
     id++;
@@ -35,6 +35,35 @@ static void clear_input(client_t *client)
     }
 }
 
+static void reset_player(player_t *player)
+{
+    init_items(&player->inventory);
+    player->id = 0;
+    player->level = 1;
+    player->x = 0;
+    player->y = 0;
+    player->last_command_time = 0;
+    player->in_incantation = 0;
+    player->direction = NORTH;
+    player->team_name = NULL;
+}
+
+static void remove_from_team(game_t *game, player_t *player)
+{
+    team_t *team = malloc(sizeof(team_t));
+
+    if (!player->team_name)
+        return;
+    for (size_t i = 0; i < game->teams_number; i++) {
+        if (!strcmp(game->teams[i].name, player->team_name)) {
+            team = &game->teams[i];
+            break;
+        }
+    }
+    team->total_players_connected--;
+    free(player->team_name);
+}
+
 void reset_client(server_t *server, client_t *client)
 {
     client->is_playing = false;
@@ -44,11 +73,8 @@ void reset_client(server_t *server, client_t *client)
         if (client->fd > -1 && server->clients[i].is_graphic)
             dprintf(server->clients[i].fd, "pdi %li\n", client->player->id);
     client->fd = -1;
-    init_items(&client->player->inventory);
-    if (client->player->team_name) {
-        free(client->player->team_name);
-        client->player->team_name = NULL;
-    }
+    remove_from_team(server->game, client->player);
+    reset_player(client->player);
     clear_input(client);
 }
 
