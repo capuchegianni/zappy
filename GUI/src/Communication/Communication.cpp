@@ -110,16 +110,10 @@ void zappy::Communication::graphicalUserInterface() {
 
     sf::RenderWindow window(sf::VideoMode(winwidth, winheight), "Zappy");
 
-    sf::Vector2f loggerPos(1090, 20);
-    sf::Vector2f loggerSize(820, 512);
+    int displayedFrameRate = 0;
+    int frames = 0;
+    sf::Clock frameRateClock;
 
-    eventLogger.setDisplayPosition(loggerPos);
-    eventLogger.setDisplaySize(loggerSize);
-
-    window.setFramerateLimit(60);
-
-    sf::Vector2f position(0, 0);
-    sf::Vector2f size(1080, 1080);
     window.setFramerateLimit(60);
 
     sf::Event event;
@@ -133,6 +127,34 @@ void zappy::Communication::graphicalUserInterface() {
     zappy::BoxInfo boxInfo(assets);
     zappy::PlayerInfo playerInfo(assets);
     zappy::TeamsInfo teamsInfo(assets);
+
+    // init window properly
+    sf::Vector2f size = sf::Vector2f(winwidth / 2, winheight);
+    sf::Vector2f position = sf::Vector2f(0, 0);
+    view = sf::View(sf::FloatRect(0, 0, winwidth, winheight));
+
+    sf::Vector2f boxPos(winwidth / 2 + 5, winheight / 2);
+    sf::Vector2f boxSize(winwidth / 8 - 5, winheight / 2);
+
+    sf::Vector2f loggerPos(winwidth / 2 + 5 + winheight / 4, 0);
+    sf::Vector2f loggerSize(winwidth / 4 - 5, winheight);
+
+    sf::Vector2f playerInfoPos(winwidth / 2 + event.size.width / 8 + 5, winheight / 2);
+    sf::Vector2f playerInfoSize(winwidth / 8 - 5, winheight / 2);
+
+    sf::Vector2f teamsInfoPos(winwidth / 2 + 5, 0);
+    sf::Vector2f teamsInfoSize(winwidth / 4 - 5, winheight / 2);
+
+    boxInfo.setDisplaySize(boxSize);
+    boxInfo.setDisplayPosition(boxPos);
+    playerInfo.setDisplaySize(playerInfoSize);
+    playerInfo.setDisplayPosition(playerInfoPos);
+    teamsInfo.setDisplaySize(teamsInfoSize);
+    teamsInfo.setDisplayPosition(teamsInfoPos);
+    eventLogger.setDisplayPosition(loggerPos);
+    eventLogger.setDisplaySize(loggerSize);
+    (*map).setDisplaySize(size);
+    window.setView(view);
 
     while (window.isOpen())
     {
@@ -212,17 +234,17 @@ void zappy::Communication::graphicalUserInterface() {
                 size = sf::Vector2f(event.size.width / 2, event.size.height);
                 view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
 
-                sf::Vector2f boxPos(event.size.width / 2 + 5, event.size.height / 2);
-                sf::Vector2f boxSize(event.size.width / 8 - 5, event.size.height / 2);
+                boxPos = sf::Vector2f(event.size.width / 2 + 5, event.size.height / 2);
+                boxSize = sf::Vector2f(event.size.width / 8 - 5, event.size.height / 2);
 
-                sf::Vector2f loggerPos(event.size.width / 2 + 5 + event.size.width / 4, 0);
-                sf::Vector2f loggerSize(event.size.width / 4 - 5, event.size.height);
+                loggerPos = sf::Vector2f(event.size.width / 2 + 5 + event.size.width / 4, 0);
+                loggerSize = sf::Vector2f(event.size.width / 4 - 5, event.size.height);
 
-                sf::Vector2f playerInfoPos(event.size.width / 2 + event.size.width / 8 + 5, event.size.height / 2);
-                sf::Vector2f playerInfoSize(event.size.width / 8 - 5, event.size.height / 2);
+                playerInfoPos = sf::Vector2f(event.size.width / 2 + event.size.width / 8 + 5, event.size.height / 2);
+                playerInfoSize = sf::Vector2f(event.size.width / 8 - 5, event.size.height / 2);
 
-                sf::Vector2f teamsInfoPos(event.size.width / 2 + 5, 0);
-                sf::Vector2f teamsInfoSize(event.size.width / 4 - 5, event.size.height / 2);
+                teamsInfoPos = sf::Vector2f(event.size.width / 2 + 5, 0);
+                teamsInfoSize = sf::Vector2f(event.size.width / 4 - 5, event.size.height / 2);
 
                 boxInfo.setDisplaySize(boxSize);
                 boxInfo.setDisplayPosition(boxPos);
@@ -235,6 +257,25 @@ void zappy::Communication::graphicalUserInterface() {
                 (*map).setDisplaySize(size);
                 window.setView(view);
             }
+            
+            if (event.type == sf::Event::KeyPressed)
+            {
+                switch (event.key.code)
+                {
+                    case sf::Keyboard::Add:
+                        map->setTimeUnit(map->getTimeUnit() + 1);
+                        updateTimeUnit(map->getTimeUnit());
+                        break;
+
+                    case sf::Keyboard::Subtract:
+                        if (map->getTimeUnit() >= 1)
+                        {
+                            map->setTimeUnit(map->getTimeUnit() - 1);
+                            updateTimeUnit(map->getTimeUnit());
+                        }
+                        break;
+                }
+            }
         }
 
         teamsInfo.updateTeams(map->getTeams());
@@ -242,11 +283,13 @@ void zappy::Communication::graphicalUserInterface() {
 
         try
         {
-            auto selectedPlayer = map->getPlayerById(teamsInfo.getSelectedPlayer());
+            std::shared_ptr<zappy::Trantorien> selectedPlayer = map->getPlayerById(teamsInfo.getSelectedPlayer());
             playerInfo.setPlayer(selectedPlayer);
         }
         catch (std::exception &e)
         {
+            std::shared_ptr<zappy::Trantorien> selectedPlayer = nullptr;
+            playerInfo.setPlayer(selectedPlayer);
         }
 
         teamsInfo.updateDisplay();
@@ -263,6 +306,19 @@ void zappy::Communication::graphicalUserInterface() {
         window.draw(teamsInfo);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
+
+        if (frameRateClock.getElapsedTime().asSeconds() >= 1)
+        {
+            displayedFrameRate = frames;
+            frames = 0;
+            frameRateClock.restart();
+        }
+        else
+        {
+            frames++;
+        }
+
+        window.setTitle("Zappy - FPS: " + std::to_string(displayedFrameRate) + " - Tickrate: " + std::to_string(map->getTimeUnit()));
         frameClock.restart();
     }
     this->_running = false;

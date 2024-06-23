@@ -288,6 +288,8 @@ void zappy::Map::updateSelection()
 }
 
 void zappy::Map::setTimeUnit(int timeUnit) {
+    if (timeUnit < 0)
+        throw Map::MapError("Time unit must be positive");
     this->_timeUnit = timeUnit;
 }
 

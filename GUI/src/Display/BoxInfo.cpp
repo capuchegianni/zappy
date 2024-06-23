@@ -7,7 +7,7 @@
 
 #include "BoxInfo.hpp"
 
-zappy::BoxInfoDrawables::BoxInfoDrawables()
+zappy::BoxInfoDrawables::BoxInfoDrawables() : renderTexture(), view()
 {
     background.setFillColor(sf::Color(32, 32, 32, 255));
     background.setOutlineColor(sf::Color::Black);
@@ -53,7 +53,7 @@ void zappy::BoxInfoDrawables::updateDisplay(std::shared_ptr<Box> &box)
     sprite.setTexture(renderTexture.getTexture(), true);
 }
 
-zappy::BoxInfo::BoxInfo(zappy::Assets &assets)
+zappy::BoxInfo::BoxInfo(zappy::Assets &assets) : _drawables()
 {
     _drawables.food.setTexture(*assets.foodTextures[0]);
     _drawables.linemate.setTexture(*assets.linemateTextures[0]);
