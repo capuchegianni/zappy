@@ -10,13 +10,13 @@ from AI.Color import Color
 class Communication:
     def __init__(self, port, name, host):
         self.team_name = name
+        self.all_data = queue.Queue()
         self.data_queue = queue.Queue()
+        self.message_queue = queue.Queue()
         self.client_socket = self.openConnection(port, name, host)
         self.stop_listening = False
         self.listen_thread = threading.Thread(target=self.listenServer, daemon=True)
         self.listen_thread.start()
-        self.data = None
-        self.message = None
 
 
     def openConnection(self, port, name, host):
@@ -57,12 +57,14 @@ class Communication:
 
     def sendCommand(self, command):
         try:
+            if self.stop_listening:
+                return
             self.client_socket.sendall((command + "\n").encode())
             print(f"{Color.BLUE}Sent command: {command}{Color.RESET}")
         except socket.error as e:
             print(f"{Color.RED}Error sending data: {e}{Color.RESET}")
             return
-        while self.data is None:
+        while self.data_queue.empty():
             if self.stop_listening:
                 return
             continue
@@ -75,39 +77,42 @@ class Communication:
                 if not data_received:
                     print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
                     break
-                if data_received == "dead\n":
-                    print(f"{Color.BLUE}You died.{Color.RESET}")
-                    self.stop_listening = True
+                data_items = filter(None, data_received.split('\n'))
+                for data in data_items:
+                    if data == "dead":
+                        print(f"{Color.BLUE}You died.{Color.RESET}")
+                        self.stop_listening = True
+                        break
+                    else:
+                        self.all_data.put(data)
+                        self.processQueue()
+                if self.stop_listening:
                     break
             except socket.error as e:
                 print(f"{Color.RED}Error receiving data: {e}{Color.RESET}")
                 break
-            self.data_queue.put(data_received)
-            self.processQueue()
         self.closeConnection(join=False)
 
 
     def processQueue(self):
-        if self.data_queue.empty():
-            return False
-        data_received = self.data_queue.get()
-        data_split = data_received.split(' ')
-        if data_split[0] == "message":
-            self.message = [int(data_split[1].strip(',')), data_split[2].strip('\n')]
-            print(f"{Color.YELLOW}Message received: {self.message}{Color.RESET}")
-        else:
-            self.data = data_received
-            print(f"{Color.PURPLE}Data received: {self.data}{Color.RESET}")
-        return True
+        while not self.all_data.empty():
+            data_received = self.all_data.get()
+            data_split = data_received.split(' ')
+            if data_split[0] == "message":
+                self.message_queue.put([int(data_split[1].strip(',')), ' '.join(data_split[2:])])
+                print(f"{Color.YELLOW}Message queued: {[int(data_split[1].strip(',')), ' '.join(data_split[2:])]}{Color.RESET}")
+            else:
+                self.data_queue.put(data_received)
+                print(f"{Color.PURPLE}Data queued: {data_received}{Color.RESET}")
 
 
     def getData(self):
-        data = self.data
-        self.data = None
-        return data
+        if not self.data_queue.empty():
+            return self.data_queue.get()
+        return None
 
 
     def getMessage(self):
-        message = self.message
-        self.message = None
-        return message
+        if not self.message_queue.empty():
+            return self.message_queue.get()
+        return None

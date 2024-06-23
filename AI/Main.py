@@ -30,19 +30,13 @@ def imMaster(comm):
     start_time = time.time()
 
     while True:
-        time.sleep(0.1)
         current_time = time.time()
-        if current_time - start_time > 3:
+        if current_time - start_time > 5:
             break
-
-        comm.sendCommand("Broadcast " + "I'mMaster?-" + comm.team_name)
-        if comm.getData() == "ko\n":
-            return False
 
         message = comm.getMessage()
         if not message:
             continue
-        print(message)
         if message[1] == ("You'reNotMaster!-" + comm.team_name):
             return False
 
@@ -68,6 +62,7 @@ if __name__ == "__main__":
             pass
     except KeyboardInterrupt:
         print(f"\r{Color.BLUE}Interrupted by user. Closing...{Color.RESET}")
+        exit(0)
     finally:
         if bot and bot.comm is not None:
             bot.comm.closeConnection()
