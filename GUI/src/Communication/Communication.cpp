@@ -255,7 +255,7 @@ void zappy::Communication::graphicalUserInterface() {
                 teamsInfo.setDisplaySize(teamsInfoSize);
                 teamsInfo.setDisplayPosition(teamsInfoPos);
                 eventLogger.setDisplayPosition(loggerPos);
-                eventLogger.setDisplaySize(loggerSize);z
+                eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
                 window.setView(view);
             }
