@@ -44,7 +44,7 @@ zappy::Broadcast::Broadcast(double duration, double x, double y, double z, const
     _drawables.fill1.setScale(size.width / _drawables.fill1.getTexture()->getSize().x, 1);
     _drawables.fill2.setScale(size.width / _drawables.fill2.getTexture()->getSize().x, 1);
 
-    _drawables.view = sf::View(sf::FloatRect(-size.width / 2 - _drawables.leftSide.getTexture()->getSize().x, -_drawables.center.getTexture()->getSize().y / 2, size.width + _drawables.leftSide.getTexture()->getSize().x + _drawables.rightSide.getTexture()->getSize().x, _drawables.center.getTexture()->getSize().y));
+    _drawables.view = sf::View(sf::FloatRect(-size.width / 2 - _drawables.leftSide.getTexture()->getSize().x - _drawables.center.getTexture()->getSize().x / 2, -(_drawables.center.getTexture()->getSize().y / 2), size.width + _drawables.leftSide.getTexture()->getSize().x + _drawables.rightSide.getTexture()->getSize().x + _drawables.message.getGlobalBounds().width, _drawables.center.getTexture()->getSize().y));
 
     _drawables.renderTexture.setView(_drawables.view);
     _drawables.renderTexture.create(size.width + _drawables.leftSide.getTexture()->getSize().x + _drawables.rightSide.getTexture()->getSize().x, _drawables.center.getTexture()->getSize().y);

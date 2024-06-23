@@ -134,6 +134,11 @@ void zappy::Map::updateEntities()
         }
     }
 
+    for (auto &broadcast : _broadcasts) {
+        broadcast->updateDisplay(sceneDate.sceneData.camera);
+        allSprites.push_back(broadcast->getSprite(sceneDate.sceneData.camera));
+    }
+
     std::sort(allSprites.begin(), allSprites.end(), [](const std::pair<double, sf::Sprite> &a, const std::pair<double, sf::Sprite> &b) {
         return a.first < b.first;
     });
@@ -182,6 +187,18 @@ void zappy::Map::updateDirectionUI()
 
 void zappy::Map::updateDisplay()
 {
+    for (auto it = _broadcasts.begin(); it != _broadcasts.end();)
+    {
+        if ((*it)->getElapsedTimeSeconds() > (*it)->duration)
+        {
+            it = _broadcasts.erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
+
     sceneDate.updateDisplay();
     sceneDate.renderTexture.clear(sf::Color::Transparent);
 
