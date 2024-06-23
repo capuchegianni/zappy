@@ -73,7 +73,7 @@ static int isset_client_and_server(server_t *server, fd_set *readfds,
             continue;
         if (isset_read(server, &server->clients[i], readfds))
             return 84;
--------        if (isset_write(server, &server->clients[i], writefds))
+        if (isset_write(server, &server->clients[i], writefds))
             return 84;
     }
     return 0;

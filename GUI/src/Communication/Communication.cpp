@@ -367,6 +367,7 @@ void zappy::Communication::automaticCommandSender() {
         this->sendCommand("mct");
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+    eventLogger.log("Disconnected from server");
     std::cout << "Automatic Sender Stopped\n";
 }
 
