@@ -369,17 +369,18 @@ void zappy::Communication::commandReceiver() {
 
 void zappy::Communication::automaticCommandSender() {
     std::cout << "Starting Automatic Sender\n";
-    this->sendCommand("msz");
-    while (this->_running) {
-        this->sendCommand("mct");
-        if (this->map != nullptr) {
-            for (const auto &team: (*this->map).getTeams()) {
-                for (const auto &player: team.players) {
-                    this->sendCommand("pin " + std::to_string(player->id));
-                }
+    try {
+        this->sendCommand("msz");
+        while (this->_running) {
+            this->sendCommand("mct");
+            if ((*this->map).getPlayerById(this->_displayPlayerID) != nullptr) {
+                this->sendCommand("pin " + std::to_string(this->_displayPlayerID));
             }
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+    } catch (CommunicationError &e) {
+        std::cerr << e.what() << std::endl;
+        this->_running = false;
     }
     eventLogger.log("Disconnected from server");
     std::cout << "Automatic Sender Stopped\n";
@@ -391,8 +392,13 @@ void zappy::Communication::msz(std::vector<std::string> &args) {
     }
     if (this->map == nullptr) {
         this->map = std::make_shared<zappy::Map>(std::stoi(args[0]), std::stoi(args[1]), this->assets);
-        this->sendCommand("tna");
-        this->sendCommand("mct");
+        try {
+            this->sendCommand("tna");
+            this->sendCommand("mct");
+        } catch (CommunicationError &e) {
+            std::cerr << e.what() << std::endl;
+            this->_running = false;
+        }
     }
 }
 
@@ -455,7 +461,6 @@ void zappy::Communication::pnw(std::vector<std::string> &args) {
         trantorien.direction = direction;
         trantorien.level = level;
         (*this->map).addPlayer(std::make_shared<zappy::Trantorien>(trantorien), team);
-        this->sendCommand("pin " + std::to_string(id));
         this->eventLogger.log("Player " + std::to_string(id) + " joined team " + team);
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
@@ -549,6 +554,8 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
         int id = std::stoi(args[0]);
         this->sendCommand("ppo " + std::to_string(id));
         this->eventLogger.log("Player " + std::to_string(id) + " has been expelled");
+    } catch (CommunicationError &e) {
+        throw CommandError("Lost connection to the server");
     } catch (std::exception &e) {
         throw CommandError("Invalid arguments");
     }
@@ -566,6 +573,8 @@ void zappy::Communication::pdr(std::vector<std::string> &args) {
             return;
         this->sendCommand("pin " + std::to_string(id));
         this->sendCommand("bct " + std::to_string(player->x) + " " + std::to_string(player->y));
+    } catch (CommunicationError &e) {
+        throw CommandError("Lost connection to the server");
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
@@ -587,6 +596,8 @@ void zappy::Communication::pgt(std::vector<std::string> &args) {
             return;
         this->sendCommand("pin " + std::to_string(id));
         this->sendCommand("bct " + std::to_string(player->x) + " " + std::to_string(player->y));
+    } catch (CommunicationError &e) {
+        throw CommandError("Lost connection to the server");
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (Map::MapError &e) {
