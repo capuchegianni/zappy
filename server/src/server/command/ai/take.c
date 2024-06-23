@@ -31,7 +31,11 @@ static void pick_item(server_t *server, client_t *client, int objectID)
         (&client->player->inventory.food)[objectID]++;
     }
     dprintf(client->fd, "ok\n");
-    dprintf(client->fd, "pgt %li %i\n", client->player->id, objectID);
+    for (int i = 0; i < FD_SETSIZE; ++i) {
+        if (client->fd > -1 && server->clients[i].is_graphic) {
+            dprintf(client->fd, "pgt %li %i\n", client->player->id, objectID);
+        }
+    }
 }
 
 int take_command(server_t *server, client_t *client)
