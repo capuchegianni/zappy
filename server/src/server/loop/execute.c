@@ -33,7 +33,7 @@ commands_t commands[] = {
     {"Left", 0, 7, left_command},
     {"Look", 0, 7, look_command},
     {"Inventory", 0, 1, inventory_command},
-    {"Broadcast", 0, 7, command_not_impl},
+    {"Broadcast", 0, 7, broadcast_command},
     {"Connect_nbr", 0, 0, connect_nbr_command},
     {"Fork", 0, 42, fork_command},
     {"Eject", 0, 7, eject_command},

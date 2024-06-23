@@ -226,3 +226,11 @@ int set_command(server_t *server, client_t *client);
  * @return 1 if the command has been successfully executed
 */
 int incantation_command(server_t *server, client_t *client);
+
+/**
+ * @brief Broadcast command
+ * @param server
+ * @param client
+ * @return 1 if the command has been successfully executed
+*/
+int broadcast_command(server_t *server, client_t *client);

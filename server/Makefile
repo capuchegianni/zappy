@@ -9,7 +9,7 @@
 
 WARNING_FLAGS := -Wall -Wextra -W -g -std=gnu2x
 
-LIB_FLAGS := -I include/ -luuid
+LIB_FLAGS := -I include/ -luuid -lm
 
 FILE = coding-style.sh
 
@@ -61,7 +61,8 @@ SRC = 	src/server/main.c						\
 		src/server/command/ai/eject.c			\
 		src/server/command/ai/take.c			\
 		src/server/command/ai/set.c				\
-		src/server/command/ai/incantation.c
+		src/server/command/ai/incantation.c 	\
+		src/server/command/ai/broadcast.c
 
 OBJ = $(addprefix $(OBJ_DIR), \
 	$(subst src/,,$(SRC:.c=.o)))
