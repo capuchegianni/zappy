@@ -49,6 +49,11 @@ namespace zappy
             sf::Text thystameText;
 
             sf::Text title;
+
+            sf::Text playerID;
+            sf::Text playerLevel;
+            sf::Text playerOrientation;
+            sf::Text playerPosition;
     };
 
     class PlayerInfo : public sf::Drawable

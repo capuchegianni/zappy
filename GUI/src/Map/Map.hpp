@@ -84,6 +84,8 @@ namespace zappy
             void setTimeUnit(int timeUnit);
             int getTimeUnit() const;
 
+            std::vector<Team> &getTeams();
+
             math::Point3D selectedBox = {0, 0, 0};
         private:
             std::vector<std::vector<std::shared_ptr<Box>>> _map;

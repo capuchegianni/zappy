@@ -8,6 +8,7 @@
 #include "Communication.hpp"
 #include "../Display/BoxInfo.hpp"
 #include "../Display/PlayerInfo.hpp"
+#include "../Display/TeamsInfo.hpp"
 
 #include <iostream>
 #include <unordered_map>
@@ -131,6 +132,7 @@ void zappy::Communication::graphicalUserInterface() {
 
     zappy::BoxInfo boxInfo(assets);
     zappy::PlayerInfo playerInfo(assets);
+    zappy::TeamsInfo teamsInfo(assets);
 
     while (window.isOpen())
     {
@@ -199,6 +201,12 @@ void zappy::Communication::graphicalUserInterface() {
                 window.close();
             }
 
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                teamsInfo.selectTeam(mousePos);
+            }
+
             if (event.type == sf::Event::Resized)
             {
                 size = sf::Vector2f(event.size.width / 2, event.size.height);
@@ -213,10 +221,15 @@ void zappy::Communication::graphicalUserInterface() {
                 sf::Vector2f playerInfoPos(event.size.width / 2 + event.size.width / 8 + 5, event.size.height / 2);
                 sf::Vector2f playerInfoSize(event.size.width / 8 - 5, event.size.height / 2);
 
+                sf::Vector2f teamsInfoPos(event.size.width / 2 + 5, 0);
+                sf::Vector2f teamsInfoSize(event.size.width / 4 - 5, event.size.height / 2);
+
                 boxInfo.setDisplaySize(boxSize);
                 boxInfo.setDisplayPosition(boxPos);
                 playerInfo.setDisplaySize(playerInfoSize);
                 playerInfo.setDisplayPosition(playerInfoPos);
+                teamsInfo.setDisplaySize(teamsInfoSize);
+                teamsInfo.setDisplayPosition(teamsInfoPos);
                 eventLogger.setDisplayPosition(loggerPos);
                 eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
@@ -224,16 +237,30 @@ void zappy::Communication::graphicalUserInterface() {
             }
         }
 
-        map->updateSelection();
+        teamsInfo.updateTeams(map->getTeams());
         boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
+
+        try
+        {
+            auto selectedPlayer = map->getPlayerById(teamsInfo.getSelectedPlayer());
+            playerInfo.setPlayer(selectedPlayer);
+        }
+        catch (std::exception &e)
+        {
+        }
+
+        teamsInfo.updateDisplay();
+        map->updateSelection();
         map->updateDisplay();
         boxInfo.updateDisplay();
         playerInfo.updateDisplay();
+
         window.clear(sf::Color::Blue);
         window.draw(*map);
         window.draw(eventLogger);
         window.draw(boxInfo);
         window.draw(playerInfo);
+        window.draw(teamsInfo);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();
@@ -330,16 +357,13 @@ void zappy::Communication::bct(std::vector<std::string> &args) {
 }
 
 void zappy::Communication::tna(std::vector<std::string> &args) {
+    std::cout << "Team " << args[0] << " added\n";
     if (args.size() != 1)
         throw CommandError("Invalid number of arguments");
     if (this->map == nullptr)
         throw MapUninitialized();
     std::string team = args[0];
-    try {
-        (*this->map).getTeam(team);
-    } catch (Team::TeamError &e) {
-        (*this->map).addTeam(team);
-    }
+    (*this->map).addTeam(team);
 }
 
 void zappy::Communication::pnw(std::vector<std::string> &args) {

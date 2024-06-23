@@ -34,7 +34,6 @@ void zappy::Team::removePlayerById(std::size_t id)
     for (auto it = players.begin(); it != players.end(); it++) {
         if ((*it)->id == id) {
             players.erase(it);
-            std::cout << "Player " << id << " removed from team" << std::endl;
             return;
         }
     }

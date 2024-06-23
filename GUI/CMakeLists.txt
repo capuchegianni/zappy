@@ -42,6 +42,8 @@ add_executable(zappy_gui
         src/Display/BoxInfo.hpp
         src/Display/PlayerInfo.cpp
         src/Display/PlayerInfo.hpp
+        src/Display/TeamsInfo.cpp
+        src/Display/TeamsInfo.hpp
 )
 
 target_link_libraries(zappy_gui Math)

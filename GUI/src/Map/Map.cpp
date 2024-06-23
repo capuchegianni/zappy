@@ -206,7 +206,11 @@ zappy::Team &zappy::Map::getTeam(std::string &name)
 
 void zappy::Map::addTeam(std::string &name)
 {
-    _teams.emplace_back(name, _assets);
+    try {
+        getTeam(name);
+    } catch (Map::MapError &e) {
+        _teams.emplace_back(name, _assets);
+    }
 }
 
 void zappy::Map::addEgg(std::size_t x, std::size_t y, std::size_t id, std::string &team)
@@ -295,4 +299,9 @@ void zappy::Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(sceneDate.rect, states);
     target.draw(sceneDate.sprite, states);
+}
+
+std::vector<zappy::Team> &zappy::Map::getTeams()
+{
+    return _teams;
 }
