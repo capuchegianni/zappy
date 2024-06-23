@@ -32,9 +32,14 @@ class Servant(Bot):
         message_split = message[1].split("|")
         if message_split[0] == "RequestInventory-" + self.comm.team_name:
             self.sendInventory()
-        elif message_split[0] == "Incantation-" + self.comm.team_name and self.action != Action.WAIT_ELEVATION:
+        elif message_split[0] == "Incantation-" + self.comm.team_name and int(message_split[1]) == self.level and self.action != Action.WAIT_ELEVATION:
             self.joinMaster(message[0])
+        elif message_split[0] == "IncantationFailed-" + self.comm.team_name:
+            self.action = Action.NONE
         elif message_split[0] == "IncantationDone-" + self.comm.team_name:
+            self.comm.getData()
+            self.comm.getData()
+            self.level += 1
             self.action = Action.NONE
 
 

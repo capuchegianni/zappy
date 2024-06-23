@@ -2,6 +2,7 @@
 
 from AI.Bot import Bot
 from AI.Enums import Element
+from AI.Color import Color
 import time
 
 
@@ -82,28 +83,27 @@ class Master(Bot):
         while servants_arrived < 5:
             if self.comm.stop_listening:
                 return False
-            self.broadcast("Incantation-" + self.comm.team_name)
+            self.broadcast("You'reNotMaster!-" + self.comm.team_name)
+            self.broadcast("Incantation-" + self.comm.team_name + "|" + str(self.level))
             time.sleep(0.5)
             message = self.comm.getMessage()
             if not message:
                 continue
             if message[1] == "JoinedMaster-" + self.comm.team_name:
                 servants_arrived += 1
-            print(f"Waiting for all players to join... {servants_arrived}")
+            print(f"{Color.GREEN}Waiting for all bots to join...{Color.RESET}")
 
         if not self.dropObjects():
             return False
 
         if not self.startIncantation():
-            self.broadcast("IncantationDone-" + self.comm.team_name)
+            self.broadcast("IncantationFailed-" + self.comm.team_name)
             return True
 
         if self.comm.getData() == "ko":
-            self.broadcast("IncantationDone-" + self.comm.team_name)
+            self.broadcast("IncantationFailed-" + self.comm.team_name)
             return True
 
         self.level += 1
         self.broadcast("IncantationDone-" + self.comm.team_name)
-        print(f"Level up! {self.level}")
-        time.sleep(5)
         return True
