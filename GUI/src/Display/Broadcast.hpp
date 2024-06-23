@@ -15,6 +15,7 @@
 #include <string>
 
 #include "Assets.hpp"
+#include "../Display/Renderer/Camera.hpp"
 
 namespace zappy
 {
@@ -48,6 +49,8 @@ namespace zappy
             void updateDisplay(render3d::Camera &camera);
 
             double getElapsedTimeSeconds() const;
+
+            std::pair<double, sf::Sprite> getSprite(render3d::Camera &camera);
 
             std::size_t x;
             std::size_t y;

@@ -71,11 +71,22 @@ void zappy::Broadcast::updateDisplay(zappy::render3d::Camera &camera)
     float scale = camera.unitaryPixelsSize / _drawables.sprite.getTexture()->getSize().y;
 
     _drawables.sprite.setScale(scale, scale);
+
+    _drawables.sprite.setOrigin(_drawables.sprite.getTexture()->getSize().x / 2, _drawables.sprite.getTexture()->getSize().y);
+    _drawables.sprite.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
+                                 camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + z * camera.unitaryPixelsSize);
 }
 
 double zappy::Broadcast::getElapsedTimeSeconds() const
 {
     return _drawables.clock.getElapsedTime().asSeconds();
+}
+
+std::pair<double, sf::Sprite> zappy::Broadcast::getSprite(render3d::Camera &camera)
+{
+    math::Point3D CameraPosition = math::Vector3D(camera.centerX - camera.direction.x * 10000, camera.centerY - camera.direction.y * 10000, camera.centerZ - camera.direction.z * 10000);
+
+    return {math::Point3D::distance(CameraPosition, math::Vector3D(x, y, z)), _drawables.sprite};
 }
 
 void zappy::Broadcast::draw(sf::RenderTarget &target, sf::RenderStates states) const
