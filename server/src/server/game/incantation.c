@@ -42,6 +42,8 @@ void check_for_incantation(game_t *game, client_t *clients)
 {
     time_t now = time(NULL);
 
+    if (!game->frequence)
+        return;
     for (size_t i = 0; i < game->y; i++)
         second_loop(game, clients, &now, i);
 }

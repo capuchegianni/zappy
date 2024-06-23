@@ -106,6 +106,8 @@ static int check_connection(server_t *server)
         printf("Error on select: %s\n", strerror(errno));
         return 84;
     }
+    if (server->game->end)
+        return 0;
     if (isset_client_and_server(server, &readfds, &writefds))
         return 84;
     update_game(server);

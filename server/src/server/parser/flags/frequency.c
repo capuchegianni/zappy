@@ -19,12 +19,12 @@ bool frequency_flag(server_t *server, char **av)
         server->game->frequence = 100;
         return true;
     }
-    server->game->frequence = atoi(args[0]);
-    if (server->game->frequence < 1) {
-        printf("The frequence must be higher than 0.\n");
+    if (atoi(args[0]) < 0) {
+        printf("The frequence must be positive.\n");
         free_tab(args);
         return false;
     }
+    server->game->frequence = atoi(args[0]);
     free_tab(args);
     return true;
 }

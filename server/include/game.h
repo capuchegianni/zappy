@@ -88,6 +88,7 @@ typedef struct game_s {
     level_t levels[8];
     tile_t **map;
     time_t life_unit_update;
+    bool end;
 } game_t;
 
 typedef struct client_s client_t;
@@ -129,3 +130,5 @@ void update_life_units(server_t *server);
 bool death_event(client_t *client, server_t *server);
 
 void check_for_incantation(game_t *game, client_t *clients);
+
+void is_a_team_winning(server_t *server);

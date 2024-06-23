@@ -23,6 +23,8 @@ void update_life_units(server_t *server)
 {
     time_t now = time(NULL);
 
+    if (!server->game->frequence)
+        return;
     if (difftime(now, server->game->life_unit_update) <
     126.0 / server->game->frequence)
         return;

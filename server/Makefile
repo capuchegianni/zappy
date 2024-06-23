@@ -50,6 +50,7 @@ SRC = 	src/server/main.c						\
 		src/server/game/teams.c					\
 		src/server/game/life_units.c 			\
 		src/server/game/incantation.c 			\
+		src/server/game/win_condition.c 		\
 		src/server/command/ai/forward.c			\
 		src/server/command/ai/right.c 			\
 		src/server/command/ai/left.c 			\

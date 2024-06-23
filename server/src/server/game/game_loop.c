@@ -6,28 +6,12 @@
 */
 
 #include <stddef.h>
-#include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "server.h"
 #include "command.h"
 #include "game.h"
 #include <sys/time.h>
-
-static void set_fds(fd_set *readfds, fd_set *writefds, server_t *server)
-{
-    FD_ZERO(readfds);
-    FD_ZERO(writefds);
-    FD_SET(server->fd, readfds);
-    FD_SET(server->fd, writefds);
-    for (int i = 0; i < FD_SETSIZE; i++) {
-        if (server->clients[i].fd > -1) {
-            FD_SET(server->clients[i].fd, readfds);
-            FD_SET(server->clients[i].fd, writefds);
-        }
-    }
-}
 
 void send_update_cell(int x, int y, server_t *server)
 {
@@ -61,6 +45,7 @@ void spawn_ressource(server_t *server, float ressouce_density,
 
 int update_game(server_t *server)
 {
+    is_a_team_winning(server);
     update_life_units(server);
     spawn_ressource(server, FOOD, 0);
     spawn_ressource(server, LINEMATE, 1);

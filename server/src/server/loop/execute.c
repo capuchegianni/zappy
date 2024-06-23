@@ -161,22 +161,33 @@ static bool check_spaces(char *buffer)
     return false;
 }
 
-int execute_command(server_t *server, client_t *client)
+static bool check_for_execution(server_t *server, client_t *client)
 {
     time_t now = time(NULL);
 
     if (!client->input[0].body)
-        return 0;
-    if (client->input[0].exec_time / server->game->frequence > 0.5 &&
-    (difftime(now, client->player->last_command_time) <
-    client->input[0].exec_time / server->game->frequence ||
-    client->player->in_incantation))
-        return 0;
+        return false;
+    if (!client->is_graphic) {
+        if (!server->game->frequence)
+            return false;
+        if (client->input[0].exec_time / server->game->frequence > 0.5 &&
+        (difftime(now, client->player->last_command_time) <
+        client->input[0].exec_time / server->game->frequence ||
+        client->player->in_incantation))
+            return false;
+    }
     if (!check_spaces(client->input[0].body)) {
         dprintf(client->fd, "%s\n", client->is_graphic ? "suc" : "ko");
         move_inputs(client->input);
-        return 0;
+        return false;
     }
+    return true;
+}
+
+int execute_command(server_t *server, client_t *client)
+{
+    if (!check_for_execution(server, client))
+        return 0;
     printf("[%s][%ld] %s\n", client->player->team_name ?
     client->player->team_name : "Anonymous", client->player->id,
     client->input[0].body);
