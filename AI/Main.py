@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-from AI.Bot import Bot
+import time
+from AI.Master import Master
+from AI.Servant import Servant
 from AI.Communication import Communication
 from AI.Color import Color
 
@@ -24,9 +26,31 @@ def parse_args():
     return args.port, args.name, args.host
 
 
+def imMaster(comm):
+    start_time = time.time()
+
+    while True:
+        current_time = time.time()
+        if current_time - start_time > 3:
+            break
+
+        message = comm.getMessage()
+        if not message:
+            continue
+        if message[1] == ("You'reNotMaster!-" + comm.team_name):
+            return False
+
+    return True
+
+
 def main():
-    bot = Bot(Communication(*parse_args()))
-    bot.run()
+    comm = Communication(*parse_args())
+
+    if imMaster(comm):
+        bot = Master(comm)
+    else:
+        bot = Servant(comm)
+
     return bot
 
 
@@ -38,6 +62,7 @@ if __name__ == "__main__":
             pass
     except KeyboardInterrupt:
         print(f"\r{Color.BLUE}Interrupted by user. Closing...{Color.RESET}")
+        exit(0)
     finally:
         if bot and bot.comm is not None:
             bot.comm.closeConnection()

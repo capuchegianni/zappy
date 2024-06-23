@@ -4,18 +4,17 @@ from AI.Enums import Direction
 from AI.Enums import Element
 import numpy as np
 from math import sqrt
-from AI.Color import Color
 
 
-Levels = {}
-Levels[1] = {"VISION" : 3, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 0), (Element.SIBUR, 0), (Element.MENDIANE, 0), (Element.PHIRAS, 0), (Element.THYSTAME, 0)]}
-Levels[2] = {"VISION" : 5, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 1), (Element.MENDIANE, 0), (Element.PHIRAS, 0), (Element.THYSTAME, 0)]}
-Levels[3] = {"VISION" : 7, "ELEVATION" : [(Element.LINEMATE, 2), (Element.DERAUMERE, 0), (Element.SIBUR, 1), (Element.MENDIANE, 0), (Element.PHIRAS, 2), (Element.THYSTAME, 0)]}
-Levels[4] = {"VISION" : 9, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 2), (Element.MENDIANE, 0), (Element.PHIRAS, 1), (Element.THYSTAME, 0)]}
-Levels[5] = {"VISION" : 11, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 2), (Element.SIBUR, 1), (Element.MENDIANE, 3), (Element.PHIRAS, 0), (Element.THYSTAME, 0)]}
-Levels[6] = {"VISION" : 13, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 2), (Element.SIBUR, 3), (Element.MENDIANE, 0), (Element.PHIRAS, 1), (Element.THYSTAME, 0)]}
-Levels[7] = {"VISION" : 15, "ELEVATION" : [(Element.LINEMATE, 2), (Element.DERAUMERE, 2), (Element.SIBUR, 2), (Element.MENDIANE, 2), (Element.PHIRAS, 2), (Element.THYSTAME, 1)]}
-Levels[8] = {"VISION" : 17, "ELEVATION" : [()]}
+LevelsDict = {}
+LevelsDict[1] = {"VISION" : 3, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 0), (Element.SIBUR, 0), (Element.MENDIANE, 0), (Element.PHIRAS, 0), (Element.THYSTAME, 0)]}
+LevelsDict[2] = {"VISION" : 5, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 1), (Element.MENDIANE, 0), (Element.PHIRAS, 0), (Element.THYSTAME, 0)]}
+LevelsDict[3] = {"VISION" : 7, "ELEVATION" : [(Element.LINEMATE, 2), (Element.DERAUMERE, 0), (Element.SIBUR, 1), (Element.MENDIANE, 0), (Element.PHIRAS, 2), (Element.THYSTAME, 0)]}
+LevelsDict[4] = {"VISION" : 9, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 1), (Element.SIBUR, 2), (Element.MENDIANE, 0), (Element.PHIRAS, 1), (Element.THYSTAME, 0)]}
+LevelsDict[5] = {"VISION" : 11, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 2), (Element.SIBUR, 1), (Element.MENDIANE, 3), (Element.PHIRAS, 0), (Element.THYSTAME, 0)]}
+LevelsDict[6] = {"VISION" : 13, "ELEVATION" : [(Element.LINEMATE, 1), (Element.DERAUMERE, 2), (Element.SIBUR, 3), (Element.MENDIANE, 0), (Element.PHIRAS, 1), (Element.THYSTAME, 0)]}
+LevelsDict[7] = {"VISION" : 15, "ELEVATION" : [(Element.LINEMATE, 2), (Element.DERAUMERE, 2), (Element.SIBUR, 2), (Element.MENDIANE, 2), (Element.PHIRAS, 2), (Element.THYSTAME, 1)]}
+LevelsDict[8] = {"VISION" : 17, "ELEVATION" : [()]}
 
 
 class Bot:
@@ -24,12 +23,13 @@ class Bot:
         self.direction = Direction.NORTH
         self.level = 1
         self.master = False
+        self.levels_dict = LevelsDict
 
 
     def forward(self, steps=1):
         for i in range(steps):
             self.comm.sendCommand("Forward")
-            if self.comm.getData() == "ko\n":
+            if self.comm.getData() == "ko":
                 return False
         return True
 
@@ -44,7 +44,7 @@ class Bot:
             self.direction = Direction.WEST
         elif self.direction == Direction.WEST:
             self.direction = Direction.NORTH
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
@@ -59,7 +59,7 @@ class Bot:
             self.direction = Direction.EAST
         elif self.direction == Direction.EAST:
             self.direction = Direction.NORTH
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
@@ -73,28 +73,28 @@ class Bot:
 
     def takeObject(self, object):
         self.comm.sendCommand("Take " + object.name.lower())
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
 
     def setObject(self, object):
         self.comm.sendCommand("Set " + object.name.lower())
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
 
     def broadcast(self, text):
         self.comm.sendCommand("Broadcast " + text)
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
 
     def startIncantation(self):
         self.comm.sendCommand("Incantation")
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
@@ -113,7 +113,7 @@ class Bot:
 
     def lookAround(self):
         all_list = []
-        vision = np.zeros((Levels[self.level]["VISION"], Levels[self.level]["VISION"]), dtype=Element)
+        vision = np.zeros((self.levels_dict[self.level]["VISION"], self.levels_dict[self.level]["VISION"]), dtype=Element)
         s = [self.level, self.level]
 
         for i in range(4):
@@ -133,7 +133,7 @@ class Bot:
         for i, list in enumerate(all_list):
             elements = list.strip()[1:-1].strip().split(',')
             clean_elements = [element.strip() for element in elements]
-            all_list[i] = [[Element[sub_item.upper()] for sub_item in item.split()] for item in clean_elements]
+            all_list[i] = [[Element[sub_item.upper()] for sub_item in item.split() if sub_item.upper() in Element.__members__] for item in clean_elements]
 
         for list in all_list:
             x = 1
@@ -224,8 +224,8 @@ class Bot:
 
 
     def refillFood(self):
-        if self.inventory[Element.FOOD] < 10:
-            while self.inventory[Element.FOOD] < 20:
+        if self.inventory[Element.FOOD] < 30:
+            while self.inventory[Element.FOOD] < 50:
                 if not self.getObject([Element.FOOD]):
                     break
                 if not self.lookAround():
@@ -233,4 +233,13 @@ class Bot:
                 if not self.updateInventory():
                     break
 
+        return True
+
+
+    def dropObjects(self):
+        for key, value in self.inventory.items():
+            if key != Element.FOOD:
+                for _ in range(min(value, 3)):
+                    if not self.setObject(key):
+                        return False
         return True

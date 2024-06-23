@@ -20,3 +20,9 @@ class Element(Enum):
     THYSTAME = 6
     PLAYER = 7
     EGG = 8
+
+
+class Action(Enum):
+    NONE = 0
+    JOIN_MASTER = 1
+    WAIT_ELEVATION = 2
