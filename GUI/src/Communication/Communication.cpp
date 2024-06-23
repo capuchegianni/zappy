@@ -595,7 +595,9 @@ void zappy::Communication::pbc(std::vector<std::string> &args) {
             }
         }
         this->eventLogger.log("Player " + std::to_string(id) + " broadcasted: " + message);
+        map->mutex.lock();
         (*this->map).broadcast(id, message);
+        map->mutex.unlock();
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (std::exception &e) {

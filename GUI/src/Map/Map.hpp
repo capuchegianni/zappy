@@ -8,6 +8,7 @@
 #pragma once
 
 #include <string>
+#include <mutex>
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Drawable.hpp>
@@ -90,6 +91,8 @@ namespace zappy
             std::vector<Team> &getTeams();
 
             math::Point3D selectedBox = {0, 0, 0};
+
+            std::mutex mutex;
         private:
             std::vector<std::vector<std::shared_ptr<Box>>> _map;
             std::size_t _getPlayerIndexById(std::size_t id);

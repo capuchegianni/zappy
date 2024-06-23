@@ -134,10 +134,12 @@ void zappy::Map::updateEntities()
         }
     }
 
+    mutex.lock();
     for (auto &broadcast : _broadcasts) {
         broadcast->updateDisplay(sceneDate.sceneData.camera);
         allSprites.push_back(broadcast->getSprite(sceneDate.sceneData.camera));
     }
+    mutex.unlock();
 
     std::sort(allSprites.begin(), allSprites.end(), [](const std::pair<double, sf::Sprite> &a, const std::pair<double, sf::Sprite> &b) {
         return a.first < b.first;
