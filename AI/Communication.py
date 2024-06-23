@@ -28,14 +28,14 @@ class Communication:
             print(f"{Color.RED}Failed to connect to server '{host}:{port}'.{Color.RESET}")
             exit(1)
 
-        if (client_socket.recv(1024).decode() != "WELCOME\n"):
+        if (client_socket.recv(4096).decode() != "WELCOME\n"):
             exit("Server did not send welcome message")
 
         while True:
             client_socket.sendall(f"{name}\n".encode())
             ready = select.select([client_socket], [], [], 0.5)
             if ready[0]:
-                data = client_socket.recv(1024).decode()
+                data = client_socket.recv(4096).decode()
                 if not data == "ko\n":
                     break
             else:
@@ -43,7 +43,7 @@ class Communication:
                 continue
 
         print(f"{Color.GREEN}Connected to server.{Color.RESET}")
-        self.size_map = client_socket.recv(1024).decode()
+        self.size_map = client_socket.recv(4096).decode()
 
         return client_socket
 
@@ -73,7 +73,7 @@ class Communication:
     def listenServer(self):
         while not self.stop_listening:
             try:
-                data_received = self.client_socket.recv(1024).decode()
+                data_received = self.client_socket.recv(4096).decode()
                 if not data_received:
                     print(f"{Color.BLUE}Connection closed by server.{Color.RESET}")
                     break
@@ -106,10 +106,11 @@ class Communication:
                 print(f"{Color.PURPLE}Data queued: {data_received}{Color.RESET}")
 
 
-    def getData(self):
-        if not self.data_queue.empty():
-            return self.data_queue.get()
-        return None
+    def getData(self, timeout=None):
+        try:
+            return self.data_queue.get(block=True, timeout=timeout)
+        except queue.Empty:
+            return None
 
 
     def getMessage(self):

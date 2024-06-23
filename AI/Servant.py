@@ -2,7 +2,6 @@
 
 from AI.Bot import Bot
 from AI.Enums import Element, Direction, Action
-from time import sleep
 
 
 class Servant(Bot):
@@ -33,8 +32,10 @@ class Servant(Bot):
         message_split = message[1].split("|")
         if message_split[0] == "RequestInventory-" + self.comm.team_name:
             self.sendInventory()
-        elif message_split[0] == "Incantation-" + self.comm.team_name:
+        elif message_split[0] == "Incantation-" + self.comm.team_name and self.action != Action.WAIT_ELEVATION:
             self.joinMaster(message[0])
+        elif message_split[0] == "IncantationDone-" + self.comm.team_name:
+            self.action = Action.NONE
 
 
     def sendInventory(self):
@@ -47,9 +48,11 @@ class Servant(Bot):
     def joinMaster(self, direction):
         self.action = Action.JOIN_MASTER
 
-        print(direction)
-        sleep(0.1)
-        if direction == 1:
+        if direction == 0:
+            self.broadcast("JoinedMaster-" + self.comm.team_name)
+            self.dropObjects()
+            self.action = Action.WAIT_ELEVATION
+        elif direction == 1:
             self.forward()
         elif direction == 2:
             self.forward()

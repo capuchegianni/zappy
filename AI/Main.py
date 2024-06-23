@@ -31,7 +31,7 @@ def imMaster(comm):
 
     while True:
         current_time = time.time()
-        if current_time - start_time > 5:
+        if current_time - start_time > 3:
             break
 
         message = comm.getMessage()

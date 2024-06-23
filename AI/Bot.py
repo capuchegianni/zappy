@@ -4,7 +4,6 @@ from AI.Enums import Direction
 from AI.Enums import Element
 import numpy as np
 from math import sqrt
-from AI.Color import Color
 
 
 LevelsDict = {}
@@ -30,7 +29,7 @@ class Bot:
     def forward(self, steps=1):
         for i in range(steps):
             self.comm.sendCommand("Forward")
-            if self.comm.getData() == "ko\n":
+            if self.comm.getData() == "ko":
                 return False
         return True
 
@@ -45,7 +44,7 @@ class Bot:
             self.direction = Direction.WEST
         elif self.direction == Direction.WEST:
             self.direction = Direction.NORTH
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
@@ -60,7 +59,7 @@ class Bot:
             self.direction = Direction.EAST
         elif self.direction == Direction.EAST:
             self.direction = Direction.NORTH
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
@@ -74,28 +73,28 @@ class Bot:
 
     def takeObject(self, object):
         self.comm.sendCommand("Take " + object.name.lower())
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
 
     def setObject(self, object):
         self.comm.sendCommand("Set " + object.name.lower())
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
 
     def broadcast(self, text):
         self.comm.sendCommand("Broadcast " + text)
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
 
     def startIncantation(self):
         self.comm.sendCommand("Incantation")
-        if self.comm.getData() == "ko\n":
+        if self.comm.getData() == "ko":
             return False
         return True
 
@@ -234,4 +233,13 @@ class Bot:
                 if not self.updateInventory():
                     break
 
+        return True
+
+
+    def dropObjects(self):
+        for key, value in self.inventory.items():
+            if key != Element.FOOD:
+                for _ in range(min(value, 3)):
+                    if not self.setObject(key):
+                        return False
         return True

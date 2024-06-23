@@ -8,7 +8,6 @@ import time
 class Master(Bot):
     def __init__(self, comm):
         super().__init__(comm)
-        notMaster_time = time.time()
         requestInventory_time = time.time()
         self.number_of_servants = 0
         self.all_inventories = {}
@@ -16,11 +15,10 @@ class Master(Bot):
         while True:
             if self.comm.stop_listening:
                 break
-            if time.time() - notMaster_time > 0.2:
-                self.broadcast("You'reNotMaster!-" + self.comm.team_name)
-                notMaster_time = time.time()
-            # if self.canLevelUp():
-            #     self.incantation()
+            self.broadcast("You'reNotMaster!-" + self.comm.team_name)
+            if self.canLevelUp():
+                if not self.incantation():
+                    break
             if not self.lookAround():
                 break
             if not self.updateInventory():
@@ -79,10 +77,33 @@ class Master(Bot):
 
 
     def incantation(self):
-        print("Start Incantation!")
-        print(self.vision[self.level, self.level])
-        while sum(1 for item in self.vision[self.level, self.level] if item == Element.PLAYER) != 6:
-            self.broadcast("Incantation-" + self.comm.team_name)
+        servants_arrived = 0
 
-        print("Incantation!")
+        while servants_arrived < 5:
+            if self.comm.stop_listening:
+                return False
+            self.broadcast("Incantation-" + self.comm.team_name)
+            time.sleep(0.5)
+            message = self.comm.getMessage()
+            if not message:
+                continue
+            if message[1] == "JoinedMaster-" + self.comm.team_name:
+                servants_arrived += 1
+            print(f"Waiting for all players to join... {servants_arrived}")
+
+        if not self.dropObjects():
+            return False
+
+        if not self.startIncantation():
+            self.broadcast("IncantationDone-" + self.comm.team_name)
+            return True
+
+        if self.comm.getData() == "ko":
+            self.broadcast("IncantationDone-" + self.comm.team_name)
+            return True
+
+        self.level += 1
+        self.broadcast("IncantationDone-" + self.comm.team_name)
+        print(f"Level up! {self.level}")
         time.sleep(5)
+        return True
