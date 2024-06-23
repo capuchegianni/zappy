@@ -48,10 +48,10 @@ void zappy::Trantorien::updateDisplay(zappy::render3d::Camera &camera)
         break;
     }
 
-    float characterScale = _drawables.body.getTexture()->getSize().x / (camera.unitaryPixelsSize * scaleFromTile);
+    float characterScale = (camera.unitaryPixelsSize * scaleFromTile) / _drawables.body.getTexture()->getSize().x;
 
     _drawables.body.setOrigin(_drawables.body.getTexture()->getSize().x / 2, _drawables.body.getTexture()->getSize().y);
-    _drawables.body.setScale(1 / characterScale, 1 / characterScale);
+    _drawables.body.setScale(characterScale, characterScale);
     _drawables.body.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
                                 camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ);
     _drawables.shadow.setRadius(camera.unitaryPixelsSize / 3);

@@ -22,10 +22,10 @@ void zappy::Egg::updateDisplay(render3d::Camera &camera)
 {
     double scaleFromTile = 0.45;
 
-    float scale = _drawables.sprite.getTexture()->getSize().x / (camera.unitaryPixelsSize * scaleFromTile);
+    float scale = (camera.unitaryPixelsSize * scaleFromTile) / _drawables.sprite.getTexture()->getSize().x;
 
     _drawables.sprite.setOrigin(_drawables.sprite.getTexture()->getSize().x / 2, _drawables.sprite.getTexture()->getSize().y);
-    _drawables.sprite.setScale(1 / scale, 1 / scale);
+    _drawables.sprite.setScale(scale, scale);
     _drawables.sprite.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
                                 camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ);
     _drawables.shadow.setRadius(camera.unitaryPixelsSize / 4);

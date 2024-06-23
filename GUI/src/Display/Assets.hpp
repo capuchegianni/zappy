@@ -53,5 +53,10 @@ namespace zappy
             sf::Texture towardsLeftTexture;
             sf::Texture towardsRightTexture;
             sf::Texture towardsBackTexture;
+
+            sf::Texture bubbleLeftTexture;
+            sf::Texture bubbleRightTexture;
+            sf::Texture bubbleCenterTexture;
+            sf::Texture bubbleFillTexture;
     };
 }
