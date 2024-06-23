@@ -71,7 +71,7 @@ namespace zappy {
             {"plv", [this](std::vector<std::string> &args) { zappy::Communication::plv(args); }},
             {"pin", [this](std::vector<std::string> &args) { zappy::Communication::pin(args); }},
             {"pex", [this](std::vector<std::string> &args) { zappy::Communication::pex(args); }},
-            //{"pbc", [this](std::vector<std::string> &args) { zappy::Communication::pbc(args); }},
+            {"pbc", [this](std::vector<std::string> &args) { zappy::Communication::pbc(args); }},
             {"pic", [this](std::vector<std::string> &args) { zappy::Communication::pic(args); }},
             {"pie", [this](std::vector<std::string> &args) { zappy::Communication::pie(args); }},
             //{"pfk", [this](std::vector<std::string> &args) { zappy::Communication::pfk(args); }},
@@ -96,7 +96,7 @@ namespace zappy {
         void plv(std::vector<std::string> &args);
         void pin(std::vector<std::string> &args);
         void pex(std::vector<std::string> &args);
-        //void pbc(std::vector<std::string> &args);
+        void pbc(std::vector<std::string> &args);
         void pic(std::vector<std::string> &args);
         void pie(std::vector<std::string> &args);
         //void pfk(std::vector<std::string> &args);

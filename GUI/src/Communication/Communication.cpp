@@ -580,6 +580,29 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
     }
 }
 
+void zappy::Communication::pbc(std::vector<std::string> &args) {
+    if (args.size() < 2)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int id = std::stoi(args[0]);
+        std::string message;
+        for (std::size_t i = 1; i < args.size(); i++) {
+            message += args[i];
+            if (i + 1 < args.size()) {
+                message += " ";
+            }
+        }
+        this->eventLogger.log("Player " + std::to_string(id) + " broadcasted: " + message);
+        (*this->map).broadcast(id, message);
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
 void zappy::Communication::pic(std::vector<std::string> &args) {
     if (args.size() < 4)
         throw CommandError("Invalid number of arguments");
