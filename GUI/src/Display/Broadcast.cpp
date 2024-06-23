@@ -59,7 +59,7 @@ zappy::Broadcast::Broadcast(double duration, double x, double y, double z, const
 
     _drawables.sprite.setTexture(_drawables.renderTexture.getTexture(), true);
 
-    _drawables.sprite.setOrigin(_drawables.sprite.getTexture()->getSize().x / 2, _drawables.sprite.getTexture()->getSize().y);
+    _drawables.sprite.setOrigin(_drawables.sprite.getTexture()->getSize().x / 2, _drawables.sprite.getTexture()->getSize().y + z);
 
     _drawables.clock.restart();
 }
@@ -74,7 +74,7 @@ void zappy::Broadcast::updateDisplay(zappy::render3d::Camera &camera)
 
     _drawables.sprite.setOrigin(_drawables.sprite.getTexture()->getSize().x / 2, _drawables.sprite.getTexture()->getSize().y);
     _drawables.sprite.setPosition(camera.displayUnitaryX.x * x + camera.displayUnitaryY.x * y + camera.centerX * camera.displayUnitaryX.x + camera.displayUnitaryY.x * camera.centerY + camera.displayUnitaryZ.x * camera.centerZ,
-                                 camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ + z * camera.unitaryPixelsSize);
+                                 camera.displayUnitaryX.y * x + camera.displayUnitaryY.y * y + camera.centerX * camera.displayUnitaryX.y + camera.displayUnitaryY.y * camera.centerY + camera.displayUnitaryZ.y * camera.centerZ - z);
 }
 
 double zappy::Broadcast::getElapsedTimeSeconds() const
