@@ -30,7 +30,8 @@ static void pick_item(server_t *server, client_t *client, int objectID)
         (&server->game->map[y][x].items.food)[objectID]--;
         (&client->player->inventory.food)[objectID]++;
     }
-    dprintf(client->fd, "ok");
+    dprintf(client->fd, "ok\n");
+    dprintf(client->fd, "pgt %li %i\n", client->player->id, objectID);
 }
 
 int take_command(server_t *server, client_t *client)
