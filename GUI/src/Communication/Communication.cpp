@@ -238,12 +238,23 @@ void zappy::Communication::graphicalUserInterface() {
         }
 
         teamsInfo.updateTeams(map->getTeams());
+        boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
+
+        try
+        {
+            auto selectedPlayer = map->getPlayerById(teamsInfo.getSelectedPlayer());
+            playerInfo.setPlayer(selectedPlayer);
+        }
+        catch (std::exception &e)
+        {
+        }
+
         teamsInfo.updateDisplay();
         map->updateSelection();
-        boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
         map->updateDisplay();
         boxInfo.updateDisplay();
         playerInfo.updateDisplay();
+
         window.clear(sf::Color::Blue);
         window.draw(*map);
         window.draw(eventLogger);
@@ -352,11 +363,7 @@ void zappy::Communication::tna(std::vector<std::string> &args) {
     if (this->map == nullptr)
         throw MapUninitialized();
     std::string team = args[0];
-    try {
-        (*this->map).getTeam(team);
-    } catch (Team::TeamError &e) {
-        (*this->map).addTeam(team);
-    }
+    (*this->map).addTeam(team);
 }
 
 void zappy::Communication::pnw(std::vector<std::string> &args) {

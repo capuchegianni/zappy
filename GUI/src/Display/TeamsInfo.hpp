@@ -42,6 +42,8 @@ namespace zappy
             std::size_t selectedTeam = 0;
             std::size_t selectedPlayer = 0;
 
+            std::size_t selectedPlayerID = 0;
+
             sf::Font &font;
     };
 
@@ -57,6 +59,8 @@ namespace zappy
 
             void updateTeams(std::vector<Team> &teams);
             void selectTeam(sf::Vector2f &mousePos);
+
+            std::size_t getSelectedPlayer() const;
 
         private:
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

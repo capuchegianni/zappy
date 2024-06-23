@@ -61,6 +61,9 @@ void zappy::TeamsInfo::updateDisplay()
 
 void zappy::TeamsInfo::updateTeams(std::vector<Team> &teams)
 {
+    if (teams.size() == 0)
+        return;
+
     _drawables.teams.clear();
     _drawables.teams.reserve(teams.size());
 
@@ -113,6 +116,11 @@ void zappy::TeamsInfo::updateTeams(std::vector<Team> &teams)
 
     if (teams[_drawables.selectedTeam].players.size() > 0)
     {
+        if (_drawables.selectedPlayer >= teams[_drawables.selectedTeam].players.size())
+            _drawables.selectedPlayer = 0;
+
+        _drawables.selectedPlayerID = teams[_drawables.selectedTeam].players[_drawables.selectedPlayer]->id;
+
         _drawables.playersbg.reserve(teams[_drawables.selectedTeam].players.size());
         _drawables.players.reserve(teams[_drawables.selectedTeam].players.size());
 
@@ -171,4 +179,9 @@ void zappy::TeamsInfo::draw(sf::RenderTarget &target, sf::RenderStates states) c
 {
     target.draw(_drawables.background);
     target.draw(_drawables.sprite);
+}
+
+std::size_t zappy::TeamsInfo::getSelectedPlayer() const
+{
+    return _drawables.selectedPlayerID;
 }
