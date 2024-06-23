@@ -580,6 +580,64 @@ void zappy::Communication::pex(std::vector<std::string> &args) {
     }
 }
 
+void zappy::Communication::pic(std::vector<std::string> &args) {
+    if (args.size() < 4)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int x = std::stoi(args[0]);
+        int y = std::stoi(args[1]);
+        int id = std::stoi(args[2]);
+        std::vector<unsigned long> players;
+        for (std::size_t i = 3; i < args.size(); i++) {
+            try {
+                auto player = (*this->map).getPlayerById(std::stoi(args[i]));
+                if (player != nullptr) {
+                    players.push_back(player->id);
+                }
+            } catch (std::invalid_argument &e) {
+                throw CommandError("Invalid arguments");
+            } catch (Map::MapError &e) {
+                throw CommandError("Player not found");
+            }
+        }
+        this->eventLogger.log("Incantation at " + std::to_string(x) + " " + std::to_string(y) + " started by player " + std::to_string(id));
+        for (auto &player : players) {
+            this->eventLogger.log("Player " + std::to_string(player) + " is participating in the incantation");
+        }
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
+void zappy::Communication::pie(std::vector<std::string> &args) {
+    if (args.size() != 3)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try {
+        int x = std::stoi(args[0]);
+        int y = std::stoi(args[1]);
+        int result = std::stoi(args[2]);
+        if (result == 1) {
+            this->eventLogger.log("Incantation at " + std::to_string(x) + " " + std::to_string(y) + " succeeded");
+        } else {
+            this->eventLogger.log("Incantation at " + std::to_string(x) + " " + std::to_string(y) + " failed");
+        }
+    } catch (std::invalid_argument &e) {
+        throw CommandError("Invalid arguments");
+    } catch (Map::MapError &e) {
+        throw CommandError("Player not found");
+    } catch (std::exception &e) {
+        throw CommandError("Unknown error");
+    }
+}
+
 void zappy::Communication::pdr(std::vector<std::string> &args) {
     if (args.size() != 2)
         throw CommandError("Invalid number of arguments");
