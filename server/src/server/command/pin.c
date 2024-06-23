@@ -31,7 +31,7 @@ int internal_pin(client_t *client, int fd)
     char *str;
 
     get_items(&client->player->inventory, &str);
-    dprintf(fd, "pin %li %li %li %s", client->player->id, client->player->x,
+    dprintf(fd, "pin %li %li %li %s\n", client->player->id, client->player->x,
     client->player->y, str);
     free(str);
     return 1;
