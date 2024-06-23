@@ -47,7 +47,7 @@ int main(int ac, char **av)
     server = malloc(sizeof(server_t));
     server->game = malloc(sizeof(game_t));
     server->game->life_unit_update = time(NULL);
-    server->game->end = true;
+    server->game->end = false;
     if (!store_arguments_in_server(server, av)) {
         free(server->game);
         free(server);
