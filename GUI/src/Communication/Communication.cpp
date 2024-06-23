@@ -153,7 +153,6 @@ void zappy::Communication::graphicalUserInterface() {
     teamsInfo.setDisplayPosition(teamsInfoPos);
     eventLogger.setDisplayPosition(loggerPos);
     eventLogger.setDisplaySize(loggerSize);
-    (*map).setDisplaySize(size);
     window.setView(view);
 
     while (window.isOpen())
@@ -263,16 +262,19 @@ void zappy::Communication::graphicalUserInterface() {
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Add:
+                    case sf::Keyboard::F:
                         map->setTimeUnit(map->getTimeUnit() + 1);
                         updateTimeUnit(map->getTimeUnit());
                         break;
-
                     case sf::Keyboard::Subtract:
+                    case sf::Keyboard::G:
                         if (map->getTimeUnit() >= 1)
                         {
                             map->setTimeUnit(map->getTimeUnit() - 1);
                             updateTimeUnit(map->getTimeUnit());
                         }
+                        break;
+                    default:
                         break;
                 }
             }
@@ -365,6 +367,13 @@ void zappy::Communication::automaticCommandSender() {
     this->sendCommand("msz");
     while (this->_running) {
         this->sendCommand("mct");
+        if (this->map != nullptr) {
+            for (const auto &team: (*this->map).getTeams()) {
+                for (const auto &player: team.players) {
+                    this->sendCommand("pin " + std::to_string(player->id));
+                }
+            }
+        }
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     eventLogger.log("Disconnected from server");
@@ -678,7 +687,7 @@ void zappy::Communication::sst(std::vector<std::string> &args) {
         throw MapUninitialized();
     try {
         int timeUnit = std::stoi(args[0]);
-        this->updateTimeUnit(timeUnit);
+        (*this->map).setTimeUnit(timeUnit);
     } catch (std::invalid_argument &e) {
         throw CommandError("Invalid arguments");
     } catch (std::exception &e) {
