@@ -168,6 +168,18 @@ void zappy::Communication::graphicalUserInterface() {
         } else if (!map_created) {
             map->setDisplaySize(size);
             map->setDisplayPosition(position);
+
+            std::string dummyTeam = "dummy";
+            map->addTeam(dummyTeam);
+
+            std::shared_ptr<zappy::Trantorien> dummyPlayer = std::make_shared<zappy::Trantorien>(500);
+            dummyPlayer->x = 5;
+            dummyPlayer->y = 5;
+
+            map->addPlayer(dummyPlayer, dummyTeam);
+
+            map->broadcast(500, "Hello World");
+
             map_created = true;
         }
 
