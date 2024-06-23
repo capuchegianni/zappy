@@ -60,20 +60,20 @@ void zappy::PlayerInfoDrawables::updateDisplay(std::shared_ptr<Trantorien> &play
 
         playerOrientation.setString("Orientation: " + orientation);
         playerPosition.setString("Position: " + std::to_string(player->x) + ", " + std::to_string(player->y));
+
+        renderTexture.draw(foodText);
+        renderTexture.draw(linemateText);
+        renderTexture.draw(deraumereText);
+        renderTexture.draw(siburText);
+        renderTexture.draw(mendianeText);
+        renderTexture.draw(phirasText);
+        renderTexture.draw(thystameText);
+
+        renderTexture.draw(playerPosition);
+        renderTexture.draw(playerOrientation);
+        renderTexture.draw(playerLevel);
+        renderTexture.draw(playerID);
     }
-
-    renderTexture.draw(foodText);
-    renderTexture.draw(linemateText);
-    renderTexture.draw(deraumereText);
-    renderTexture.draw(siburText);
-    renderTexture.draw(mendianeText);
-    renderTexture.draw(phirasText);
-    renderTexture.draw(thystameText);
-
-    renderTexture.draw(playerPosition);
-    renderTexture.draw(playerOrientation);
-    renderTexture.draw(playerLevel);
-    renderTexture.draw(playerID);
 
     renderTexture.draw(title);
 
@@ -124,7 +124,7 @@ zappy::PlayerInfo::~PlayerInfo() = default;
 
 void zappy::PlayerInfo::setDisplaySize(sf::Vector2f &size)
 {
-        _drawables.background.setSize(size);
+    _drawables.background.setSize(size);
     _drawables.renderTexture.create(size.x, size.y);
     _drawables.view = sf::View(sf::FloatRect(0, 0, size.x, size.y));
 
