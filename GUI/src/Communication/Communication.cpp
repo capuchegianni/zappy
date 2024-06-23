@@ -52,6 +52,9 @@ std::string zappy::Communication::getLine() {
 }
 
 void zappy::Communication::sendCommand(std::string command) {
+    if (this->_socket.getRemoteAddress() == sf::IpAddress::None) {
+        throw CommunicationError("Not connected to the server");
+    }
     command += "\n";
     std::size_t totalSent = 0;
     while (totalSent < command.size()) {
