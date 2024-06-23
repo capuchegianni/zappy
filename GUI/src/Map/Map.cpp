@@ -307,3 +307,17 @@ std::vector<zappy::Team> &zappy::Map::getTeams()
 {
     return _teams;
 }
+
+void zappy::Map::broadcast(std::size_t playerId, const std::string &message)
+{
+    std::shared_ptr<Trantorien> player = getPlayerById(playerId);
+
+    double duration = 5;
+
+    double x = player->x;
+    double y = player->y;
+    double z = player->getSprite().getGlobalBounds().height;
+
+    _broadcasts.push_back(std::make_unique<Broadcast>(duration, x, y, z, message, _assets));
+}
+

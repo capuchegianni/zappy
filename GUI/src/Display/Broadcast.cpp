@@ -11,7 +11,7 @@ zappy::BroadcastDrawables::BroadcastDrawables() = default;
 
 zappy::BroadcastDrawables::~BroadcastDrawables() = default;
 
-zappy::Broadcast::Broadcast(double duration, std::size_t x, std::size_t y, std::size_t z, const std::string &message, Assets &assets) : x(x), y(y), z(z), duration(duration)
+zappy::Broadcast::Broadcast(double duration, double x, double y, double z, const std::string &message, Assets &assets) : x(x), y(y), z(z), duration(duration)
 {
     _drawables.message.setString(message);
     _drawables.message.setFont(assets.font);
