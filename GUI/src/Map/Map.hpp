@@ -19,6 +19,7 @@
 #include "../Characters/Team.hpp"
 #include "../Display/SceneData.hpp"
 #include "../Characters/Team.hpp"
+#include "../Display/Broadcast.hpp"
 
 namespace zappy
 {
@@ -84,6 +85,8 @@ namespace zappy
             void setTimeUnit(int timeUnit);
             int getTimeUnit() const;
 
+            void broadcast(std::size_t playerId, const std::string &message);
+
             std::vector<Team> &getTeams();
 
             math::Point3D selectedBox = {0, 0, 0};
@@ -92,6 +95,8 @@ namespace zappy
             std::size_t _getPlayerIndexById(std::size_t id);
 
             std::vector<std::shared_ptr<Trantorien>> _players = {};
+
+            std::vector<std::unique_ptr<Broadcast>> _broadcasts = {};
 
             Assets &_assets;
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

@@ -84,6 +84,19 @@ zappy::Assets::Assets()
 
     if (!towardsBackTexture.loadFromFile("assets/textures/characters/towards_back.png"))
         throw Assets::AssetsError("Could not load towards back texture");
+
+
+    if (!bubbleLeftTexture.loadFromFile("assets/textures/characters/bubble/left.png"))
+        throw Assets::AssetsError("Could not load bubble left texture");
+
+    if (!bubbleRightTexture.loadFromFile("assets/textures/characters/bubble/right.png"))
+        throw Assets::AssetsError("Could not load bubble right texture");
+
+    if (!bubbleCenterTexture.loadFromFile("assets/textures/characters/bubble/center.png"))
+        throw Assets::AssetsError("Could not load bubble center texture");
+
+    if (!bubbleFillTexture.loadFromFile("assets/textures/characters/bubble/fill.png"))
+        throw Assets::AssetsError("Could not load bubble fill texture");
 }
 
 zappy::Assets::~Assets() = default;
