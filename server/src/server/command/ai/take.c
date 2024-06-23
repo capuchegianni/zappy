@@ -33,7 +33,8 @@ static void pick_item(server_t *server, client_t *client, int objectID)
     dprintf(client->fd, "ok\n");
     for (int i = 0; i < FD_SETSIZE; ++i) {
         if (client->fd > -1 && server->clients[i].is_graphic) {
-            dprintf(client->fd, "pgt %li %i\n", client->player->id, objectID);
+            dprintf(server->clients[i].fd, "pgt %li %i\n",
+            client->player->id, objectID);
         }
     }
 }
