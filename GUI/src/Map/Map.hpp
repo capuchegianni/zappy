@@ -79,6 +79,8 @@ namespace zappy
 
             std::vector<std::pair<double, sf::Sprite>> getPlayersSprites(render3d::Camera &camera);
 
+            void updateSelection();
+
             void setTimeUnit(int timeUnit);
             int getTimeUnit() const;
 

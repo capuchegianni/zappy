@@ -7,6 +7,7 @@
 
 #include "Communication.hpp"
 #include "../Display/BoxInfo.hpp"
+#include "../Display/PlayerInfo.hpp"
 
 #include <iostream>
 #include <unordered_map>
@@ -129,6 +130,7 @@ void zappy::Communication::graphicalUserInterface() {
     sf::View view(sf::FloatRect(0, 0, static_cast<float>(winwidth), static_cast<float>(winheight)));
 
     zappy::BoxInfo boxInfo(assets);
+    zappy::PlayerInfo playerInfo(assets);
 
     while (window.isOpen())
     {
@@ -150,23 +152,23 @@ void zappy::Communication::graphicalUserInterface() {
         {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
             {
-                map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX += movForward.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY += movForward.y * lastFrameTime * 0.05;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             {
-                map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX -= movForward.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY -= movForward.y * lastFrameTime * 0.05;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
             {
-                map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX += movRight.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY += movRight.y * lastFrameTime * 0.05;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
             {
-                map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.1;
-                map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.1;
+                map->sceneDate.sceneData.camera.centerX -= movRight.x * lastFrameTime * 0.05;
+                map->sceneDate.sceneData.camera.centerY -= movRight.y * lastFrameTime * 0.05;
             }
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && map->sceneDate.sceneData.camera.unitaryPixelsSize < 200)
@@ -208,23 +210,30 @@ void zappy::Communication::graphicalUserInterface() {
                 sf::Vector2f loggerPos(event.size.width / 2 + 5 + event.size.width / 4, 0);
                 sf::Vector2f loggerSize(event.size.width / 4 - 5, event.size.height);
 
+                sf::Vector2f playerInfoPos(event.size.width / 2 + event.size.width / 8 + 5, event.size.height / 2);
+                sf::Vector2f playerInfoSize(event.size.width / 8 - 5, event.size.height / 2);
+
                 boxInfo.setDisplaySize(boxSize);
                 boxInfo.setDisplayPosition(boxPos);
+                playerInfo.setDisplaySize(playerInfoSize);
+                playerInfo.setDisplayPosition(playerInfoPos);
                 eventLogger.setDisplayPosition(loggerPos);
                 eventLogger.setDisplaySize(loggerSize);
                 (*map).setDisplaySize(size);
-                boxInfo.setBox((*map)(5, 5));
-                map->selectedBox = {5, 5, 0};
                 window.setView(view);
             }
         }
 
+        map->updateSelection();
+        boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
         map->updateDisplay();
         boxInfo.updateDisplay();
+        playerInfo.updateDisplay();
         window.clear(sf::Color::Blue);
         window.draw(*map);
         window.draw(eventLogger);
         window.draw(boxInfo);
+        window.draw(playerInfo);
         window.display();
         lastFrameTime = frameClock.getElapsedTime().asMilliseconds();
         frameClock.restart();

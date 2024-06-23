@@ -164,16 +164,16 @@ void zappy::Map::updateTiles()
             sceneDate.renderTexture.draw(*box);
         }
     }
-}
 
-void zappy::Map::updateDirectionUI()
-{
     sceneDate.selection.setTexture(sceneDate.sceneData.selectionTile.getTexture(), true);
     sceneDate.selection.setOrigin(sceneDate.selection.getTexture()->getSize().x / 2, sceneDate.selection.getTexture()->getSize().y / 2);
     sceneDate.selection.setPosition(sceneDate.sceneData.camera.displayUnitaryX.x * selectedBox.x + sceneDate.sceneData.camera.displayUnitaryY.x * selectedBox.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.x + sceneDate.sceneData.camera.displayUnitaryY.x * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.x * sceneDate.sceneData.camera.centerZ,
                                     sceneDate.sceneData.camera.displayUnitaryX.y * selectedBox.x + sceneDate.sceneData.camera.displayUnitaryY.y * selectedBox.y + sceneDate.sceneData.camera.centerX * sceneDate.sceneData.camera.displayUnitaryX.y + sceneDate.sceneData.camera.displayUnitaryY.y * sceneDate.sceneData.camera.centerY + sceneDate.sceneData.camera.displayUnitaryZ.y * sceneDate.sceneData.camera.centerZ);
     sceneDate.renderTexture.draw(sceneDate.selection);
-    
+}
+
+void zappy::Map::updateDirectionUI()
+{
     sceneDate.compass.setTexture(sceneDate.sceneData.compassTile.getTexture(), true);
     sceneDate.compass.setOrigin(sceneDate.compass.getTexture()->getSize().x / 2, sceneDate.compass.getTexture()->getSize().y / 2);
     sceneDate.compass.setPosition(80-sceneDate.rect.getSize().x / 2, 80-sceneDate.rect.getSize().y / 2);
@@ -268,6 +268,19 @@ std::vector<std::pair<double, sf::Sprite>> zappy::Map::getPlayersSprites(zappy::
     }
 
     return playersSprites;
+}
+
+void zappy::Map::updateSelection()
+{
+    // round camera position to nearest integer
+    math::Point3D cameraPosition = math::Point3D(-sceneDate.sceneData.camera.centerX, -sceneDate.sceneData.camera.centerY, 0);
+    math::Point3D roundedCameraPosition = math::Point3D(round(cameraPosition.x), round(cameraPosition.y), 0);
+
+    if (roundedCameraPosition.x < 0 || roundedCameraPosition.y < 0 || roundedCameraPosition.x >= _map.size() || roundedCameraPosition.y >= _map[0].size())
+        return;
+
+    selectedBox.x = roundedCameraPosition.x;
+    selectedBox.y = roundedCameraPosition.y;
 }
 
 void zappy::Map::setTimeUnit(int timeUnit) {
