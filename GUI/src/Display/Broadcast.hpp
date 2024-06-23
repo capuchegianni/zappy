@@ -25,7 +25,6 @@ namespace zappy
             ~BroadcastDrawables();
 
             sf::Clock clock;
-            sf::Sprite background;
             sf::Sprite leftSide;
             sf::Sprite rightSide;
             sf::Sprite center;
@@ -38,13 +37,12 @@ namespace zappy
             sf::RenderTexture renderTexture;
             sf::Sprite sprite;
 
-            double duration;
     };
 
     class Broadcast : public sf::Drawable
     {
         public:
-            Broadcast(double duration, std::size_t x, std::size_t y, const std::string &message, Assets &assets);
+            Broadcast(double duration, std::size_t x, std::size_t y, std::size_t z, const std::string &message, Assets &assets);
             ~Broadcast();
 
             void updateDisplay(render3d::Camera &camera);
@@ -53,6 +51,9 @@ namespace zappy
 
             std::size_t x;
             std::size_t y;
+            std::size_t z;
+
+            double duration;
 
         private:
             BroadcastDrawables _drawables;

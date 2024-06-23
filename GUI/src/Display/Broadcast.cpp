@@ -7,14 +7,12 @@
 
 #include "Broadcast.hpp"
 
-zappy::BroadcastDrawables::BroadcastDrawables() : duration(0) {}
+zappy::BroadcastDrawables::BroadcastDrawables() = default;
 
 zappy::BroadcastDrawables::~BroadcastDrawables() = default;
 
-zappy::Broadcast::Broadcast(double duration, std::size_t x, std::size_t y, const std::string &message, Assets &assets) : x(x), y(y)
+zappy::Broadcast::Broadcast(double duration, std::size_t x, std::size_t y, std::size_t z, const std::string &message, Assets &assets) : x(x), y(y), z(z), duration(duration)
 {
-    _drawables.duration = duration;
-
     _drawables.message.setString(message);
     _drawables.message.setFont(assets.font);
     _drawables.message.setCharacterSize(20);
