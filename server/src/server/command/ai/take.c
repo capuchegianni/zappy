@@ -29,8 +29,11 @@ static void pick_item(server_t *server, client_t *client, int objectID)
     if ((&server->game->map[y][x].items.food)[objectID]) {
         (&server->game->map[y][x].items.food)[objectID]--;
         (&client->player->inventory.food)[objectID]++;
+        dprintf(client->fd, "ok\n");
+    } else {
+        dprintf(client->fd, "ko\n");
+        return;
     }
-    dprintf(client->fd, "ok\n");
     for (int i = 0; i < FD_SETSIZE; ++i) {
         if (client->fd > -1 && server->clients[i].is_graphic) {
             dprintf(server->clients[i].fd, "pgt %li %i\n",
@@ -45,7 +48,6 @@ int take_command(server_t *server, client_t *client)
         dprintf(client->fd, "ko\n");
         return 1;
     }
-
     for (int i = 0; objects[i]; i++) {
         if (!strcmp(objects[i], client->input[0].args[1])) {
             pick_item(server, client, i);
