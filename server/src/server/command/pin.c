@@ -46,7 +46,7 @@ int command_pin(server_t *server, client_t *client)
         if (server->clients[i].fd > -1 && server->clients[i].player->id
         == (size_t) atoi(client->input->args[1])
             && !server->clients[i].is_graphic) {
-            internal_plv(&server->clients[i], client->fd);
+            internal_pin(&server->clients[i], client->fd);
             return 1;
         }
     }
