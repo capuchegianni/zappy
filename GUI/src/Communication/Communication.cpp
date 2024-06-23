@@ -387,9 +387,14 @@ void zappy::Communication::automaticCommandSender() {
         this->sendCommand("msz");
         while (this->_running) {
             this->sendCommand("mct");
-            if ((*this->map).getPlayerById(this->_displayPlayerID) != nullptr) {
-                this->sendCommand("pin " + std::to_string(this->_displayPlayerID));
-            }
+            try {
+                if (this->map != nullptr) {
+                    auto player = (*this->map).getPlayerById(this->_displayPlayerID);
+                    if (player != nullptr) {
+                        this->sendCommand("ppo " + std::to_string(this->_displayPlayerID));
+                    }
+                }
+            } catch (Map::MapError &e) {}
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     } catch (CommunicationError &e) {
