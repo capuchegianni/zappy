@@ -30,7 +30,6 @@
 *.exe
 *.out
 *.app
-plazza
 
 # CMake
 CMakeLists.txt.user
@@ -63,3 +62,4 @@ zappy_server_n
 font.ttf
 manyAI
 Dockerfile
+/assets

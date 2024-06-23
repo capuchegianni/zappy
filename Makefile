@@ -12,6 +12,7 @@ all:
 	cp ./server/zappy_server .
 	cp ./GUI/zappy_gui .
 	cp ./AI/zappy_ai .
+	cp -r ./GUI/assets .
 
 clean:
 	$(MAKE) clean -C ./AI
@@ -25,6 +26,7 @@ fclean:
 	rm -f zappy_server
 	rm -f zappy_gui
 	rm -f zappy_ai
+	rm -rf assets
 
 re: fclean all
 
