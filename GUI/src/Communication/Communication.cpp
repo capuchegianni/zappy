@@ -255,30 +255,44 @@ void zappy::Communication::graphicalUserInterface() {
                 teamsInfo.setDisplaySize(teamsInfoSize);
                 teamsInfo.setDisplayPosition(teamsInfoPos);
                 eventLogger.setDisplayPosition(loggerPos);
-                eventLogger.setDisplaySize(loggerSize);
+                eventLogger.setDisplaySize(loggerSize);z
                 (*map).setDisplaySize(size);
                 window.setView(view);
             }
             
             if (event.type == sf::Event::KeyPressed)
             {
+                bool sendTimeUnit = false;
+
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Add:
                     case sf::Keyboard::F:
                         map->setTimeUnit(map->getTimeUnit() + 1);
-                        updateTimeUnit(map->getTimeUnit());
+                        sendTimeUnit = true;
                         break;
                     case sf::Keyboard::Subtract:
                     case sf::Keyboard::G:
                         if (map->getTimeUnit() >= 1)
                         {
                             map->setTimeUnit(map->getTimeUnit() - 1);
-                            updateTimeUnit(map->getTimeUnit());
+                            sendTimeUnit = true;
                         }
                         break;
                     default:
                         break;
+                }
+
+                if (sendTimeUnit)
+                {
+                    try
+                    {
+                        updateTimeUnit(map->getTimeUnit());
+                    }
+                    catch (std::exception &e)
+                    {
+                        eventLogger.log(e.what());
+                    }
                 }
             }
         }
