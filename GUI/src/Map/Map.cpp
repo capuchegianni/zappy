@@ -343,4 +343,3 @@ void zappy::Map::broadcast(std::size_t playerId, const std::string &message)
     }
     _broadcasts.push_back(std::make_unique<Broadcast>(duration, x, y, z, player->color, message, _assets));
 }
-
