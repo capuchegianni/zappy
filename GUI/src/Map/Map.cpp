@@ -153,10 +153,24 @@ void zappy::Map::updateEntities()
         sceneDate.renderTexture.draw(sprite.second);
     }
 
+    mutex.lock();
+    for (auto it = _broadcasts.begin(); it != _broadcasts.end();)
+    {
+        if ((*it)->getElapsedTimeSeconds() > (*it)->duration)
+        {
+            it = _broadcasts.erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
+
     for (auto &broadcast : _broadcasts) {
         broadcast->updateDisplay(sceneDate.sceneData.camera);
         sceneDate.renderTexture.draw(*broadcast);
     }
+    mutex.unlock();
 }
 
 void zappy::Map::updateTiles()
@@ -187,18 +201,6 @@ void zappy::Map::updateDirectionUI()
 
 void zappy::Map::updateDisplay()
 {
-    for (auto it = _broadcasts.begin(); it != _broadcasts.end();)
-    {
-        if ((*it)->getElapsedTimeSeconds() > (*it)->duration)
-        {
-            it = _broadcasts.erase(it);
-        }
-        else
-        {
-            it++;
-        }
-    }
-
     sceneDate.updateDisplay();
     sceneDate.renderTexture.clear(sf::Color::Transparent);
 
@@ -335,6 +337,10 @@ void zappy::Map::broadcast(std::size_t playerId, const std::string &message)
     double y = player->y;
     double z = player->getSprite().getGlobalBounds().height;
 
+    if (_broadcasts.size() > 50)
+    {
+        _broadcasts.erase(_broadcasts.begin());
+    }
     _broadcasts.push_back(std::make_unique<Broadcast>(duration, x, y, z, player->color, message, _assets));
 }
 
