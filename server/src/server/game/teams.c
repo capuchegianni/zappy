@@ -29,22 +29,21 @@ static void send_response(client_t *client, team_t *team, game_t *game)
 
 bool set_player_team(char *team_name, game_t *game, client_t *client)
 {
-    team_t *team = malloc(sizeof(team_t));
+    team_t *teams = game->teams;
+    size_t i = 0;
 
-    for (size_t i = 0; i < game->teams_number; i++) {
-        if (!strcmp(game->teams[i].name, team_name)) {
-            team = &game->teams[i];
+    for (; i < game->teams_number; i++) {
+        if (!strcmp(game->teams[i].name, team_name))
             break;
-        }
     }
-    if (team->available_slots == team->total_players_connected) {
+    if (teams[i].available_slots == teams[i].total_players_connected) {
         dprintf(client->fd, "ko\n");
         return false;
     }
-    team->total_players_connected++;
+    teams[i].total_players_connected++;
     client->player->team_name = strdup(team_name);
     client->is_playing = true;
-    send_response(client, team, game);
+    send_response(client, &teams[i], game);
     return true;
 }
 

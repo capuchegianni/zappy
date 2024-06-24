@@ -8,6 +8,7 @@
 #include "server.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 static void get_items(items_t *items, char **str)
 {
@@ -31,5 +32,6 @@ int inventory_command(server_t *server, client_t *client)
     (void)server;
     get_items(&client->player->inventory, &str);
     dprintf(client->fd, "[ %s ]\n", str);
+    free(str);
     return 1;
 }

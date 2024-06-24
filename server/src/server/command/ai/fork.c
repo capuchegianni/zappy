@@ -14,14 +14,13 @@
 int fork_command(server_t *server, client_t *client)
 {
     size_t i = 0;
-    team_t *team = malloc(sizeof(team_t));
+    team_t *teams = server->game->teams;
 
     for (; i < server->game->teams_number; i++) {
         if (!strcmp(server->game->teams[i].name, client->player->team_name))
             break;
     }
-    team = &server->game->teams[i];
-    team->available_slots++;
+    teams[i].available_slots++;
     srand(time(NULL));
     server->game->map[rand() % server->game->y]
     [rand() % server->game->x].egg_here++;

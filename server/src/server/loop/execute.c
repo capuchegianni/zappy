@@ -92,6 +92,7 @@ static void init_connection_graphic(server_t *server, client_t *client)
 static void handle_new_connection(server_t *server, client_t *client)
 {
     if (!strcmp(client->input->args[0], "GRAPHIC")) {
+        set_player_id(client->player);
         init_connection_graphic(server, client);
         return;
     }
@@ -137,6 +138,7 @@ static void store_args(server_t *server, client_t *client, char *token,
         client->input[0].args[i + 1] = NULL;
         cmd = strtok(NULL, " ");
     }
+    client->input[0].nb_args = tablen(client->input[0].args);
     execute_cmd(server, client);
 }
 
