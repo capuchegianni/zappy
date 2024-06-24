@@ -134,13 +134,6 @@ void zappy::Map::updateEntities()
         }
     }
 
-    mutex.lock();
-    for (auto &broadcast : _broadcasts) {
-        broadcast->updateDisplay(sceneDate.sceneData.camera);
-        allSprites.push_back(broadcast->getSprite(sceneDate.sceneData.camera));
-    }
-    mutex.unlock();
-
     std::sort(allSprites.begin(), allSprites.end(), [](const std::pair<double, sf::Sprite> &a, const std::pair<double, sf::Sprite> &b) {
         return a.first < b.first;
     });
@@ -158,6 +151,11 @@ void zappy::Map::updateEntities()
 
     for (auto &sprite : allSprites) {
         sceneDate.renderTexture.draw(sprite.second);
+    }
+
+    for (auto &broadcast : _broadcasts) {
+        broadcast->updateDisplay(sceneDate.sceneData.camera);
+        sceneDate.renderTexture.draw(*broadcast);
     }
 }
 
@@ -331,12 +329,12 @@ void zappy::Map::broadcast(std::size_t playerId, const std::string &message)
 {
     std::shared_ptr<Trantorien> player = getPlayerById(playerId);
 
-    double duration = 5;
+    double duration = 1;
 
     double x = player->x;
     double y = player->y;
     double z = player->getSprite().getGlobalBounds().height;
 
-    _broadcasts.push_back(std::make_unique<Broadcast>(duration, x, y, z, message, _assets));
+    _broadcasts.push_back(std::make_unique<Broadcast>(duration, x, y, z, player->color, message, _assets));
 }
 

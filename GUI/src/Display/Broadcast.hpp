@@ -8,8 +8,7 @@
 #pragma once
 
 #include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/System/Clock.hpp>
 
 #include <string>
@@ -25,32 +24,19 @@ namespace zappy
             BroadcastDrawables();
             ~BroadcastDrawables();
 
+            sf::CircleShape circle;
             sf::Clock clock;
-            sf::Sprite leftSide;
-            sf::Sprite rightSide;
-            sf::Sprite center;
-            sf::Sprite fill1;
-            sf::Sprite fill2;
-            sf::Text message;
-
-            sf::View view;
-
-            sf::RenderTexture renderTexture;
-            sf::Sprite sprite;
-
     };
 
     class Broadcast : public sf::Drawable
     {
         public:
-            Broadcast(double duration, double x, double y, double z, const std::string &message, Assets &assets);
+            Broadcast(double duration, double x, double y, double z, sf::Color color, const std::string &message, Assets &assets);
             ~Broadcast();
 
             void updateDisplay(render3d::Camera &camera);
 
             double getElapsedTimeSeconds() const;
-
-            std::pair<double, sf::Sprite> getSprite(render3d::Camera &camera);
 
             std::size_t x;
             std::size_t y;
