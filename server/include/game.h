@@ -23,12 +23,24 @@ enum ITEMS_DENSITY {
     THYSTAME = 5
 };
 
-enum DIRECTION {
+typedef enum DIRECTION {
     NORTH = 1,
     EAST,
     SOUTH,
     WEST
-};
+} direction_t;
+
+typedef enum ORIENTATION {
+    SAME,
+    CENTER_DOWN,
+    CENTER_UP,
+    CENTER_LEFT,
+    CENTER_RIGHT,
+    DOWN_LEFT,
+    DOWN_RIGHT,
+    UP_LEFT,
+    UP_RIGHT
+} orientation_t;
 
 typedef struct incantation_s {
     bool occuring;
@@ -60,7 +72,7 @@ typedef struct player_s {
     size_t level;
     size_t x;
     size_t y;
-    enum DIRECTION direction;
+    direction_t direction;
     time_t last_command_time;
     bool in_incantation;
 } player_t;

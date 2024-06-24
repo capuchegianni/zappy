@@ -8,48 +8,61 @@
 #include "server.h"
 
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
 
-static int get_angle(size_t dy, size_t dx)
+static size_t get_angle(size_t num1, size_t num2, size_t max)
 {
-    double angle = atan2(dy, dx) * (180 / 3.14159265);
+    int val = num2 - num1;
 
-    if (-22.5 <= angle && angle < 22.5)
-        return 1;
-    if (22.5 <= angle && angle < 67.5)
-        return 2;
-    if (67.5 <= angle && angle < 112.5)
-        return 3;
-    if (112.5 <= angle && angle < 157.5)
-        return 4;
-    if (157.5 <= angle || angle < -157.5)
-        return 5;
-    if (-157.5 <= angle && angle < -112.5)
-        return 6;
-    if (-112.5 <= angle && angle < -67.5)
-        return 7;
-    if (-67.5 <= angle && angle < -22.5)
-        return 8;
-    return -1;
+    if ((size_t)abs(val) > max / 2 && val > 0)
+        val -= max;
+    if ((size_t)abs(val) > max / 2 && val < 0)
+        val += max;
+    return val;
 }
 
-static int get_orientation(server_t *server,
+static int get_orientation(int x, int y, player_t *broadcaster,
+    player_t *receiver)
+{
+    if (receiver->x == broadcaster->x && receiver->y == broadcaster->y)
+        return SAME;
+    if (y > 0 && broadcaster->x == receiver->x)
+        return CENTER_DOWN;
+    if (y < 0 && broadcaster->x == receiver->x)
+        return CENTER_UP;
+    if (broadcaster->y == receiver->y && x > 0)
+        return CENTER_LEFT;
+    if (broadcaster->y == receiver->y && x < 0)
+        return CENTER_RIGHT;
+    if (y > 0 && x > 0)
+        return DOWN_LEFT;
+    if (y > 0 && x < 0)
+        return DOWN_RIGHT;
+    if (y < 0 && x > 0)
+        return UP_LEFT;
+    if (y < 0 && x < 0)
+        return UP_RIGHT;
+    return SAME;
+}
+
+static int get_sound_direction(server_t *server,
     player_t *broadcaster, player_t *receiver)
 {
-    size_t dy = receiver->y - broadcaster->y;
-    size_t dx = receiver->x - broadcaster->x;
+    size_t x = get_angle(broadcaster->x, receiver->x, server->game->x);
+    size_t y = get_angle(broadcaster->y, receiver->y, server->game->y);
+    orientation_t orientation = get_orientation(x, y, broadcaster, receiver);
 
-    if (dx > server->game->x / 2)
-        dx -= server->game->x;
-    else
-        dx += server->game->x;
-    if (dy > server->game->y / 2)
-        dy -= server->game->y;
-    else
-        dy += server->game->y;
-    if (dx == 0 && dy == 0)
-        return 0;
-    return get_angle(dy, dx);
+    if (orientation == SAME)
+        return orientation;
+    if (receiver->direction == EAST)
+        orientation += 2;
+    if (receiver->direction == SOUTH)
+        orientation += 4;
+    if (receiver->direction == WEST)
+        orientation += 6;
+    if (orientation > 8)
+        orientation -= 8;
+    return orientation;
 }
 
 static void send_message(client_t *broadcaster, client_t *receiver, int tile)
@@ -84,7 +97,7 @@ int broadcast_command(server_t *server, client_t *client)
             continue;
         if (clients[i].player->id == client->player->id)
             continue;
-        tile = get_orientation(server, client->player, clients[i].player);
+        tile = get_sound_direction(server, client->player, clients[i].player);
         send_message(client, &clients[i], tile);
     }
     dprintf(client->fd, "ok\n");
