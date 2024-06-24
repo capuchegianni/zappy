@@ -13,6 +13,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include <memory>
+#include <mutex>
 
 #include "Assets.hpp"
 
@@ -41,8 +42,10 @@ namespace zappy
             std::size_t max_logs = 10;
             float logHeight = 20;
             sf::Vector2f textOrigin = {0, 0};
+            std::mutex mutex;
 
         private:
+
             sf::Font _font;
     };
 
@@ -57,6 +60,9 @@ namespace zappy
 
             void setDisplaySize(sf::Vector2f &size);
             void setDisplayPosition(sf::Vector2f &position);
+
+            void lock();
+            void unlock();
 
         private:
             void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

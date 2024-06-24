@@ -18,6 +18,7 @@ zappy::EventLoggerDrawables::~EventLoggerDrawables() = default;
 
 void zappy::EventLoggerDrawables::log(std::string &log)
 {
+    mutex.lock();
     if (logs.size() >= max_logs)
         logs.erase(logs.begin());
 
@@ -34,6 +35,7 @@ void zappy::EventLoggerDrawables::log(std::string &log)
     if (logs.size() > max_logs) {
         logs.erase(logs.begin());
     }
+    mutex.unlock();
 }
 
 zappy::EventLogger::EventLogger(std::size_t max_logs, Assets &assets) : _drawables(assets.font)
@@ -87,4 +89,14 @@ void zappy::EventLogger::draw(sf::RenderTarget &target, sf::RenderStates states)
     for (const auto &log : _drawables.logs) {
         target.draw(*log, states);
     }
+}
+
+void zappy::EventLogger::lock()
+{
+    _drawables.mutex.lock();
+}
+
+void zappy::EventLogger::unlock()
+{
+    _drawables.mutex.unlock();
 }

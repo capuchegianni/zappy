@@ -321,7 +321,11 @@ void zappy::Communication::graphicalUserInterface() {
 
         window.clear(sf::Color::Blue);
         window.draw(*map);
+
+        eventLogger.lock();
         window.draw(eventLogger);
+        eventLogger.unlock();
+
         window.draw(boxInfo);
         window.draw(playerInfo);
         window.draw(teamsInfo);
