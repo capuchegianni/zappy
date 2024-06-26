@@ -142,12 +142,14 @@ void zappy::Map::updateEntities()
         sceneDate.renderTexture.draw(*player);
     }
 
+    mutex.lock();
     for (auto &team : _teams) {
         for (auto &egg : team.eggs) {
             egg->updateDisplay(sceneDate.sceneData.camera);
             sceneDate.renderTexture.draw(*egg);
         }
     }
+    mutex.unlock();
 
     for (auto &sprite : allSprites) {
         sceneDate.renderTexture.draw(sprite.second);
@@ -234,8 +236,10 @@ void zappy::Map::addTeam(std::string &name)
 
 void zappy::Map::addEgg(std::size_t x, std::size_t y, std::size_t id, std::string &team)
 {
+    mutex.lock();
     Team &storedTeam = getTeam(team);
     storedTeam.addEgg(std::make_shared<Egg>(x, y, id, team));
+    mutex.unlock();
 }
 
 void zappy::Map::removeEggById(std::size_t id)
