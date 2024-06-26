@@ -859,3 +859,31 @@ void zappy::Communication::sbp(std::vector<std::string> &args) {
         throw MapUninitialized();
     this->eventLogger.log("Command failed");
 }
+
+void zappy::Communication::pfk(std::vector<std::string> &args)
+{
+    if (args.size() != 1)
+        throw CommandError("Invalid number of arguments");
+    if (this->map == nullptr)
+        throw MapUninitialized();
+    try
+    {
+        int id = std::stoi(args[0]);
+        this->eventLogger.log("Player " + std::to_string(id) + " is laying an egg");
+        std::size_t x = (*this->map).getPlayerById(id)->x;
+        std::size_t y = (*this->map).getPlayerById(id)->y;
+        (*this->map).addEgg(x, y, id, (*this->map).getPlayerById(id)->team);
+    }
+    catch (std::invalid_argument &e)
+    {
+        throw CommandError("Invalid arguments");
+    }
+    catch (Map::MapError &e)
+    {
+        throw CommandError("Player not found");
+    }
+    catch (std::exception &e)
+    {
+        throw CommandError("Unknown error");
+    }
+}
