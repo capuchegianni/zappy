@@ -409,6 +409,8 @@ void zappy::Communication::automaticCommandSender() {
                     auto player = (*this->map).getPlayerById(this->_displayPlayerID);
                     if (player != nullptr) {
                         this->sendCommand("ppo " + std::to_string(this->_displayPlayerID));
+                        this->sendCommand("pin " + std::to_string(this->_displayPlayerID));
+                        this->sendCommand("plv " + std::to_string(this->_displayPlayerID));
                     }
                 }
             } catch (Map::MapError &e) {}
