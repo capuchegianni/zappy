@@ -158,6 +158,8 @@ void zappy::Communication::graphicalUserInterface() {
     eventLogger.setDisplaySize(loggerSize);
     window.setView(view);
 
+    std::size_t lastPlayerSelected = 0;
+
     while (window.isOpen())
     {
         if (frameClock.getElapsedTime().asMilliseconds() <= 1000 / 60) {
@@ -229,6 +231,17 @@ void zappy::Communication::graphicalUserInterface() {
             {
                 sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                 teamsInfo.selectTeam(mousePos);
+                if (teamsInfo.getSelectedPlayer() != lastPlayerSelected)
+
+                    try
+                    {
+                        this->sendCommand("plv " + std::to_string(teamsInfo.getSelectedPlayer()));
+                    }
+                    catch (std::exception &e)
+                    {
+                        eventLogger.log(e.what());
+                    }
+                }
             }
 
             if (event.type == sf::Event::Resized)
