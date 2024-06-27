@@ -232,11 +232,12 @@ void zappy::Communication::graphicalUserInterface() {
                 sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                 teamsInfo.selectTeam(mousePos);
                 if (teamsInfo.getSelectedPlayer() != lastPlayerSelected)
-
+                {
+                    lastPlayerSelected = teamsInfo.getSelectedPlayer();
                     try
                     {
-                        sendCommand("plv " + std::to_string(teamsInfo.getSelectedPlayer()));
-                        sendCommand("pin " + std::to_string(teamsInfo.getSelectedPlayer()));
+                        this->sendCommand("plv " + std::to_string(teamsInfo.getSelectedPlayer()));
+                        this->sendCommand("pin " + std::to_string(teamsInfo.getSelectedPlayer()));
                     }
                     catch (std::exception &e)
                     {
@@ -273,7 +274,7 @@ void zappy::Communication::graphicalUserInterface() {
                 (*map).setDisplaySize(size);
                 window.setView(view);
             }
-            
+
             if (event.type == sf::Event::KeyPressed)
             {
                 bool sendTimeUnit = false;
@@ -309,6 +310,7 @@ void zappy::Communication::graphicalUserInterface() {
                     }
                 }
             }
+        }
 
         teamsInfo.updateTeams(map->getTeams());
         boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
@@ -359,7 +361,6 @@ void zappy::Communication::graphicalUserInterface() {
         window.setTitle("Zappy - FPS: " + std::to_string(displayedFrameRate) + " - Tickrate: " + std::to_string(map->getTimeUnit()));
         frameClock.restart();
     }
-
     this->_running = false;
 }
 
