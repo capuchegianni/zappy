@@ -309,7 +309,6 @@ void zappy::Communication::graphicalUserInterface() {
                     }
                 }
             }
-        }
 
         teamsInfo.updateTeams(map->getTeams());
         boxInfo.setBox((*map)(map->selectedBox.x, map->selectedBox.y));
@@ -360,6 +359,7 @@ void zappy::Communication::graphicalUserInterface() {
         window.setTitle("Zappy - FPS: " + std::to_string(displayedFrameRate) + " - Tickrate: " + std::to_string(map->getTimeUnit()));
         frameClock.restart();
     }
+
     this->_running = false;
 }
 
