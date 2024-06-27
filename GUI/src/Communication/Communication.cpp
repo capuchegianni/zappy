@@ -235,8 +235,8 @@ void zappy::Communication::graphicalUserInterface() {
 
                     try
                     {
-                        this->sendCommand("plv " + std::to_string(teamsInfo.getSelectedPlayer()));
-                        this->sendCommand("pin " + std::to_string(teamsInfo.getSelectedPlayer()));
+                        sendCommand("plv " + std::to_string(teamsInfo.getSelectedPlayer()));
+                        sendCommand("pin " + std::to_string(teamsInfo.getSelectedPlayer()));
                     }
                     catch (std::exception &e)
                     {
